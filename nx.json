@@ -28,6 +28,9 @@
     }
   },
   "targetDefaults": {
+    "build": {
+      "inputs": ["{projectRoot}/**/!(*.spec).ts", "{projectRoot}/**/!(*.spec).tsx"]
+    },
     "test": {
       "inputs": [
         "default",
