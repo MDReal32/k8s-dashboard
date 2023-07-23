@@ -39,6 +39,9 @@
         "{workspaceRoot}/jest.preset.js"
       ]
     },
+    "serve": {
+      "dependsOn": ["build"]
+    },
     "lint": {
       "inputs": ["default", "{workspaceRoot}/.eslintrc.json", "{workspaceRoot}/.eslintignore"]
     }
