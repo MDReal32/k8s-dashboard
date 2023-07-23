@@ -1,0 +1,20 @@
+{
+  "name": "k8s-dashboard",
+  "packageManager": "yarn@3.6.1",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@nx/cypress": "16.5.5",
+    "@nx/react": "16.5.5",
+    "@nx/vite": "16.5.5",
+    "nx": "16.5.5",
+    "prettier": "3.0.0",
+    "prettier-plugin-packagejson": "2.4.5",
+    "prettier-plugin-tsconfig": "0.0.1"
+  },
+  "dependencies": {
+    "tslib": "2.6.0"
+  }
+}
