@@ -6,6 +6,9 @@
     "packages/*",
     "libs/*"
   ],
+  "scripts": {
+    "dev": "nx run-many -t serve --projects=client,server --parallel --maxParallel=2"
+  },
   "dependencies": {
     "@nestjs/common": "10.0.2",
     "@nestjs/core": "10.0.2",
