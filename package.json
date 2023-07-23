@@ -3,7 +3,8 @@
   "packageManager": "yarn@3.6.1",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "libs/*"
   ],
   "dependencies": {
     "@nestjs/common": "10.0.2",
