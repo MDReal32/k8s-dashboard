@@ -76,13 +76,8 @@ export class BaseK8s {
     return this.baseResource(service, {
       spec: {
         type: service.spec.type,
-        app: service.spec.selector.app,
-        ports: service.spec.ports.map(port => ({
-          name: port.name,
-          protocol: port.protocol,
-          port: port.port,
-          targetPort: port.targetPort
-        }))
+        app: service.spec.selector?.app,
+        ports: service.spec.ports
       }
     });
   }
