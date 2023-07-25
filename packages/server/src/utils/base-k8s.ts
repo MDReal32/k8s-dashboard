@@ -1,10 +1,10 @@
 import {
-  V1Pod,
-  V1Service,
+  V1ConfigMap,
   V1Deployment,
   V1Ingress,
-  V1ConfigMap,
+  V1Pod,
   V1Secret,
+  V1Service,
   V1StatefulSet
 } from "@kubernetes/client-node";
 import { merge } from "lodash";
