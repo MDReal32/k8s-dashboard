@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 
 import { K8sService } from "../k8s.service";
-import { BaseK8s } from "../../utils/base-k8s";
+import { BaseK8s, PodResource, Resource, ServiceResource } from "../../utils/base-k8s";
 
 @Injectable()
 export class NamespaceService extends BaseK8s {
@@ -27,12 +27,20 @@ export class NamespaceService extends BaseK8s {
     return { pods, services };
   }
 
-  async getNamespacePods(namespace: string) {
+  async getNamespacePods(namespace: string): Promise<PodResource[]> {
+    if (namespace === "_") {
+      return this.allNamespace(this.getNamespacePods);
+    }
+
     const pods = await this.k8sService.k8sApi.listNamespacedPod(namespace);
     return pods.body.items.map(pod => this.podResource(pod));
   }
 
-  async getNamespaceServices(namespace: string) {
+  async getNamespaceServices(namespace: string): Promise<ServiceResource[]> {
+    if (namespace === "_") {
+      return this.allNamespace(this.getNamespaceServices);
+    }
+
     const services = await this.k8sService.k8sApi.listNamespacedService(namespace);
     return services.body.items.map(service => this.serviceResource(service));
   }
