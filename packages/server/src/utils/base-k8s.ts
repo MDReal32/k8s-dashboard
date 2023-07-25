@@ -1,3 +1,4 @@
+import { execSync } from "node:child_process";
 import {
   V1ConfigMap,
   V1Deployment,
@@ -41,7 +42,7 @@ export class BaseK8s {
         }))
       },
       spec: {
-        nodeName: pod.spec.nodeName,
+        node: this.getNode(pod.spec.nodeName),
         containers: pod.spec.containers.map(container => ({
           image: {
             name: container.image,
@@ -102,5 +103,18 @@ export class BaseK8s {
         annotations: resource.metadata.annotations
       }
     };
+  }
+
+  private getNode(nodeName: string) {
+    switch (nodeName) {
+      case "minikube":
+        return `${nodeName}/${this.minikubeIp()}`;
+      default:
+        return nodeName;
+    }
+  }
+
+  private minikubeIp() {
+    return execSync("minikube ip").toString().trim();
   }
 }
