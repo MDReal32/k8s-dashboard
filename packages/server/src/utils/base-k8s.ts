@@ -19,6 +19,9 @@ export type Resource =
   | V1ConfigMap
   | V1Secret;
 
+export type PodResource = ReturnType<BaseK8s["podResource"]>;
+export type ServiceResource = ReturnType<BaseK8s["serviceResource"]>;
+
 interface BaseMetadata {
   metadata: {
     id: string;
