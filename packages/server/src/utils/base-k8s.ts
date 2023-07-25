@@ -35,7 +35,7 @@ export class BaseK8s {
   protected podResource(pod: V1Pod) {
     return this.baseResource(pod, {
       metadata: {
-        owners: pod.metadata.ownerReferences.map(owner => ({
+        owners: pod.metadata.ownerReferences?.map(owner => ({
           id: owner.uid,
           name: owner.name,
           kind: owner.kind
@@ -43,7 +43,7 @@ export class BaseK8s {
       },
       spec: {
         node: this.getNode(pod.spec.nodeName),
-        containers: pod.spec.containers.map(container => ({
+        containers: pod.spec.containers?.map(container => ({
           image: {
             name: container.image,
             pullPolicy: container.imagePullPolicy
@@ -55,11 +55,11 @@ export class BaseK8s {
             devices: container.volumeDevices
           }
         })),
-        volumes: pod.spec.volumes.map(volume => ({
+        volumes: pod.spec.volumes?.map(volume => ({
           name: volume.name,
-          sources: volume.projected.sources
+          sources: volume.projected?.sources
         })),
-        secrets: pod.spec.imagePullSecrets.map(secret => secret.name),
+        secrets: pod.spec.imagePullSecrets?.map(secret => secret.name),
         restart: {
           policy: pod.spec.restartPolicy
         },
