@@ -6,7 +6,7 @@ import { NamespaceService } from "./namespace.service";
 export class NamespaceController {
   constructor(private readonly namespaceService: NamespaceService) {}
 
-  @Get("all")
+  @Get("_")
   getAllNamespaces() {
     return this.namespaceService.getAllNamespaces();
   }
