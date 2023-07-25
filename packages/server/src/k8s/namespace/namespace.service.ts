@@ -44,4 +44,13 @@ export class NamespaceService extends BaseK8s {
     const services = await this.k8sService.k8sApi.listNamespacedService(namespace);
     return services.body.items.map(service => this.serviceResource(service));
   }
+
+  private async allNamespace<T extends Resource>(
+    method: (namespace: string) => Promise<T[]>
+  ): Promise<T[]> {
+    const namespaces = await this.getAllNamespaces();
+    const namespacedResourcePromises = namespaces.map(ns => method.call(this, ns.name));
+    const namespacedResources = await Promise.all(namespacedResourcePromises);
+    return namespacedResources.flat();
+  }
 }
