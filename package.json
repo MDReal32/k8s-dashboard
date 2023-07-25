@@ -7,7 +7,7 @@
     "libs/*"
   ],
   "scripts": {
-    "dev": "nx run-many -t serve --projects=client,server --parallel --maxParallel=2"
+    "dev": "nx run-many -t serve --projects=client,server --parallel --maxParallel=2 --output-style=stream"
   },
   "dependencies": {
     "@nestjs/common": "10.0.2",
