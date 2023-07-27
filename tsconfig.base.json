@@ -14,7 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@ugrab/k8s-shared": ["packages/shared/src/index.ts"]
+    },
+    "esModuleInterop": true
   },
   "exclude": ["node_modules", "tmp"]
 }
