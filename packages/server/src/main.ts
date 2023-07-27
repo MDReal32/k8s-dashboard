@@ -1,7 +1,7 @@
 import { mkdir, writeFile, unlink } from "node:fs/promises";
 import * as crypto from "node:crypto";
 
-import { Logger } from "@nestjs/common";
+import { Logger, ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { WsAdapter } from "@nestjs/platform-ws";
 
@@ -22,7 +22,10 @@ export const sessionSecret = crypto.randomBytes(32).toString("hex");
   await writeFile(secretFile, sessionSecret);
 
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix(globalPrefix).useGlobalInterceptors(new RequestInterceptor());
+  app
+    .setGlobalPrefix(globalPrefix)
+    .useGlobalInterceptors(new RequestInterceptor())
+    .useGlobalPipes(new ValidationPipe());
   const wsApp = app.useWebSocketAdapter(new WsAdapter(app));
   await wsApp.listen(port);
 
