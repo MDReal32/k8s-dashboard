@@ -40,7 +40,7 @@
       ]
     },
     "serve": {
-      "dependsOn": ["build"]
+      "dependsOn": ["build", "^build"]
     },
     "lint": {
       "inputs": ["default", "{workspaceRoot}/.eslintrc.json", "{workspaceRoot}/.eslintignore"]
