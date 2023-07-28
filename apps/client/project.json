@@ -1,15 +1,17 @@
 {
   "name": "client",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "packages/client/src",
+  "sourceRoot": "apps/client/src",
   "projectType": "application",
   "targets": {
     "build": {
       "executor": "@nx/vite:build",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "build/client"
+        "outputPath": "dist/apps/client"
       },
       "configurations": {
         "development": {
@@ -25,7 +27,7 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "client:build",
-        "proxyConfig": "packages/client/proxy.conf.json"
+        "proxyConfig": "apps/client/proxy.conf.json"
       },
       "configurations": {
         "development": {
@@ -55,17 +57,29 @@
     },
     "test": {
       "executor": "@nx/vite:test",
-      "outputs": ["coverage/packages/client"],
+      "outputs": [
+        "coverage/apps/client"
+      ],
       "options": {
         "passWithNoTests": true,
-        "reportsDirectory": "../../coverage/packages/client"
+        "reportsDirectory": "../../coverage/apps/client"
       }
     },
     "lint": {
       "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["packages/client/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": [
+          "apps/client/**/*.{ts,tsx,js,jsx}"
+        ]
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "client:build"
       }
     }
   },
