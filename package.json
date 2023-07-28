@@ -1,5 +1,7 @@
 {
-  "name": "k8s-dashboard",
+  "name": "@ugrab/k8s-dashboard",
+  "version": "0.0.0-development",
+  "license": "MIT",
   "private": true,
   "workspaces": [
     "apps/*",
