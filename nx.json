@@ -41,6 +41,9 @@
     },
     "lint": {
       "inputs": ["default", "{workspaceRoot}/.eslintrc.json", "{workspaceRoot}/.eslintignore"]
+    },
+    "serve": {
+      "dependsOn": ["^build"]
     }
   },
   "namedInputs": {
