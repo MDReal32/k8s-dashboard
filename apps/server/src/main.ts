@@ -9,7 +9,7 @@ import { AppModule } from "./app.module";
 import { RequestInterceptor } from "./interceptors/request.interceptor";
 
 const logger = new Logger("ApplicationBootstrap");
-const port = process.env.PORT || 3000;
+const port = +process.env.SERVER_PORT || 3000;
 const globalPrefix = "api";
 
 const runFile = "/home/mdreal/.cache/ugrab";
