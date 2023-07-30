@@ -1,13 +1,16 @@
 import { mkdir, writeFile, unlink } from "node:fs/promises";
 import * as crypto from "node:crypto";
 
-import { Logger, ValidationPipe } from "@nestjs/common";
+import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { WsAdapter } from "@nestjs/platform-ws";
+
+import { loggerFactory } from "@ugrab/k8s-shared";
 
 import { AppModule } from "./app.module";
 import { RequestInterceptor } from "./interceptors/request.interceptor";
 
+export const Logger = loggerFactory("Nest");
 const logger = new Logger("ApplicationBootstrap");
 const port = +process.env.SERVER_PORT || 3000;
 const globalPrefix = "api";
