@@ -29,7 +29,6 @@
     "react-router-dom": "6.11.2",
     "reflect-metadata": "0.1.13",
     "rxjs": "7.8.0",
-    "simple-git": "3.19.1",
     "tslib": "2.6.0",
     "ws": "^8.13.0"
   },
