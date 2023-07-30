@@ -1,14 +1,15 @@
 import { cp } from "node:fs/promises";
-import { BadRequestException, Injectable, Logger } from "@nestjs/common";
+import { resolve } from "node:path";
+
+import { BadRequestException, Injectable } from "@nestjs/common";
 
 import { GITHUB_VALIDATE_RE } from "@ugrab/k8s-shared";
 
 import { GitService } from "../git/git.service";
-
+import { Logger } from "../main";
 import { ProjectInitDto } from "./dto/project-init.dto";
 import { Config } from "./utils/config";
 import { ProjectUpdateDto } from "./dto/project-update.dto";
-import { resolve } from "node:path";
 
 @Injectable()
 export class ProjectService {

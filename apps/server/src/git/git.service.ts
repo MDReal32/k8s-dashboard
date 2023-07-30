@@ -1,5 +1,7 @@
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { simpleGit } from "simple-git";
+
+import { Logger } from "../main";
 
 interface GitOptions {
   branch?: string;
