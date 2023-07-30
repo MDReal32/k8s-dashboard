@@ -8,7 +8,7 @@
     "libs/*"
   ],
   "scripts": {
-    "dev": "nx run-many -t serve --projects=client,server --parallel --maxParallel=2 --output-style=stream",
+    "dev": "nx run-many -t serve",
     "dev:server": "nx run server:serve"
   },
   "dependencies": {
