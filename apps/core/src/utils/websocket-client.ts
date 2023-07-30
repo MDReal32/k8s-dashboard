@@ -1,24 +1,57 @@
 import { WebSocket } from "ws";
 
+import { Logger } from "../main";
+
 interface WebsocketClientData<T = any> {
   event: string;
   data: T;
 }
 
 export class WebsocketClient<T> {
-  private readonly ws: WebSocket;
+  private ws: WebSocket;
   private _connected = false;
+  private reconnects = 0;
+  private maxReconnects = 20;
+
+  private readonly logger = new Logger("WebsocketClient");
 
   private _handlers: Map<string, ((data: any) => void)[]> = new Map();
   private _emits: Map<string, any[]> = new Map();
 
-  constructor(private readonly url: string) {
-    this.ws = new WebSocket(url);
-  }
+  constructor(
+    private readonly url: string,
+    private waitTimer = 1,
+    private waitSeed = waitTimer,
+    private multiplier = 2
+  ) {}
 
   connect() {
+    this.ws = new WebSocket(this.url);
+
+    this.ws.on("error", err => {
+      if (this.reconnects > this.maxReconnects) {
+        throw err;
+      }
+
+      this.reconnects++;
+      this.logger.log(`Reconnecting after ${this.waitTimer}s`);
+
+      setTimeout(() => {
+        this.connect().handle();
+      }, this.waitTimer * 1e3);
+
+      if (this.waitTimer < 60) this.waitTimer = this.waitTimer * this.multiplier;
+    });
+
+    return this;
+  }
+
+  handle() {
     this.ws.on("open", () => {
       this._connected = true;
+      this.reconnects = 0;
+      this.waitTimer = this.waitSeed;
+      this.logger.log(`Connected to ${this.url}`);
 
       if (this._emits) {
         this._emits.forEach((data, event) => {
