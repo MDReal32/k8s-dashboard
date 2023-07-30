@@ -3976,7 +3976,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
+"@types/node@npm:*, @types/node@npm:^20.4.5":
   version: 20.4.5
   resolution: "@types/node@npm:20.4.5"
   checksum: 36a0304a8dc346a1b2d2edac4c4633eecf70875793d61a5274d0df052d7a7af7a8e34f29884eac4fbd094c4f0201477dcb39c0ecd3307ca141688806538d1138
@@ -4188,7 +4188,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/ws@npm:^8.5.3, @types/ws@npm:^8.5.5":
+"@types/ws@npm:^8, @types/ws@npm:^8.5.3, @types/ws@npm:^8.5.5":
   version: 8.5.5
   resolution: "@types/ws@npm:8.5.5"
   dependencies:
@@ -4458,6 +4458,7 @@ __metadata:
     "@types/node": 18.14.2
     "@types/react": 18.2.14
     "@types/react-dom": 18.2.6
+    "@types/ws": ^8
     "@typescript-eslint/eslint-plugin": 5.60.1
     "@typescript-eslint/parser": 5.60.1
     "@vitejs/plugin-react": 4.0.0
@@ -4497,12 +4498,15 @@ __metadata:
     vite: 4.3.9
     vite-tsconfig-paths: 4.2.0
     vitest: 0.32.0
+    ws: ^8.13.0
   languageName: unknown
   linkType: soft
 
 "@ugrab/k8s-shared@workspace:libs/shared":
   version: 0.0.0-use.local
   resolution: "@ugrab/k8s-shared@workspace:libs/shared"
+  dependencies:
+    "@types/node": ^20.4.5
   languageName: unknown
   linkType: soft
 
