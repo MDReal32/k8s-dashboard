@@ -19,7 +19,7 @@
     "@nestjs/platform-ws": "10.1.1",
     "@nestjs/websockets": "10.1.1",
     "@swc/helpers": "0.5.0",
-    "axios": "^1.0.0",
+    "axios": "1.4.0",
     "class-transformer": "0.5.1",
     "class-validator": "0.14.0",
     "js-yaml": "4.1.0",
@@ -30,7 +30,7 @@
     "reflect-metadata": "0.1.13",
     "rxjs": "7.8.0",
     "tslib": "2.6.0",
-    "ws": "^8.13.0"
+    "ws": "8.13.0"
   },
   "devDependencies": {
     "@nestjs/schematics": "10.0.1",
@@ -58,7 +58,7 @@
     "@types/node": "18.14.2",
     "@types/react": "18.2.14",
     "@types/react-dom": "18.2.6",
-    "@types/ws": "^8",
+    "@types/ws": "8",
     "@typescript-eslint/eslint-plugin": "5.60.1",
     "@typescript-eslint/parser": "5.60.1",
     "@vitejs/plugin-react-swc": "3.3.2",
