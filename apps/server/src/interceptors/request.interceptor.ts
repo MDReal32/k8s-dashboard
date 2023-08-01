@@ -10,7 +10,7 @@ import { pick } from "lodash";
 
 @Injectable()
 export class RequestInterceptor implements NestInterceptor {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<unknown> {
     return next.handle().pipe(
       map(data => ({ success: true, data, error: null })),
       catchError(async error => ({
