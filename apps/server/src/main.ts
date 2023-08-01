@@ -1,11 +1,11 @@
 import { NestFactory } from "@nestjs/core";
 import { WsAdapter } from "@nestjs/platform-ws";
-import { ZodValidationPipe } from "nestjs-zod";
 
 import { loggerFactory } from "@ugrab/k8s-shared";
 
 import { AppModule } from "./app.module";
 import { RequestInterceptor } from "./interceptors/request.interceptor";
+import { ZodValidationPipe } from "./validations/zod-validation-pipe";
 
 export const Logger = loggerFactory("Nest");
 const isDev = process.env.NODE_ENV === "development";
