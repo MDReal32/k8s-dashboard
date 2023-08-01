@@ -61,10 +61,10 @@ export class Config {
 
   set(data: PartialDeep<ProjectInitDto>) {
     data.name && this.setName(data.name);
-    data.repositoryUrl && this.setRepositoryUrl(data.repositoryUrl);
-    data.branch && this.setBranch(data.branch);
-    typeof data.ssh === "boolean" && this.setSsh(data.ssh);
-    data.ciDir && this.setCiDir(data.ciDir);
+    data.repo.url && this.setRepositoryUrl(data.repo.url);
+    data.repo.branch && this.setBranch(data.repo.branch);
+    typeof data.repo.ssh === "boolean" && this.setSsh(data.repo.ssh);
+    data.ci.dir && this.setCiDir(data.ci.dir);
     return this;
   }
 
