@@ -23,7 +23,9 @@ export class WebsocketClient<T> {
     private waitTimer = 1,
     private waitSeed = waitTimer,
     private multiplier = 2
-  ) {}
+  ) {
+    this.logger.log(`Connecting to ${this.url}`);
+  }
 
   connect() {
     this.ws = new WebSocket(this.url);
