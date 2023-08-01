@@ -1,22 +1,5 @@
-import { IsBoolean, IsOptional, IsString } from "class-validator";
+import { createZodDto } from "nestjs-zod";
 
-export class ProjectInitDto {
-  @IsString()
-  @IsOptional()
-  name: string;
+import { projectInitSchema } from "@ugrab/k8s-shared";
 
-  @IsString()
-  repositoryUrl: string;
-
-  @IsString()
-  @IsOptional()
-  ciDir?: string;
-
-  @IsBoolean()
-  @IsOptional()
-  ssh?: boolean;
-
-  @IsString()
-  @IsOptional()
-  branch?: string;
-}
+export class ProjectInitDto extends createZodDto(projectInitSchema) {}

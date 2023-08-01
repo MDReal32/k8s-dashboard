@@ -1,6 +1,6 @@
 import { NestFactory } from "@nestjs/core";
 import { WsAdapter } from "@nestjs/platform-ws";
-import { ValidationPipe } from "@nestjs/common";
+import { ZodValidationPipe } from "nestjs-zod";
 
 import { loggerFactory } from "@ugrab/k8s-shared";
 
@@ -18,7 +18,7 @@ const globalPrefix = "api";
   app
     .setGlobalPrefix(globalPrefix)
     .useGlobalInterceptors(new RequestInterceptor())
-    .useGlobalPipes(new ValidationPipe());
+    .useGlobalPipes(new ZodValidationPipe());
   const wsApp = app.useWebSocketAdapter(new WsAdapter(app));
   await wsApp.listen(port, isDev ? "localhost" : "0.0.0.0");
 

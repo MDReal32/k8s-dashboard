@@ -1,5 +1,5 @@
-import { OmitType } from "@nestjs/swagger";
+import { createZodDto } from "nestjs-zod";
 
-import { ProjectInitDto } from "./project-init.dto";
+import { projectUpdateSchema } from "@ugrab/k8s-shared";
 
-export class ProjectUpdateDto extends OmitType(ProjectInitDto, ["name"]) {}
+export class ProjectUpdateDto extends createZodDto(projectUpdateSchema) {}
