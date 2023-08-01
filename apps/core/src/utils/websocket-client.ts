@@ -13,6 +13,8 @@ export class WebsocketClient<T> {
   private reconnects = 0;
   private maxReconnects = 20;
 
+  private onConnection: () => void;
+
   private readonly logger = new Logger("WebsocketClient");
 
   private _handlers: Map<string, ((data: any) => void)[]> = new Map();
@@ -29,6 +31,10 @@ export class WebsocketClient<T> {
 
   connect() {
     this.ws = new WebSocket(this.url);
+
+    this.ws.on("open", () => {
+      this.onConnection?.();
+    });
 
     this.ws.on("error", err => {
       if (this.reconnects > this.maxReconnects) {
@@ -49,9 +55,8 @@ export class WebsocketClient<T> {
   }
 
   handle() {
-    this.ws.on("open", () => {
+    this.onConnection = () => {
       this._connected = true;
-      this.reconnects = 0;
       this.waitTimer = this.waitSeed;
       this.logger.log(`Connected to ${this.url}`);
 
@@ -61,19 +66,34 @@ export class WebsocketClient<T> {
         });
         this._emits = null;
       }
-    });
 
-    this.ws.on("message", rawData => {
-      const datum = rawData.toString();
-      const obj = JSON.parse(datum) as WebsocketClientData;
-      const { event, data } = obj;
-      const handlers = this._handlers.get(event);
-      if (handlers) {
-        handlers.forEach(handler => handler(data));
-      }
-    });
+      this.ws.on("message", rawData => {
+        const datum = rawData.toString();
+        const obj = JSON.parse(datum) as WebsocketClientData;
+        const { event, data } = obj;
+        const handlers = this._handlers.get(event);
+        if (handlers) {
+          handlers.forEach(handler => handler(data));
+        }
+      });
+
+      this.ws.on("close", this.reconnect.bind(this));
+    };
 
     return this;
+  }
+
+  reconnect() {
+    this.ws.close();
+    this._connected = false;
+    this.logger.log(`Disconnected from ${this.url}`);
+    this.logger.log(`Reconnecting to ${this.url}`);
+    this.reconnects = 0;
+    this.connect();
+    if (this.onConnection) {
+      delete this.onConnection;
+      this.handle();
+    }
   }
 
   emit(event: string, data: any);
