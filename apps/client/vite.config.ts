@@ -16,12 +16,7 @@ export default defineConfig({
     host: "localhost"
   },
 
-  plugins: [
-    react(),
-    viteTsConfigPaths({
-      root: "../../"
-    })
-  ],
+  plugins: [react(), viteTsConfigPaths({ root: "../../" })],
 
   test: {
     globals: true,
