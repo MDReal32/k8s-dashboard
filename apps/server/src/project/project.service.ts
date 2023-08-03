@@ -3,10 +3,9 @@ import { resolve } from "node:path";
 
 import { BadRequestException, Injectable } from "@nestjs/common";
 
-import { GITHUB_VALIDATE_RE } from "@ugrab/k8s-shared";
+import { GITHUB_VALIDATE_RE, Logger } from "@ugrab/k8s-shared";
 
 import { GitService } from "../git/git.service";
-import { Logger } from "../main";
 import { ProjectInitDto } from "./dto/project-init.dto";
 import { Config } from "./utils/config";
 import { ProjectUpdateDto } from "./dto/project-update.dto";

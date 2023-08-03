@@ -1,15 +1,14 @@
 import { NestFactory } from "@nestjs/core";
 import { WsAdapter } from "@nestjs/platform-ws";
 
-import { loggerFactory } from "@ugrab/k8s-shared";
+import { Logger } from "@ugrab/k8s-shared";
 
 import { AppModule } from "./app.module";
 import { RequestInterceptor } from "./interceptors/request.interceptor";
 import { ZodValidationPipe } from "./validations/zod-validation-pipe";
 
-export const Logger = loggerFactory("Nest");
-const isDev = process.env.NODE_ENV === "development";
 const logger = new Logger("ApplicationBootstrap");
+const isDev = process.env.NODE_ENV === "development";
 const port = +process.env.SERVER_PORT || 3000;
 const globalPrefix = "api";
 
