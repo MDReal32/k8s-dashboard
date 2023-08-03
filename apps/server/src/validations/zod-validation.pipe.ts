@@ -8,6 +8,12 @@ const isInvalidTypeIssue = (error: Partial<ZodIssue>): error is ZodInvalidTypeIs
 const isInvalidStringIssue = (error: Partial<ZodIssue>): error is ZodInvalidStringIssue =>
   error.code === "invalid_string";
 
+const errorConstructor = (path: string, message: string, additionalData: object = {}) => ({
+  path,
+  ...additionalData,
+  message
+});
+
 export const ZodValidationPipe = createZodValidationPipe({
   createValidationException(error) {
     const errors = error.errors.map(err => {
