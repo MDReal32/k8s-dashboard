@@ -46,6 +46,11 @@ export const ZodValidationPipe = createZodValidationPipe({
       }
     });
 
-    throw new BadRequestException(errors, { cause: error });
+    if (errors.length) {
+      return new BadRequestException(errors, {
+        description: "Validation failed",
+        cause: zodError
+      });
+    }
   }
 });
