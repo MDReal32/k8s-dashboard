@@ -15,8 +15,8 @@ const errorConstructor = (path: string, message: string, additionalData: object 
 });
 
 export const ZodValidationPipe = createZodValidationPipe({
-  createValidationException(error) {
-    const errors = error.errors.map(err => {
+  createValidationException(zodError) {
+    const errors = zodError.errors.map(err => {
       if (isInvalidTypeIssue(err)) {
         const isEnum = err.expected.includes("|");
         const enumValues = err.expected.split("|").map(v => v.trim().replace(/^['"]|['"]$/g, ""));
