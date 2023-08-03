@@ -1,5 +1,5 @@
 import { createZodValidationPipe } from "nestjs-zod";
-import { ZodInvalidTypeIssue, ZodIssue, ZodInvalidStringIssue } from "nestjs-zod/z";
+import { ZodInvalidStringIssue, ZodInvalidTypeIssue, ZodIssue } from "nestjs-zod/z";
 import { BadRequestException } from "@nestjs/common";
 
 const isInvalidTypeIssue = (error: Partial<ZodIssue>): error is ZodInvalidTypeIssue =>
