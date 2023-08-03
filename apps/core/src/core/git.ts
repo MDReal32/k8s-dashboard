@@ -20,8 +20,8 @@ export class Git extends Command {
     this.executor.extend((err, line) => this.logger[err ? "error" : "log"](err || line));
   }
 
-  init() {
-    return this.executor.run(this.cmd("init"));
+  init(options?: GitInitOptions) {
+    return this.executor.run(this.cmd("init", this.getArgs(options)));
   }
 
   remote(name: string, url: string) {
