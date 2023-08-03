@@ -1,9 +1,9 @@
 import { NestFactory } from "@nestjs/core";
-import { WsAdapter } from "@nestjs/platform-ws";
 
 import { Logger } from "@ugrab/k8s-shared";
 
 import { AppModule } from "./app.module";
+import { WsAdapter } from "./adapters/ws.adapter";
 import { RequestInterceptor } from "./interceptors/request.interceptor";
 import { ZodValidationPipe } from "./validations/zod-validation-pipe";
 
