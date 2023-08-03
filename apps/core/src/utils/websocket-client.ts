@@ -1,6 +1,6 @@
 import { WebSocket } from "ws";
 
-import { Logger } from "../main";
+import { Logger } from "@ugrab/k8s-shared";
 
 interface WebsocketClientData<T = any> {
   event: string;
