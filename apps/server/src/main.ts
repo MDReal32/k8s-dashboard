@@ -19,7 +19,7 @@ const globalPrefix = "api";
     .useGlobalInterceptors(new RequestInterceptor())
     .useGlobalPipes(new ZodValidationPipe());
   const wsApp = app.useWebSocketAdapter(new WsAdapter(app));
-  await wsApp.listen(port, isDev ? "localhost" : "0.0.0.0");
+  await wsApp.listen(port, isDev ? undefined : "0.0.0.0");
 
   logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
 })();
