@@ -4309,6 +4309,8 @@ __metadata:
 "@ugrab/k8s-shared@workspace:libs/shared":
   version: 0.0.0-use.local
   resolution: "@ugrab/k8s-shared@workspace:libs/shared"
+  dependencies:
+    "@types/node": 20.4.5
   languageName: unknown
   linkType: soft
 

@@ -1,5 +1,8 @@
 {
   "name": "@ugrab/k8s-shared",
   "version": "0.0.1",
-  "type": "commonjs"
+  "type": "commonjs",
+  "devDependencies": {
+    "@types/node": "20.4.5"
+  }
 }
