@@ -5,7 +5,7 @@ import { Logger } from "@ugrab/k8s-shared";
 import { AppModule } from "./app.module";
 import { WsAdapter } from "./adapters/ws.adapter";
 import { RequestInterceptor } from "./interceptors/request.interceptor";
-import { ZodValidationPipe } from "./validations/zod-validation-pipe";
+import { ZodValidationPipe } from "./validations/zod-validation.pipe";
 
 const logger = new Logger("ApplicationBootstrap");
 const isDev = process.env.NODE_ENV === "development";
