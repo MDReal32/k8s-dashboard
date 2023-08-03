@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { appendFileSync, existsSync } from "node:fs";
 
 import { Logger as _Logger, LogLevel } from "@nestjs/common/services/logger.service";
@@ -5,6 +6,7 @@ import {
   ConsoleLogger as _ConsoleLogger,
   ConsoleLoggerOptions
 } from "@nestjs/common/services/console-logger.service";
+import { Injectable } from "@nestjs/common/decorators/core/injectable.decorator";
 
 class ConsoleLogger extends _ConsoleLogger {
   constructor(
@@ -47,6 +49,7 @@ class ConsoleLogger extends _ConsoleLogger {
   }
 }
 
+@Injectable()
 export class Logger extends _Logger {
   private readonly appName = process.env["APP_NAME"] || "K8SD";
   private readonly file = process.env["LOG_FILE"] || "k8sd.log";
