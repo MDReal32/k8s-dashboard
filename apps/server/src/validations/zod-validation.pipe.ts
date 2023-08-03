@@ -29,19 +29,20 @@ export const ZodValidationPipe = createZodValidationPipe({
           ? `"${path}" value isn't correct. Expected one of: [${enumValuesString}], but got "${received}"`
           : `"${path}" value expected to be "${expected}" but got "${received}"`;
 
-        return {
-          path,
+        return errorConstructor(path, message, {
           expected: {
             type: isEnum ? "enum" : err.expected,
             values: isEnum ? enumValues : undefined
           },
-          received,
-          message
-        };
+          received
+        });
       }
 
       if (isInvalidStringIssue(err)) {
-        return `"${err.path.join(".")}" value isn't correct. ${err.message}`;
+        return errorConstructor(
+          err.path.join("."),
+          `"${err.path.join(".")}" value isn't correct. ${err.message}`
+        );
       }
     });
 
