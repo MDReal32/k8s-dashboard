@@ -1,11 +1,6 @@
 import { WebSocket } from "ws";
 
-import { Logger } from "@ugrab/k8s-shared";
-
-interface WebsocketClientData<T = any> {
-  event: string;
-  data: T;
-}
+import { Logger, WebSocketResponse } from "@ugrab/k8s-shared";
 
 export class WebsocketClient<T> {
   private ws: WebSocket;
@@ -17,8 +12,9 @@ export class WebsocketClient<T> {
 
   private readonly logger = new Logger("WebsocketClient");
 
-  private _handlers: Map<string, ((data: any) => void)[]> = new Map();
-  private _emits: Map<string, any[]> = new Map();
+  private readonly _handlers: Map<string, Set<(data: unknown, headers: unknown) => void>> =
+    new Map();
+  private readonly _emits: Map<string, Set<Omit<WebSocketResponse, "event">>> = new Map();
 
   constructor(
     private readonly url: string,
@@ -62,18 +58,21 @@ export class WebsocketClient<T> {
 
       if (this._emits) {
         this._emits.forEach((data, event) => {
-          this.send(event, data);
+          data.forEach(({ data, headers }) => {
+            this.send(event, data, headers);
+          });
+
+          this._emits.delete(event);
         });
-        this._emits = null;
       }
 
       this.ws.on("message", rawData => {
         const datum = rawData.toString();
-        const obj = JSON.parse(datum) as WebsocketClientData;
-        const { event, data } = obj;
+        const obj = JSON.parse(datum) as WebSocketResponse;
+        const { event, data, headers } = obj;
         const handlers = this._handlers.get(event);
         if (handlers) {
-          handlers.forEach(handler => handler(data));
+          handlers.forEach(handler => handler(data, headers));
         }
       });
 
@@ -96,27 +95,29 @@ export class WebsocketClient<T> {
     }
   }
 
-  emit(event: string, data: any);
-  emit<K extends keyof T>(event: K, data: T[K]);
-  emit(event: string, data: any) {
+  emit(event: string, data: unknown, headers?: object): this;
+  emit<K extends keyof T>(event: K, data: T[K], headers?: object): this;
+  emit<K extends keyof T>(event: string, data: T[K], headers?: object) {
     if (!this._connected) {
-      this._emits[event] ||= [];
-      this._emits[event].push(data);
+      const eventEmits = this._emits.get(event) || new Set();
+      eventEmits.add({ data, headers });
+      this._emits.set(event, eventEmits);
       return this;
     }
     this.send(event, data);
     return this;
   }
 
-  on(event: string, cb: (data: any) => void);
-  on<K extends keyof T>(event: K, cb: (data: T[K]) => void);
-  on(event: string, cb: (data: any) => void) {
-    this._handlers[event] ||= [];
-    this._handlers[event].push(cb);
+  on(event: string, cb: (data: unknown, headers?: object) => void): this;
+  on<K extends keyof T>(event: K, cb: (data: T[K], headers?: object) => void): this;
+  on<K extends keyof T>(event: string, cb: (data: T[K], headers?: object) => void) {
+    const handlers = this._handlers.get(event) || new Set();
+    handlers.add(cb);
+    this._handlers.set(event, handlers);
     return this;
   }
 
-  private send(event: string, data: any) {
-    this.ws.send(JSON.stringify({ event, data }));
+  private send(event: string, data: unknown, headers?: object) {
+    this.ws.send(JSON.stringify({ event, data, headers }));
   }
 }
