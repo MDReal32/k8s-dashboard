@@ -32,7 +32,7 @@ export class Core extends Queue {
 
   fetchPlugins() {
     this.pluginNames = retrievePlugins(pkgJson);
-    this.add(() => fetchPlugins(this.pluginNames));
+    this.add(async () => (this.plugins = await fetchPlugins(this.pluginNames)));
     return this.continue();
   }
 
