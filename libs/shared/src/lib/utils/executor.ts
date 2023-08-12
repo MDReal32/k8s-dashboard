@@ -1,11 +1,12 @@
 import * as child_process from "node:child_process";
 
-import { Logger } from "@k8sd/shared";
+import { Logger } from "../logger";
 
 interface ProcessResponse {
   type: "stdout" | "stderr";
   data: string;
 }
+
 type PromiseChildProcess = child_process.ChildProcess & Promise<ProcessResponse>;
 type Extension = (err: Error | string | null, line: string | null) => void;
 
@@ -24,22 +25,36 @@ export class Executor {
     return this;
   }
 
+  getCwd() {
+    return this._cwd;
+  }
+
   run(command: string | string[]) {
     const cmd = this.command(command);
     this.logger.log(`Executing: ${cmd}`);
     const child = child_process.exec(cmd, { cwd: this._cwd });
 
     child.stdout
-      .on("data", (line: string) => {
-        this._extensions.forEach(fn => fn(null, line.trim()));
+      ?.on("data", (line: string) => {
+        line
+          .trim()
+          .split("\n")
+          .forEach(line => {
+            line && this._extensions.forEach(fn => fn(null, line));
+          });
       })
       .on("error", err => {
         this._extensions.forEach(fn => fn(err, null));
       });
 
     child.stderr
-      .on("data", (line: string) => {
-        this._extensions.forEach(fn => fn(null, line.trim()));
+      ?.on("data", (line: string) => {
+        line
+          .trim()
+          .split("\n")
+          .forEach(line => {
+            line && this._extensions.forEach(fn => fn(null, line));
+          });
       })
       .on("error", err => {
         this._extensions.forEach(fn => fn(err, null));
@@ -66,9 +81,9 @@ export class Executor {
       let output = "";
       let error = "";
 
-      child.stdout.on("data", data => (output += data.toString()));
+      child.stdout?.on("data", data => (output += data.toString()));
 
-      child.stderr.on("data", data => (error += data.toString()));
+      child.stderr?.on("data", data => (error += data.toString()));
 
       child.on("close", code => {
         resolve({
