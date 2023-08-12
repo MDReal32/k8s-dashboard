@@ -12,9 +12,15 @@ type Extension = (err: Error | string | null, line: string | null) => void;
 export class Executor {
   private readonly _extensions: Set<Extension> = new Set();
   private readonly logger = new Logger("CommandExecutor");
+  private _cwd: string = process.cwd();
 
   extend(fn: Extension) {
     this._extensions.add(fn);
+    return this;
+  }
+
+  cwd(cwd: string) {
+    this._cwd = cwd;
     return this;
   }
 
