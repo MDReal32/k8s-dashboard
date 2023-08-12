@@ -41,4 +41,4 @@ export class Git extends Command {
   }
 }
 
-export const git = new Git(executor);
+export const git = (executor: Executor) => new Git(executor);
