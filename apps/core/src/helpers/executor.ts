@@ -48,6 +48,11 @@ export class Executor {
     // return child;
   }
 
+  sync(cmd: string) {
+    const child = child_process.execSync(cmd, { cwd: this._cwd });
+    return child.toString().trim();
+  }
+
   private promiseChildProcess(child: child_process.ChildProcess): PromiseChildProcess {
     const promise = new Promise<ProcessResponse>(resolve => {
       let output = "";
