@@ -2,11 +2,14 @@ import { Body, Controller, Param, Patch, Post } from "@nestjs/common";
 
 import { ProjectService } from "./project.service";
 import { ProjectInitDto } from "./dto/project-init.dto";
+import { BaseController } from "../base/base.controller";
 import { ProjectUpdateDto } from "./dto/project-update.dto";
 
 @Controller("v1/project")
-export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+export class ProjectController extends BaseController {
+  constructor(private readonly projectService: ProjectService) {
+    super(projectService);
+  }
 
   @Post("init")
   init(@Body() projectOptions: ProjectInitDto) {
