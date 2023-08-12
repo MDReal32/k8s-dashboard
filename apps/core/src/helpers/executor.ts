@@ -26,32 +26,34 @@ export class Executor {
 
   run(command: string | string[]) {
     const cmd = this.command(command);
-    console.log(cmd);
-    // const child = child_process.exec(cmd);
-    //
-    // this.logger.log(`Executing: ${cmd}`);
-    //
-    // child.stdout
-    //   .on("data", (line: string) => {
-    //     this._extensions.forEach(fn => fn(null, line));
-    //   })
-    //   .on("error", (line: string) => {
-    //     this._extensions.forEach(fn => fn(line, null));
-    //   });
-    //
-    // child.stderr
-    //   .on("data", (line: string) => {
-    //     this._extensions.forEach(fn => fn(line, null));
-    //   })
-    //   .on("error", (line: string) => {
-    //     this._extensions.forEach(fn => fn(line, null));
-    //   });
-    //
-    // child.on("close", (code: number) => {
-    //   this.logger.log(`Command ${cmd} finished with code ${code}`);
-    // });
-    //
-    // return child;
+    this.logger.log(`Executing: ${cmd}`);
+    const child = child_process.exec(cmd, { cwd: this._cwd });
+
+    child.stdout
+      .on("data", (line: string) => {
+        this._extensions.forEach(fn => fn(null, line.trim()));
+      })
+      .on("error", err => {
+        this._extensions.forEach(fn => fn(err, null));
+      });
+
+    child.stderr
+      .on("data", (line: string) => {
+        this._extensions.forEach(fn => fn(null, line.trim()));
+      })
+      .on("error", err => {
+        this._extensions.forEach(fn => fn(err, null));
+      });
+
+    child.on("error", err => {
+      this._extensions.forEach(fn => fn(err, null));
+    });
+
+    child.on("close", (code: number) => {
+      this.logger.log(`Command ${cmd} finished with code ${code}`);
+    });
+
+    return this.promiseChildProcess(child);
   }
 
   sync(cmd: string) {
