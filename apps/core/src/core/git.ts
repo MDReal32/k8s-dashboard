@@ -20,7 +20,10 @@ export class Git extends Command {
     this.executor.extend((err, line) => this.logger[err ? "error" : "log"](err || line));
   }
 
-  init(options?: GitInitOptions) {
+  init(name: string, options: GitInitOptions = {}) {
+    storage.createDirectory(name);
+    this.logger.log(`Initializing git repository in ${storage.getPath(name)}`);
+    this.executor.cwd(storage.getPath(name));
     return this.executor.run(this.cmd("init", this.getArgs(options)));
   }
 
