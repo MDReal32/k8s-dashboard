@@ -2,118 +2,140 @@ import { WebSocket } from "ws";
 
 import { Logger } from "@k8sd/shared";
 
-export class WebsocketClient<T> {
-  private ws: WebSocket;
-  private _connected = false;
-  private reconnects = 0;
-  private maxReconnects = 20;
+type BaseHandlers = Record<
+  "connect" | "connection" | "reconnect" | "reconnection" | "disconnect",
+  () => void
+>;
 
-  private onConnection: () => void;
+type WsCallback<T = unknown> = (data: T, headers?: object) => void;
+
+type ArrayBased<T> = { [K in keyof T]: T[K][] };
+
+export class WebsocketClient {
+  private static readonly __baseEvents: (keyof BaseHandlers)[] = [
+    "connect",
+    "connection",
+    "reconnect",
+    "reconnection",
+    "disconnect"
+  ];
 
   private readonly logger = new Logger("WebsocketClient");
 
-  private readonly _handlers: Map<string, Set<(data: unknown, headers: unknown) => void>> =
-    new Map();
-  private readonly _emits: Map<string, Set<Omit<WebSocketResponse, "event">>> = new Map();
+  private ws: WebSocket;
+
+  private _connected = false;
+  private _reconnects = 0;
+  private _maxReconnects = 20;
+  private _firstConnection = true;
+
+  private readonly baseEventHandlers = {} as ArrayBased<BaseHandlers>;
+  private readonly __handlers = new Map<string, WsCallback[]>();
 
   constructor(
     private readonly url: string,
     private waitTimer = 1,
     private waitSeed = waitTimer,
-    private multiplier = 2
-  ) {
-    this.logger.log(`Connecting to ${this.url}`);
-  }
+    private multiplier = 1.5
+  ) {}
 
   connect() {
-    this.ws = new WebSocket(this.url);
+    const connectionPrefix = this._firstConnection ? "Connecting" : "Reconnecting";
+    if (!this._reconnects) {
+      this.logger.log(`${connectionPrefix} to ${this.url}`);
+    }
 
+    this._reconnects++;
+    this.ws = new WebSocket(this.url);
     this.ws.on("open", () => {
-      this.onConnection?.();
+      this._connected = true;
+      this._reconnects = 0;
+      this._firstConnection = false;
+
+      const eventPrefix = this._firstConnection ? "connect" : "reconnect";
+      this.emit(eventPrefix);
+      this.emit(`${eventPrefix}ion`);
+
+      this.waitTimer = this.waitSeed;
+      this.logger.log(`Connected to ${this.url}`);
+    });
+
+    this.ws.on("message", rawData => {
+      const { event, data = {}, headers = {} } = JSON.parse(rawData.toString());
+      this.logger.log(`Received event ${event}`);
+
+      if (this.__handlers.has(event)) {
+        this.__handlers.get(event).forEach(cb => cb(data, headers));
+      }
     });
 
     this.ws.on("error", err => {
-      if (this.reconnects > this.maxReconnects) {
+      if (this._reconnects > this._maxReconnects) {
         throw err;
       }
-
-      this.reconnects++;
-      this.logger.log(`Reconnecting after ${this.waitTimer}s`);
-
-      setTimeout(() => {
-        this.connect().handle();
-      }, this.waitTimer * 1e3);
-
-      if (this.waitTimer < 60) this.waitTimer = this.waitTimer * this.multiplier;
     });
 
-    return this;
-  }
-
-  handle() {
-    this.onConnection = () => {
-      this._connected = true;
-      this.waitTimer = this.waitSeed;
-      this.logger.log(`Connected to ${this.url}`);
-
-      if (this._emits) {
-        this._emits.forEach((data, event) => {
-          data.forEach(({ data, headers }) => {
-            this.send(event, data, headers);
-          });
-
-          this._emits.delete(event);
-        });
-      }
-
-      this.ws.on("message", rawData => {
-        const datum = rawData.toString();
-        const obj = JSON.parse(datum) as WebSocketResponse;
-        const { event, data, headers } = obj;
-        const handlers = this._handlers.get(event);
-        if (handlers) {
-          handlers.forEach(handler => handler(data, headers));
-        }
-      });
-
-      this.ws.on("close", this.reconnect.bind(this));
-    };
+    this.ws.on("close", () => {
+      this.reconnect();
+    });
 
     return this;
   }
 
   reconnect() {
     this.ws.close();
-    this._connected = false;
-    this.logger.log(`Disconnected from ${this.url}`);
-    this.logger.log(`Reconnecting to ${this.url}`);
-    this.reconnects = 0;
-    this.connect();
-    if (this.onConnection) {
-      delete this.onConnection;
-      this.handle();
-    }
+    this.logger.log(`Re-trying after ${this.waitTimer}s`);
+
+    setTimeout(() => {
+      this.connect();
+    }, this.waitTimer * 1e3);
+
+    if (this.waitTimer < 60) this.waitTimer = +(this.waitTimer * this.multiplier).toFixed(2);
   }
 
-  emit(event: string, data: unknown, headers?: object): this;
-  emit<K extends keyof T>(event: K, data: T[K], headers?: object): this;
-  emit<K extends keyof T>(event: string, data: T[K], headers?: object) {
-    if (!this._connected) {
-      const eventEmits = this._emits.get(event) || new Set();
-      eventEmits.add({ data, headers });
-      this._emits.set(event, eventEmits);
+  emit<K extends keyof BaseHandlers>(event: K): this;
+  emit(event: string, data?: unknown, headers?: object): this;
+  emit(event: string, data?: unknown, headers?: object) {
+    if (this._connected) {
+      if (WebsocketClient.__baseEvents.includes(event as keyof BaseHandlers)) {
+        this.baseEventHandlers[event as keyof BaseHandlers]?.forEach(cb => cb());
+        return this;
+      }
+
+      this.send(event, data, headers);
       return this;
     }
-    this.send(event, data);
+
+    this.on("connection", () => {
+      this.send(event, data, headers);
+    });
+
     return this;
   }
 
-  on(event: string, cb: (data: unknown, headers?: object) => void): this;
-  on<K extends keyof T>(event: K, cb: (data: T[K], headers?: object) => void): this;
-  on<K extends keyof T>(event: string, cb: (data: T[K], headers?: object) => void) {
-    const handlers = this._handlers.get(event) || new Set();
-    handlers.add(cb);
-    this._handlers.set(event, handlers);
+  on<T>(event: string, cb: WsCallback<T>): this;
+  on<Event extends keyof BaseHandlers>(event: Event | Event[], cb: BaseHandlers[Event]): this;
+  on(event: string | string[], cb: WsCallback) {
+    const events = Array.isArray(event) ? event : [event];
+    const baseEvents = events.filter(event =>
+      WebsocketClient.__baseEvents.includes(event as keyof BaseHandlers)
+    );
+
+    if (baseEvents.length) {
+      baseEvents.forEach(event => {
+        this.baseEventHandlers[event] ||= [];
+        this.baseEventHandlers[event].push(cb);
+      });
+
+      return this;
+    }
+
+    events.forEach(event => {
+      const handlers = this.__handlers.get(event) || [];
+      handlers.push(cb);
+      this.__handlers.set(event, handlers);
+    });
+
     return this;
   }
 
