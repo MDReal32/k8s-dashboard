@@ -1,4 +1,4 @@
-import { Body, Controller, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Get, Param, Patch, Post } from "@nestjs/common";
 
 import { ProjectService } from "./project.service";
 import { ProjectInitDto } from "./dto/project-init.dto";
@@ -24,13 +24,13 @@ export class ProjectController extends BaseController {
     return this.projectService.init(projectOptions);
   }
 
-  @Patch(":name/update")
-  update(@Param("name") name: string, @Body() projectOptions: Partial<ProjectUpdateDto>) {
-    return this.projectService.update(name, projectOptions);
+  @Post(":id/setup")
+  setup(@Param("id") id: string) {
+    return this.projectService.setup(id);
   }
 
-  @Post(":name/setup")
-  setup(@Param("name") name: string) {
-    return this.projectService.setup(name);
+  @Patch(":id")
+  update(@Param("id") id: string, @Body() data: Partial<ProjectUpdateDto>) {
+    return this.projectService.update(id, data);
   }
 }
