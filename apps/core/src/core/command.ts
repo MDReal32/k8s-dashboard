@@ -1,4 +1,4 @@
-import { executor } from "../helpers/executor";
+import { executor } from "@k8sd/shared";
 
 export class Command {
   protected which(cmd: string) {

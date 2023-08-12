@@ -1,7 +1,6 @@
-import { Logger } from "@k8sd/shared";
+import { Logger, Executor } from "@k8sd/shared";
 
 import { Command } from "./command";
-import { Executor } from "../helpers/executor";
 import { storage } from "./storage";
 
 interface GitBaseOptions {
