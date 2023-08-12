@@ -14,13 +14,24 @@ export class ProjectService extends BaseService {
     super();
   }
 
-  async init(options: ProjectInitDto) {
-    // const repo = options.repositoryUrl.match(GITHUB_VALIDATE_RE);
-    // if (!repo) {
-    //   throw new BadRequestException("Invalid repository url");
-    // }
-    // await new Config().set(options).saveConfig();
-    // return { status: "ok" };
+  get(id: string) {
+    return this.prisma.project
+      .findUnique({
+        where: { id },
+        include: { repo: true, ci: true }
+      })
+      .catch(err => {
+        this.logger.error(err);
+        throw new BadRequestException(`Project ${id} not found`, { cause: err });
+      })
+      .then(foundProject => {
+        if (!foundProject) throw new BadRequestException(`Project ${id} didn't initialized`);
+        return foundProject;
+      })
+      .catch(err => {
+        this.logger.error(err);
+        throw err;
+      });
   }
 
   async update(name: string, options: Partial<ProjectUpdateDto>) {
