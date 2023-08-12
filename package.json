@@ -16,7 +16,7 @@
     "prisma:serve": "yarn workspace @k8sd/server prisma:serve"
   },
   "dependencies": {
-    "tslib": "2.3.0"
+    "tslib": "2.6.1"
   },
   "devDependencies": {
     "@nx/nest": "16.6.0",
