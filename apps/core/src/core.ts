@@ -7,7 +7,7 @@ import { Plugin, fetchPlugins, retrievePlugins } from "@k8sd/plugin-builder";
 
 import { WebsocketClient } from "./utils/websocket-client";
 import { Git } from "./core/git";
-import { Data } from "./types/data";
+import { Data } from "./types";
 import { Queue } from "./utils/queue";
 
 import * as pkgJson from "../package.json";
@@ -64,7 +64,7 @@ export class Core extends Queue {
       this.extend(options.cb);
     }
 
-    this.ws.on<z.infer<ZodSchema> & PrismaModel>(options.event, async (data, headers) => {
+    this.ws.on<Data<ZodSchema, PrismaModel>>(options.event, async (data, headers) => {
       const executor = new Executor();
       executor.extend((err, line) => {
         this.ws.emit(WS_EVENTS.LOG.LOG, { error: err, line }, headers);
