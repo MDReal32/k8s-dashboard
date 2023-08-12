@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
+import { PrismaService } from "nestjs-prisma";
 import { merge } from "lodash";
 
 import { Logger, WS_EVENTS } from "@k8sd/shared";
@@ -62,5 +63,18 @@ export class ProjectService extends BaseService {
 
     this.triggerCore(WS_EVENTS.PROJECT.SETUP, project);
     return { message: `Project ${project.name} setup triggered` };
+  }
+
+  update(id: string, data: Partial<ProjectUpdateDto>) {
+    try {
+      return this.prisma.project.update({
+        where: { id },
+        include: { repo: true, ci: true },
+        data: this.toUpdate(data)
+      });
+    } catch (err) {
+      this.logger.error(err);
+      throw new BadRequestException(`Project ${id} didn't updated`, { cause: err });
+    }
   }
 }
