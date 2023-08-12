@@ -1,0 +1,20 @@
+import { Plugin } from "@k8sd/plugin-builder";
+
+import * as pkgJson from "../package.json";
+
+
+export const plugin = (): Plugin => {
+  return {
+    name: pkgJson.name,
+    description: pkgJson.description,
+    version: pkgJson.version,
+
+    detect() {
+      return true;
+    },
+
+    executor(context) {
+      context.logger.log("Hello from @k8sd/example-plugin plugin");
+    }
+  };
+};

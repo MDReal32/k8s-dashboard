@@ -1,0 +1,9 @@
+{
+  "generators": {
+    "plugin": {
+      "factory": "./src/generators/plugin/plugin",
+      "schema": "./src/generators/plugin/schema.json",
+      "description": "Core plugin generator for k8sd"
+    }
+  }
+}
