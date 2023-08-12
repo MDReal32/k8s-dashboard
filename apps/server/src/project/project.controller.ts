@@ -11,6 +11,11 @@ export class ProjectController extends BaseController {
     super(projectService);
   }
 
+  @Get(":id")
+  get(@Param("id") id: string) {
+    return this.projectService.get(id);
+  }
+
   @Post("init")
   init(@Body() projectOptions: ProjectInitDto) {
     return this.projectService.init(projectOptions);
