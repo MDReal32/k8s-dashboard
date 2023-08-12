@@ -1,5 +1,5 @@
 {
-  "name": "@ugrab/k8s-shared",
+  "name": "@k8sd/shared",
   "version": "0.0.1",
   "type": "commonjs",
   "dependencies": {
