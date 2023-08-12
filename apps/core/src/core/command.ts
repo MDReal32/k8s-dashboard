@@ -1,4 +1,10 @@
+import { executor } from "../helpers/executor";
+
 export class Command {
+  protected which(cmd: string) {
+    return executor.sync(`which ${cmd}`);
+  }
+
   protected cmd(...command: (string | string[])[]) {
     return (Array.isArray(command) ? command : [command])
       .reduce<string>((cmd, arg) => `${cmd} ${Array.isArray(arg) ? arg.join(" ") : arg}`, "")
