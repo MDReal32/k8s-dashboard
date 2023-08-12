@@ -15,19 +15,10 @@ model ProjectRepository {
   Project Project?
 }
 
-enum Provider {
-  NONE
-  DOCKER
-  DOCKER_COMPOSE
-  HELM
-  KUBERNETES
-  K8S
-}
-
 model ProjectCi {
   id       String   @id @default(uuid())
   dir      String
-  provider Provider @default(NONE)
+  provider String?
   Project  Project?
 }
 
