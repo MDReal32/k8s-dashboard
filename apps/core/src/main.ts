@@ -1,6 +1,16 @@
-import { WebsocketClient } from "./utils/websocket-client";
+import { Project } from "@prisma/client";
 
-const port = +process.env.SERVER_PORT || 3000;
-const host = process.env.SERVER_HOST || "localhost";
-const ws = new WebsocketClient(`ws://${host}:${port}/ws`);
-ws.connect().handle().on("welcome", console.log);
+import { projectInitSchema, WS_EVENTS } from "@k8sd/shared";
+
+import { WebsocketClient } from "./utils/websocket-client";
+import { wsUrl } from "./api/api";
+import { Core } from "./core";
+import { Steps } from "./core/steps";
+
+const ws = new WebsocketClient(wsUrl);
+export const core = new Core(ws);
+
+core.fetchPlugins().prepare().onWebsocket<typeof projectInitSchema, Project>({
+  event: WS_EVENTS.PROJECT.SETUP,
+  cb: Steps.prepare()
+});
