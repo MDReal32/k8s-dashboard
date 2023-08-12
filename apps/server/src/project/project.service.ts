@@ -57,32 +57,10 @@ export class ProjectService extends BaseService {
       });
   }
 
-  async setup(name: string) {
-    // const config = new Config();
-    // try {
-    //   await config.loadConfig(name);
-    // } catch (err) {
-    //   this.logger.error(err);
-    //   throw new BadRequestException("Project didn't initialized", { cause: err });
-    // }
-    //
-    // if (config.setupDone) {
-    //   throw new BadRequestException(`Project ${name} already setuped`);
-    // }
-    //
-    // await this.gitService.clone(config.repoUrl, {
-    //   name: config.name,
-    //   branch: config.branch,
-    //   cwd: config.repoDir
-    // });
-    //
-    // this.logger.log(
-    //   `Copying CI files from ${config.ciDir} to ${resolve(config.configDir, "helm")}`
-    // );
-    // await cp(config.ciDir, resolve(config.configDir, "helm"), { recursive: true });
-    // config.setDone(true);
-    // await config.saveConfig(true);
-    //
-    // return { status: "ok" };
+  async setup(id: string) {
+    const project = await this.get(id);
+
+    this.triggerCore(WS_EVENTS.PROJECT.SETUP, project);
+    return { message: `Project ${project.name} setup triggered` };
   }
 }
