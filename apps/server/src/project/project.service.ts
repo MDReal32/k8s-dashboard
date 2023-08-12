@@ -1,10 +1,12 @@
 import { BadRequestException, Injectable } from "@nestjs/common";
+import { merge } from "lodash";
 
 import { Logger, WS_EVENTS } from "@k8sd/shared";
 
 import { ProjectInitDto } from "./dto/project-init.dto";
 import { ProjectUpdateDto } from "./dto/project-update.dto";
 import { BaseService } from "../base/base.service";
+import { projectDefaultOptions } from "./project.const";
 
 @Injectable()
 export class ProjectService extends BaseService {
@@ -34,20 +36,25 @@ export class ProjectService extends BaseService {
       });
   }
 
-  async update(name: string, options: Partial<ProjectUpdateDto>) {
-    // if ("name" in options) delete options.name;
-    // const config = new Config();
-    //
-    // try {
-    //   await config.loadConfig(name);
-    //   config.set(options);
-    //   await config.saveConfig(true);
-    //
-    //   return { status: "ok" };
-    // } catch (err) {
-    //   this.logger.error(err);
-    //   throw new BadRequestException("Project didn't initialized", { cause: err });
-    // }
+  async init(userOptions: ProjectInitDto) {
+    const options = merge({}, projectDefaultOptions, userOptions);
+    const found = await this.prisma.project.findFirst({ where: { name: options.name } });
+    if (found) {
+      throw new BadRequestException({
+        id: found.id,
+        message: `Project ${options.name} already initialized`
+      });
+    }
+
+    return this.prisma.project
+      .create({
+        include: { repo: true, ci: true },
+        data: this.toCreate(options)
+      })
+      .catch(err => {
+        this.logger.error(err);
+        throw new BadRequestException(`Project ${options.name} didn't initialized`, { cause: err });
+      });
   }
 
   async setup(name: string) {
