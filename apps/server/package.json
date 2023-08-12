@@ -2,6 +2,7 @@
   "name": "@k8sd/server",
   "scripts": {
     "prisma:migrate": "yarn prisma migrate dev --name",
+    "prisma:reset": "yarn prisma migrate reset --force",
     "prisma:serve": "yarn prisma studio --port 3002 --browser none"
   },
   "dependencies": {
