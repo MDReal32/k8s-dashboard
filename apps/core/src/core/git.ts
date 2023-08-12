@@ -37,6 +37,10 @@ export class Git extends Command {
     return this.executor.run(this.cmd("fetch", this.getArgs(options)));
   }
 
+  checkout(branch: string) {
+    return this.executor.run(this.cmd("checkout", branch));
+  }
+
   pull(name?: string, options?: GitPullOptions) {
     return this.executor.run(this.cmd("pull", name, this.getArgs(options)));
   }
