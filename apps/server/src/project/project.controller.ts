@@ -11,6 +11,9 @@ export class ProjectController extends BaseController {
     super(projectService);
   }
 
+  // ToDO: implement getting all my projects over
+  //       token after implementing auth
+
   @Get(":id")
   get(@Param("id") id: string) {
     return this.projectService.get(id);
