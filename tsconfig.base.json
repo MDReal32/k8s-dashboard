@@ -1,23 +1,24 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "declaration": false,
+    "importHelpers": true,
+    "module": "ESNext",
     "rootDir": ".",
     "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "importHelpers": true,
-    "target": "es2015",
-    "module": "esnext",
-    "lib": ["es2020", "dom"],
-    "skipLibCheck": true,
-    "skipDefaultLibCheck": true,
+    "target": "ESNext",
     "baseUrl": ".",
     "esModuleInterop": true,
+    "moduleResolution": "node",
     "paths": {
-      "@ugrab/k8s-shared": ["libs/shared/src/index.ts"]
-    }
+      "@k8sd/plugin-builder": ["libs/k8sd-plugin-builder/src/index.ts"],
+      "@k8sd/plugin-docker": ["plugins/plugin-docker/src/index.ts"],
+      "@k8sd/shared": ["libs/shared/src/index.ts"]
+    },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true
   },
   "exclude": ["node_modules", "tmp"]
 }
