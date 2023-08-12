@@ -5,6 +5,7 @@
     <scripts>
       <script value="dev" />
     </scripts>
+    <arguments value="--skip-nx-cache" />
     <node-interpreter value="project" />
     <envs />
     <method v="2" />
