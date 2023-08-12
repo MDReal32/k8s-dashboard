@@ -2,6 +2,11 @@ import * as child_process from "node:child_process";
 
 import { Logger } from "@k8sd/shared";
 
+interface ProcessResponse {
+  type: "stdout" | "stderr";
+  data: string;
+}
+type PromiseChildProcess = child_process.ChildProcess & Promise<ProcessResponse>;
 type Extension = (err: Error | string | null, line: string | null) => void;
 
 export class Executor {
@@ -48,4 +53,4 @@ export class Executor {
   }
 }
 
-export const executor = new Executor();
+export const executor = new Executor() as Omit<Executor, "cwd">;
