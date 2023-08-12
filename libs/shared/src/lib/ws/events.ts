@@ -1,4 +1,5 @@
 import { LOG_EVENTS } from "./events/log-events";
+import { PROJECT_EVENTS } from "./events/project-events";
 
 export interface WebSocketData<Data = unknown, Headers extends object = object> {
   event: string;
@@ -6,28 +7,32 @@ export interface WebSocketData<Data = unknown, Headers extends object = object> 
   headers?: Headers;
 }
 
-type ActionEvent<Event extends string, Actions extends readonly string[]> = {
-  [K in Actions[number] as Uppercase<K>]: `${Event}::${K}`;
+type ActionEvent<
+  EventName extends string,
+  Event extends string,
+  Actions extends readonly string[]
+> = { [K in EventName as Uppercase<K>]: Lowercase<Event> } & {
+  [K in Actions[number] as Uppercase<`${EventName}_${K}`>]: Lowercase<`${Event}::${K}`>;
 };
 
-export function actionEvent<Event extends string, Actions extends readonly string[]>(
-  event: Event,
-  ...actions: Actions
-) {
-  return Object.assign<Omit<Event, string>, ActionEvent<Event, Actions>>(
-    event,
-    actions.reduce(
-      (acc, action) => ({
-        ...acc,
-        [action.toUpperCase()]: `${event}::${action}`
-      }),
-      {} as ActionEvent<Event, Actions>
-    )
+export function actionEvent<
+  EventName extends string,
+  Event extends string,
+  Actions extends readonly string[]
+>(name: EventName, event: Event, ...actions: Actions) {
+  return actions.reduce(
+    (acc, action) => ({
+      ...acc,
+      [`${name}_${action}`.toUpperCase()]: `ws-events::${event}::${action}`.toLowerCase()
+    }),
+    { [name.toUpperCase()]: event.toLowerCase() } as ActionEvent<EventName, Event, Actions>
   );
 }
 
 export const WS_EVENTS = {
   LOG: LOG_EVENTS,
-  WELCOME: "ws-events::welcome",
-  GOODBYE: "ws-events::goodbye"
-};
+  PROJECT: PROJECT_EVENTS,
+  WELCOME: "welcome",
+  INTRODUCE: "introduce",
+  GOODBYE: "goodbye"
+} as const;
