@@ -1,5 +1,5 @@
 import { execSync } from "node:child_process";
-import {
+import type {
   V1ConfigMap,
   V1Deployment,
   V1Ingress,
