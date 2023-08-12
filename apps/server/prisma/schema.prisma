@@ -1,0 +1,51 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model ProjectRepository {
+  id      String   @id @default(uuid())
+  url     String
+  branch  String
+  ssh     Boolean
+  Project Project?
+}
+
+enum Provider {
+  NONE
+  DOCKER
+  DOCKER_COMPOSE
+  HELM
+  KUBERNETES
+  K8S
+}
+
+model ProjectCi {
+  id       String   @id @default(uuid())
+  dir      String
+  provider Provider @default(NONE)
+  Project  Project?
+}
+
+enum Status {
+  PROJECT_CREATING
+  PROJECT_INITIALIZING
+  PROJECT_INITIALIZED
+  RETRIEVING_PROVIDER // TODO: automatically detect provider
+  INSTALLING_PROVIDER // TODO: docker compose up / kubectl apply / helm install'
+  PROVIDER_INSTALLED
+}
+
+model Project {
+  id     String            @id @default(uuid())
+  name   String
+  repo   ProjectRepository @relation(fields: [repoId], references: [id])
+  repoId String            @unique
+  ci     ProjectCi         @relation(fields: [ciId], references: [id])
+  ciId   String            @unique
+  status Status            @default(PROJECT_CREATING)
+}
