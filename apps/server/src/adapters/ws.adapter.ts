@@ -1,5 +1,3 @@
-import * as crypto from "node:crypto";
-
 import { WebSocket } from "ws";
 import { WsAdapter as _WsAdapter } from "@nestjs/platform-ws";
 import { MessageMappingProperties } from "@nestjs/websockets";
@@ -22,7 +20,6 @@ export class WsAdapter extends _WsAdapter {
     transform: <T>(data: T) => Observable<T>
   ) {
     super.bindMessageHandlers(client, handlers, transform);
-    client.id = crypto.randomBytes(16).toString("hex");
 
     const close$ = fromEvent(client, CLOSE_EVENT).pipe(share(), first());
     fromEvent(client, "message")
