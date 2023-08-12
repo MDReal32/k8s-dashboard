@@ -51,11 +51,14 @@ class ConsoleLogger extends _ConsoleLogger {
 
 @Injectable()
 export class Logger extends _Logger {
-  private readonly appName = process.env["APP_NAME"] || "K8SD";
-  private readonly file = process.env["LOG_FILE"] || "k8sd.log";
+  private readonly appName;
+  private readonly file;
 
-  constructor(context: string, options?: { timestamp: boolean }) {
+  constructor(context: string, options?: { timestamp?: boolean; appName?: string; file?: string }) {
     super(context, options);
+    this.appName = options?.appName || "K8SD";
+    this.file = options?.file || "k8sd.log";
+
     this.localInstanceRef = new ConsoleLogger(
       context,
       { appName: this.appName, file: this.file },
