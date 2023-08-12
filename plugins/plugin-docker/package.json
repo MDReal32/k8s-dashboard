@@ -1,0 +1,12 @@
+{
+  "name": "@k8sd/plugin-docker",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.cjs",
+  "dependencies": {
+    "@k8sd/plugin-builder": "0.0.1"
+  },
+  "devDependencies": {
+    "@nx/esbuild": "16.6.0"
+  }
+}
