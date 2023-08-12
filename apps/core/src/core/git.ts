@@ -37,7 +37,7 @@ export class Git extends Command {
   }
 
   protected cmd(...command: (string | string[])[]): string {
-    return super.cmd("git", ...command);
+    return super.cmd(this.which("git"), ...command);
   }
 }
 
