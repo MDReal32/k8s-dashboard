@@ -1,13 +1,8 @@
-import { cp } from "node:fs/promises";
-import { resolve } from "node:path";
-
 import { BadRequestException, Injectable } from "@nestjs/common";
 
 import { Logger, WS_EVENTS } from "@k8sd/shared";
 
-import { GitService } from "../git/git.service";
 import { ProjectInitDto } from "./dto/project-init.dto";
-import { Config } from "./utils/config";
 import { ProjectUpdateDto } from "./dto/project-update.dto";
 import { BaseService } from "../base/base.service";
 
