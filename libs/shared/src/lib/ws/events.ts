@@ -1,8 +1,8 @@
 import { LOG_EVENTS } from "./events/log-events";
 
-export interface WebSocketResponse<Data = unknown, Headers extends object = object> {
+export interface WebSocketData<Data = unknown, Headers extends object = object> {
   event: string;
-  data: Data;
+  data?: Data;
   headers?: Headers;
 }
 

@@ -6,12 +6,12 @@ import { MessageMappingProperties } from "@nestjs/websockets";
 import { CLOSE_EVENT } from "@nestjs/websockets/constants";
 import { first, fromEvent, map, Observable, share, takeUntil } from "rxjs";
 
-import { WebSocketResponse } from "@ugrab/k8s-shared";
+import { WebSocketData } from "@k8sd/shared";
 
 declare module "ws" {
   interface WebSocket {
     id: string;
-    message: WebSocketResponse;
+    message: WebSocketData;
   }
 }
 

@@ -1,7 +1,7 @@
 import { WebSocket } from "ws";
 import { Injectable } from "@nestjs/common";
 
-import { WebSocketResponse, WS_EVENTS } from "@ugrab/k8s-shared";
+import { WebSocketData, WS_EVENTS } from "@k8sd/shared";
 
 @Injectable()
 export class BaseService {
@@ -28,11 +28,11 @@ export class BaseService {
   ): void;
   protected broadcast<T, H extends object>(
     client: WebSocket | string,
-    payload: WebSocketResponse<T, H>
+    payload: WebSocketData<T, H>
   ): void;
   protected broadcast<T, H extends object>(
     client: WebSocket | string,
-    eventOrData: string | WebSocketResponse<T, H>,
+    eventOrData: string | WebSocketData<T, H>,
     data?: T,
     headers?: H
   ) {
@@ -45,7 +45,7 @@ export class BaseService {
       headers = eventOrData.headers;
     }
 
-    const response: WebSocketResponse<T> = { event, data, headers };
+    const response: WebSocketData<T> = { event, data, headers };
     const foundClient = typeof client === "string" ? this.idClientMap.get(client) : client;
     foundClient.send(JSON.stringify(response));
   }
