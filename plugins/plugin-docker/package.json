@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.cjs",
   "dependencies": {
-    "@k8sd/plugin-builder": "0.0.1"
+    "@k8sd/plugin-builder": "workspace:^",
+    "@k8sd/plugin-sdk": "workspace:^"
   },
   "devDependencies": {
-    "@nx/esbuild": "16.6.0"
+    "@nx/esbuild": "16.6.0",
+    "@types/node": "^20.4.10"
   }
 }
