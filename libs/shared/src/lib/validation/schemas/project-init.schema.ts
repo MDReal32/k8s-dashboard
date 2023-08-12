@@ -29,17 +29,7 @@ export const projectInitSchema = z.object({
   ci: z
     .object({
       dir: z.string().describe("CI directory relative to root").optional(),
-      provider: z
-        .enum([
-          $Enums.Provider.NONE,
-          $Enums.Provider.DOCKER,
-          $Enums.Provider.DOCKER_COMPOSE,
-          $Enums.Provider.HELM,
-          $Enums.Provider.KUBERNETES,
-          $Enums.Provider.K8S
-        ])
-        .describe("Pre-defined CI provider")
-        .optional()
+      provider: z.string().describe("Pre-defined CI provider").optional()
     })
     .optional()
 });
