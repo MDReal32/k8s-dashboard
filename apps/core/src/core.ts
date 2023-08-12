@@ -12,8 +12,6 @@ import { Queue } from "./utils/queue";
 
 import * as pkgJson from "../package.json";
 
-export declare type UnwrapPromise<P> = P extends Promise<infer R> ? R : P;
-
 export interface WebsocketData<T> {
   data: T;
   headers: object;
