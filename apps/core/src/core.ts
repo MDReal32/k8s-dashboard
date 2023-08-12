@@ -2,11 +2,10 @@ import { Observable } from "rxjs";
 import { z, ZodType } from "zod";
 import { Promisable } from "type-fest";
 
-import { CORE_APP_NAME, Logger, WS_EVENTS } from "@k8sd/shared";
+import { Executor, CORE_APP_NAME, Logger, WS_EVENTS } from "@k8sd/shared";
 import { Plugin, fetchPlugins, retrievePlugins } from "@k8sd/plugin-builder";
 
 import { WebsocketClient } from "./utils/websocket-client";
-import { Executor } from "./helpers/executor";
 import { Git } from "./core/git";
 import { Data } from "./types/data";
 import { Queue } from "./utils/queue";
