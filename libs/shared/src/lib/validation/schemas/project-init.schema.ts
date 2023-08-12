@@ -1,9 +1,20 @@
 import { z } from "zod";
+import { $Enums } from "@prisma/client";
 
 import { GITHUB_VALIDATE_RE } from "../../regex";
 
 export const projectInitSchema = z.object({
-  name: z.string({ description: "Name of project" }).optional(),
+  name: z.string({ description: "Name of project" }),
+  status: z
+    .enum([
+      $Enums.Status.PROJECT_CREATING,
+      $Enums.Status.PROJECT_INITIALIZING,
+      $Enums.Status.PROJECT_INITIALIZED,
+      $Enums.Status.RETRIEVING_PROVIDER,
+      $Enums.Status.INSTALLING_PROVIDER,
+      $Enums.Status.PROVIDER_INSTALLED
+    ])
+    .optional(),
   repo: z
     .object({
       url: z
@@ -19,7 +30,14 @@ export const projectInitSchema = z.object({
     .object({
       dir: z.string().describe("CI directory relative to root").optional(),
       provider: z
-        .enum(["docker", "docker-compose", "k8s", "kubernetes", "helm"])
+        .enum([
+          $Enums.Provider.NONE,
+          $Enums.Provider.DOCKER,
+          $Enums.Provider.DOCKER_COMPOSE,
+          $Enums.Provider.HELM,
+          $Enums.Provider.KUBERNETES,
+          $Enums.Provider.K8S
+        ])
         .describe("Pre-defined CI provider")
         .optional()
     })
