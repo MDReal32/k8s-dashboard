@@ -10,7 +10,10 @@
   ],
   "scripts": {
     "dev": "nx run-many -t serve",
-    "dev:server": "nx run server:serve"
+    "dev:server": "nx run server:serve",
+    "plugin:docker:g": "rm -rf plugins/plugin-docker && nx g @k8sd/plugin-builder:plugin plugin-docker --scope=k8sd",
+    "prisma:migrate": "yarn workspace @k8sd/server prisma:migrate",
+    "prisma:serve": "yarn workspace @k8sd/server prisma:serve"
   },
   "dependencies": {
     "tslib": "2.3.0"
