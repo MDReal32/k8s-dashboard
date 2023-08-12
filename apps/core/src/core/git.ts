@@ -33,8 +33,8 @@ export class Git extends Command {
     return this.executor.run(this.cmd("remote", "add", name, url));
   }
 
-  fetch(name?: string, options?: GitFetchOptions) {
-    return this.executor.run(this.cmd("fetch", name, this.getArgs(options)));
+  fetch(options?: GitFetchOptions) {
+    return this.executor.run(this.cmd("fetch", this.getArgs(options)));
   }
 
   pull(name?: string, options?: GitPullOptions) {
