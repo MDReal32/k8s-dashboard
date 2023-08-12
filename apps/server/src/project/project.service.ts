@@ -9,12 +9,15 @@ import { GitService } from "../git/git.service";
 import { ProjectInitDto } from "./dto/project-init.dto";
 import { Config } from "./utils/config";
 import { ProjectUpdateDto } from "./dto/project-update.dto";
+import { BaseService } from "../base/base.service";
 
 @Injectable()
-export class ProjectService {
+export class ProjectService extends BaseService {
   private readonly logger = new Logger("ProjectService");
 
-  constructor(private readonly gitService: GitService) {}
+  constructor(private readonly prisma: PrismaService) {
+    super();
+  }
 
   async init(options: ProjectInitDto) {
     // const repo = options.repositoryUrl.match(GITHUB_VALIDATE_RE);
