@@ -3,7 +3,7 @@ import { resolve } from "node:path";
 
 import { BadRequestException, Injectable } from "@nestjs/common";
 
-import { GITHUB_VALIDATE_RE, Logger } from "@ugrab/k8s-shared";
+import { Logger, WS_EVENTS } from "@k8sd/shared";
 
 import { GitService } from "../git/git.service";
 import { ProjectInitDto } from "./dto/project-init.dto";

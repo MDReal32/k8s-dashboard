@@ -1,6 +1,6 @@
 import { NestFactory } from "@nestjs/core";
 
-import { Logger } from "@ugrab/k8s-shared";
+import { Logger } from "@k8sd/shared";
 
 import { AppModule } from "./app.module";
 import { WsAdapter } from "./adapters/ws.adapter";

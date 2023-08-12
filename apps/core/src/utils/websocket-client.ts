@@ -1,6 +1,6 @@
 import { WebSocket } from "ws";
 
-import { Logger, WebSocketResponse } from "@ugrab/k8s-shared";
+import { Logger } from "@k8sd/shared";
 
 export class WebsocketClient<T> {
   private ws: WebSocket;

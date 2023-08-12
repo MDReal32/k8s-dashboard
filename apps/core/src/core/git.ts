@@ -1,5 +1,5 @@
-import { executor, Executor } from "../helpers/executor";
-import { Logger } from "@ugrab/k8s-shared";
+import { Logger } from "@k8sd/shared";
+
 import { Command } from "./command";
 
 interface GitBaseOptions {

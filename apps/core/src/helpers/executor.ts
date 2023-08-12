@@ -1,6 +1,6 @@
 import * as child_process from "child_process";
 
-import { Logger } from "@ugrab/k8s-shared";
+import { Logger } from "@k8sd/shared";
 
 type Extension = (err: Error | string | null, line: string | null) => void;
 
