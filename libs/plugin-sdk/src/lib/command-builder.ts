@@ -35,15 +35,35 @@ export class CommandBuilder {
     return this;
   }
 
-  and() {
+  and(cmd = this.rootCommand) {
     this.args.push("&&");
-    this.args.push(this.rootCommand);
+    this.args.push(cmd);
+    this.rootCommand = cmd;
     return this;
   }
 
-  or() {
+  or(cmd = this.rootCommand) {
     this.args.push("||");
-    this.args.push(this.rootCommand);
+    this.args.push(cmd);
+    this.rootCommand = cmd;
+    return this;
+  }
+
+  pipe(cmd = this.rootCommand) {
+    this.args.push("|");
+    this.args.push(cmd);
+    this.rootCommand = cmd;
+    return this;
+  }
+
+  input(path: string) {
+    this.args.push("<");
+    this.args.push(path);
+    return this;
+  }
+
+  output() {
+    this.args.push(">");
     return this;
   }
 
