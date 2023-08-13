@@ -62,6 +62,5 @@
       }
     }
   },
-  "implicitDependencies": ["plugin-*"],
   "tags": []
 }
