@@ -91,12 +91,12 @@ export const plugin = (): Plugin => {
       const namespaces = namespaceResponse.data.map(ns => ns.name);
 
       if (!namespaces.includes(ctx.name)) {
-        ctx.executor.sync(
-          new CommandBuilder(ctx.executor.which("kubectl"))
-            .addCommand("create")
-            .addArgument("namespace", ctx.name)
-            .toString()
-        );
+        try {
+          await lastValueFrom(ctx.api.k8s.namespace.post$(ctx.name));
+        } catch (e) {
+          ctx.logger.error(e);
+          throw new Error(e);
+        }
       }
 
       const cmd = new CommandBuilder(ctx.executor.which("envsubst"))

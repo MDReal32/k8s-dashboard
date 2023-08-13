@@ -27,6 +27,15 @@ export const api = {
         fromFetch<Response<{ id: string; name: string; version: string }[]>>(
           `${baseUrl}/k8s/v1/namespace/_`,
           { selector: response => response.json() }
+        ),
+      post$: (name: string) =>
+        fromFetch<Response<{ id: string; name: string; version: string }>>(
+          `${baseUrl}/k8s/v1/namespace`,
+          {
+            selector: response => response.json(),
+            method: "POST",
+            body: JSON.stringify({ name })
+          }
         )
     }
   },
