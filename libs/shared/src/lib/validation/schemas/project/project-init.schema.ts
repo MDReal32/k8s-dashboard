@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { $Enums } from "@prisma/client";
 
-import { GITHUB_VALIDATE_RE } from "../../regex";
+import { GITHUB_VALIDATE_RE } from "../../../regex";
 
 export const projectInitSchema = z.object({
   name: z.string({ description: "Name of project" }),
