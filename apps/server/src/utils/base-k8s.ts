@@ -3,6 +3,7 @@ import type {
   V1ConfigMap,
   V1Deployment,
   V1Ingress,
+  V1Namespace,
   V1Pod,
   V1Secret,
   V1Service,
@@ -35,6 +36,10 @@ interface BaseMetadata {
 }
 
 export class BaseK8s {
+  getNamespaceResource(ns: V1Namespace) {
+    return this.baseResource(ns);
+  }
+
   protected podResource(pod: V1Pod) {
     return this.baseResource(pod, {
       metadata: {
