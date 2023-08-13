@@ -1,5 +1,5 @@
 {
-  "name": "@ugrab/k8s-dashboard",
+  "name": "@k8sd/monorepo",
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "targets": {
     "local-registry": {

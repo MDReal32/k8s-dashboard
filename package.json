@@ -1,5 +1,5 @@
 {
-  "name": "@ugrab/k8s-dashboard",
+  "name": "@k8sd/monorepo",
   "version": "0.0.0-development",
   "private": true,
   "license": "MIT",
