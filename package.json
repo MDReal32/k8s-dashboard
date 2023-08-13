@@ -11,7 +11,7 @@
   "scripts": {
     "dev": "nx run-many -t serve",
     "dev:server": "nx run server:serve",
-    "plugin:docker:g": "rm -rf plugins/plugin-docker && nx g @k8sd/plugin-builder:plugin plugin-docker --scope=k8sd"
+    "plugin:generate": "node tools/scripts/generate-plugin.mjs"
   },
   "dependencies": {
     "tslib": "2.6.1"
