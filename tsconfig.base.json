@@ -13,6 +13,7 @@
     "paths": {
       "@k8sd/plugin-builder": ["libs/k8sd-plugin-builder/src/index.ts"],
       "@k8sd/plugin-docker": ["plugins/plugin-docker/src/index.ts"],
+      "@k8sd/plugin-helm": ["plugins/plugin-helm/src/index.ts"],
       "@k8sd/plugin-sdk": ["libs/plugin-sdk/src/index.ts"],
       "@k8sd/shared": ["libs/shared/src/index.ts"]
     },
