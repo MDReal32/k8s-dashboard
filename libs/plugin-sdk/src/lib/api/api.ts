@@ -4,7 +4,7 @@ import { PartialDeep } from "type-fest";
 
 import { projectInitSchema } from "@k8sd/shared";
 
-import { Data } from "../types/data";
+import { Data } from "../types";
 
 export const port = +process.env.SERVER_PORT || 3000;
 export const host = process.env.SERVER_HOST || "localhost";
@@ -21,6 +21,15 @@ interface Response<TData> {
 }
 
 export const api = {
+  k8s: {
+    namespace: {
+      get$: () =>
+        fromFetch<Response<{ id: string; name: string; version: string }[]>>(
+          `${baseUrl}/k8s/v1/namespace/_`,
+          { selector: response => response.json() }
+        )
+    }
+  },
   project: {
     patch$: (id: string, data: PartialDeep<Data<typeof projectInitSchema, Project>>) =>
       fromFetch<Response<Data<typeof projectInitSchema, Project>>>(`${baseUrl}/v1/project/${id}`, {
