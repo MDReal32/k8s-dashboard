@@ -9,12 +9,12 @@ import {
   MonoTypeOperatorFunction,
   Observable,
   of,
+  OperatorFunction,
   switchMap,
   tap,
   toArray
 } from "rxjs";
 import { PartialDeep } from "type-fest";
-import { ZodType } from "zod";
 
 import { projectInitSchema, File } from "@k8sd/shared";
 import { PluginContext, Plugin } from "@k8sd/plugin-builder";
@@ -26,11 +26,13 @@ import { Data } from "../types";
 import { Queue } from "../utils/queue";
 import { WebsocketData } from "../core";
 
-export class Steps<ZodSchema extends ZodType, PrismaModel> extends Queue {
+type Datum = Data<typeof projectInitSchema, Project>;
+
+export class Steps extends Queue {
   private readonly helpers = helpers;
   private readonly sortedPlugins: Record<Plugin["name"], Plugin>;
 
-  constructor(protected readonly options: WebsocketData<Data<ZodSchema, PrismaModel>>) {
+  constructor(protected readonly options: WebsocketData<Datum>) {
     super();
     this.sortedPlugins = this.options.plugins.reduce((acc, plugin) => {
       acc[plugin.name] = plugin;
@@ -39,9 +41,7 @@ export class Steps<ZodSchema extends ZodType, PrismaModel> extends Queue {
   }
 
   static prepare() {
-    return async <ZodSchema extends ZodType, PrismaModel>(
-      options: WebsocketData<Data<ZodSchema, PrismaModel>>
-    ) => {
+    return async (options: WebsocketData<Datum>) => {
       new Steps(options).prepare();
     };
   }
@@ -187,8 +187,10 @@ export class Steps<ZodSchema extends ZodType, PrismaModel> extends Queue {
     return of(void 0);
   }
 
-  private updateProject$(partialData: PartialDeep<Data<typeof projectInitSchema, Project>>) {
-    return switchMap(() =>
+  private updateProject$<T>(
+    partialData: PartialDeep<Datum> | ((data: T) => PartialDeep<Datum>)
+  ): OperatorFunction<T, Datum> {
+    return switchMap(data =>
       api.project
         .patch$(this.options.data.id, partialData)
         .pipe(tap(project => merge(this.options.data, project.data)))
