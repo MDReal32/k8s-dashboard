@@ -1,10 +1,4 @@
-import { executor } from "@k8sd/shared";
-
 export class Command {
-  protected which(cmd: string) {
-    return executor.sync(`which ${cmd}`);
-  }
-
   protected cmd(...command: (string | string[])[]) {
     return (Array.isArray(command) ? command : [command])
       .reduce<string>((cmd, arg) => `${cmd} ${Array.isArray(arg) ? arg.join(" ") : arg}`, "")

@@ -100,6 +100,10 @@ export class Executor {
     });
   }
 
+  which(cmd: string) {
+    return this.sync(`which ${cmd}`);
+  }
+
   private command(command: string | string[]) {
     return Array.isArray(command) ? command.join(" ") : command;
   }
