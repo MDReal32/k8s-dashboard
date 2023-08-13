@@ -2,9 +2,13 @@ import { Promisable } from "type-fest";
 
 import { Logger, File, Executor } from "@k8sd/shared";
 
+import type { api } from "../api/api";
+
 export interface PluginContext {
   name: string;
+  root: string;
   ciRoot: string;
+  api: typeof api;
 
   logger: Logger;
   executor: Executor;

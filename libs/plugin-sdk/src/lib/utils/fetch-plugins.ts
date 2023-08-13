@@ -1,9 +1,7 @@
 import { PackageJson } from "type-fest";
 
-import { Plugin } from "@k8sd/plugin-builder";
+import { Plugin } from "@k8sd/plugin-sdk";
 import { Logger } from "@k8sd/shared";
-
-import rootPkgJson from "../../package.json";
 
 export const retrievePlugins = (pkgJson: PackageJson) => {
   const deps = [
@@ -13,16 +11,16 @@ export const retrievePlugins = (pkgJson: PackageJson) => {
 
   return deps
     .filter(dep => dep.startsWith("@k8sd/plugin-"))
-    .filter(dep => dep !== rootPkgJson.name);
+    .filter(dep => dep !== "@k8sd/plugin-builder");
 };
 
 export const fetchPlugins = async (deps: string[]): Promise<Plugin[]> => {
   const logger = new Logger("PluginBuilder.fetchPlugins");
 
   const promises = deps.map(dep =>
-    (import(dep) as Promise<{ default?: () => Plugin; plugin?: () => Plugin }>).then(module =>
-      (module.plugin || module.default)?.()
-    )
+    (import(dep) as Promise<{ default?: () => Plugin; plugin?: () => Plugin }>)
+      .then(module => (module.plugin || module.default)?.())
+      .then(plugin => (plugin.priority ||= 5) && plugin)
   );
 
   return Promise.all(promises)

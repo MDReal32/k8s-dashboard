@@ -1,4 +1,4 @@
-import { Plugin } from "@k8sd/plugin-builder";
+import { Plugin } from "@k8sd/plugin-sdk";
 
 import * as pkgJson from "../package.json";
 

@@ -1,7 +1,6 @@
 import * as process from "node:process";
 
-import { Plugin, PluginContext } from "@k8sd/plugin-builder";
-import { CommandBuilder } from "@k8sd/plugin-sdk";
+import { CommandBuilder, Plugin, PluginContext } from "@k8sd/plugin-sdk";
 
 import * as pkgJson from "../package.json";
 
