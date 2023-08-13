@@ -79,7 +79,7 @@ export const plugin = (): Plugin => {
 
       const platform = `${process.platform}/${getArch()}`;
 
-      const cmd = new CommandBuilder("docker");
+      const cmd = new CommandBuilder(ctx.executor.which("docker"));
 
       if (foundFiles.dockerCompose) {
         cmd.addCommand("compose").addCommand("up").addFlag("d").addFlag("build");
