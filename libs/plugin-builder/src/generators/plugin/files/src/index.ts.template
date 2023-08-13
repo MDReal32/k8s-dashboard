@@ -13,8 +13,8 @@ export const plugin = (): Plugin => {
       return true;
     },
 
-    executor(context) {
-      context.logger.log("Hello from @k8sd/example-plugin plugin");
+    install(context) {
+      context.logger.log("Hello from <%= name %> plugin");
     }
   };
 };
