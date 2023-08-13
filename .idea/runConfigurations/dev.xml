@@ -7,7 +7,9 @@
     </scripts>
     <arguments value="--skip-nx-cache" />
     <node-interpreter value="project" />
-    <envs />
+    <envs>
+      <env name="DOCKER_CONFIG_JSON" value="$(cat ~/.docker/config.json | jq -c | base64 -w 0)" />
+    </envs>
     <method v="2" />
   </configuration>
 </component>
