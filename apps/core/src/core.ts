@@ -3,11 +3,10 @@ import { z, ZodType } from "zod";
 import { Promisable } from "type-fest";
 
 import { Executor, CORE_APP_NAME, Logger, WS_EVENTS } from "@k8sd/shared";
-import { Plugin, fetchPlugins, retrievePlugins } from "@k8sd/plugin-builder";
+import { Plugin, fetchPlugins, retrievePlugins, Data } from "@k8sd/plugin-sdk";
 
 import { WebsocketClient } from "./utils/websocket-client";
 import { Git } from "./core/git";
-import { Data } from "./types";
 import { Queue } from "./utils/queue";
 
 import * as pkgJson from "../package.json";
