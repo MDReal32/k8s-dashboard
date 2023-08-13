@@ -17,12 +17,10 @@ import {
 import { PartialDeep } from "type-fest";
 
 import { projectInitSchema, File } from "@k8sd/shared";
-import { PluginContext, Plugin } from "@k8sd/plugin-builder";
+import { PluginContext, Plugin, api, Data } from "@k8sd/plugin-sdk";
 
 import * as helpers from "../helpers";
-import { api } from "../api/api";
 import { storage } from "./storage";
-import { Data } from "../types";
 import { Queue } from "../utils/queue";
 import { WebsocketData } from "../core";
 
