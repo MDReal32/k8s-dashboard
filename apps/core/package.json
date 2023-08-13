@@ -3,6 +3,7 @@
   "dependencies": {
     "@k8sd/plugin-builder": "workspace:^",
     "@k8sd/plugin-docker": "workspace:^",
+    "@k8sd/plugin-helm": "workspace:^",
     "@k8sd/shared": "workspace:^",
     "@prisma/client": "5.1.1",
     "@swc/helpers": "0.5.1",
