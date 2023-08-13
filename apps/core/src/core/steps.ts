@@ -102,11 +102,6 @@ export class Steps<ZodSchema extends ZodType, PrismaModel> extends Queue {
   retrieveProvider() {
     const ctx = this.getPluginContext();
 
-    const detectedPlugins = this.options.plugins.filter(plugin => plugin.detect(ctx));
-    const prioritizedPlugins = detectedPlugins;
-
-    const plugin = prioritizedPlugins[0];
-
     return this.next(() =>
       this.none$().pipe(
         switchMap(() => of(...this.options.plugins)),
