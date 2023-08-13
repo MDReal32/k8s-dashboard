@@ -11,6 +11,10 @@ export class Storage {
     return resolve(this.root, name);
   }
 
+  getRepoPath(name: string) {
+    return resolve(this.getPath(name), "repo");
+  }
+
   createFile(path: string, content: string | Buffer | Stream) {
     const filePath = this.getPath(path);
     this.createDirectory(dirname(filePath));

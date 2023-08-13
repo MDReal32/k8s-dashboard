@@ -109,10 +109,10 @@ export class Steps extends Queue {
         // TODO: Handle prioritizedPlugins.length. pick most prioritized plugins. it can be 1 or more than 1 plugins.
         map(plugins => plugins[0]),
         tap<Plugin>(plugin => this.options.logger.log(`Detected provider ${plugin.name}`)),
-        this.updateProject$({
+        this.updateProject$(plugin => ({
           status: $Enums.Status.INSTALLING_PROVIDER,
           ci: { provider: plugin.name }
-        })
+        }))
       )
     );
   }
@@ -138,10 +138,12 @@ export class Steps extends Queue {
 
   private getPluginContext(): PluginContext {
     const self = this;
-    const ciRoot = resolve(storage.getPath(this.options.data.name), this.options.data.ci.dir);
+    const ciRoot = resolve(storage.getRepoPath(this.options.data.name), this.options.data.ci.dir);
 
     return {
       name: this.options.data.name,
+      root: storage.getPath(this.options.data.name),
+      api,
       ciRoot,
 
       logger: this.options.logger,
@@ -190,8 +192,14 @@ export class Steps extends Queue {
   ): OperatorFunction<T, Datum> {
     return switchMap(data =>
       api.project
-        .patch$(this.options.data.id, partialData)
-        .pipe(tap(project => merge(this.options.data, project.data)))
+        .patch$(
+          this.options.data.id,
+          typeof partialData === "function" ? partialData(data) : partialData
+        )
+        .pipe(
+          map(project => project.data),
+          tap(project => merge(this.options.data, project))
+        )
     );
   }
 

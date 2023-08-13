@@ -22,9 +22,9 @@ export class Git extends Command {
   }
 
   init(name: string, options: GitInitOptions = {}) {
-    storage.createDirectory(name);
-    this.logger.log(`Initializing git repository in ${storage.getPath(name)}`);
-    this.executor.cwd(storage.getPath(name));
+    storage.createDirectory(storage.getRepoPath(name));
+    this.logger.log(`Initializing git repository in ${storage.getRepoPath(name)}`);
+    this.executor.cwd(storage.getRepoPath(name));
     return this.executor.run(this.cmd("init", this.getArgs(options)));
   }
 
@@ -45,7 +45,7 @@ export class Git extends Command {
   }
 
   protected cmd(...command: (string | string[])[]): string {
-    return super.cmd(this.which("git"), ...command);
+    return super.cmd(this.executor.which("git"), ...command);
   }
 }
 
