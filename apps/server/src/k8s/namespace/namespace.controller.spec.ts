@@ -1,18 +1,18 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { NamespaceController } from './namespace.controller';
+import { Test, TestingModule } from "@nestjs/testing";
+import { NamespaceController } from "./namespace.controller";
 
-describe('NamespaceController', () => {
+describe("NamespaceController", () => {
   let controller: NamespaceController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [NamespaceController],
+      controllers: [NamespaceController]
     }).compile();
 
     controller = module.get<NamespaceController>(NamespaceController);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 });
