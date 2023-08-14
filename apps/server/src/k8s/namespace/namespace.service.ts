@@ -26,7 +26,7 @@ export class NamespaceService extends BaseK8s {
   }
 
   async deleteNamespace(namespace: string) {
-    await this.catch(this.k8sApi.deleteNamespace(namespace));
+    await this.catch(this.k8sCoreApi.deleteNamespace(namespace));
     return { message: `Namespace ${namespace} deleted` };
   }
 }

@@ -9,7 +9,7 @@ export class ServiceService extends BaseK8s {
       return this.allNamespace(this.getServiceResource);
     }
 
-    const services = await this.catch(this.k8sApi.listNamespacedService(namespace));
+    const services = await this.catch(this.k8sCoreApi.listNamespacedService(namespace));
 
     return this.arrayOf(services.body.items, service => ({
       spec: {
