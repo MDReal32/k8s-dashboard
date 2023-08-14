@@ -65,8 +65,8 @@ export class BaseK8s {
   }
 
   protected async getAllNamespaces() {
-    const namespaces = await this.catch(this.k8sApi.listNamespace());
-    return namespaces.body.items.map(ns => this.getNamespaceResource(ns));
+    const namespaces = await this.catch(this.k8sCoreApi.listNamespace());
+    return namespaces.body.items.map(ns => this.baseResource(ns));
   }
 
   protected async allNamespace<T extends Resource>(
