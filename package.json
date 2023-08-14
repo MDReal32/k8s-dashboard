@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "nx run-many -t serve",
     "dev:server": "nx run server:serve",
+    "nest:g:full": "./scripts/nest:g:full.sh",
     "plugin:generate": "node tools/scripts/generate-plugin.mjs"
   },
   "dependencies": {
