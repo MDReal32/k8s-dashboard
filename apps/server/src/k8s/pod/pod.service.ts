@@ -15,6 +15,9 @@ export class PodService extends BaseK8s {
     const pods = await this.catch(this.k8sCoreApi.listNamespacedPod(namespace));
     return this.arrayOf(pods.body.items, this.getPod.bind(this));
   }
+
+  getPod(pod: V1Pod) {
+    return {
       metadata: {
         owners: pod.metadata.ownerReferences?.map(owner => ({
           id: owner.uid,
@@ -24,23 +27,9 @@ export class PodService extends BaseK8s {
       },
       spec: {
         node: this.getNode(pod.spec.nodeName),
-        containers: pod.spec.containers?.map(container => ({
-          image: {
-            name: container.image,
-            pullPolicy: container.imagePullPolicy
-          },
-          ports: container.ports,
-          resource: container.resources,
-          volume: {
-            mounts: container.volumeMounts,
-            devices: container.volumeDevices
-          }
-        })),
-        volumes: pod.spec.volumes?.map(volume => ({
-          name: volume.name,
-          sources: volume.projected?.sources
-        })),
-        secrets: pod.spec.imagePullSecrets?.map(secret => secret.name),
+        containers: this.getContainers(pod.spec.containers),
+        volumes: this.getVolumes(pod.spec.volumes),
+        secrets: this.getSecrets(pod.spec.imagePullSecrets),
         restart: {
           policy: pod.spec.restartPolicy
         },
@@ -50,7 +39,7 @@ export class PodService extends BaseK8s {
           }
         }
       }
-    }));
+    };
   }
 
   private getNode(nodeName: string) {
