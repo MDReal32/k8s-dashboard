@@ -1,5 +1,7 @@
 import { execSync } from "node:child_process";
-import type {
+import {
+  CoreV1Api,
+  KubeConfig,
   V1ConfigMap,
   V1Deployment,
   V1Ingress,
@@ -10,6 +12,9 @@ import type {
   V1StatefulSet
 } from "@kubernetes/client-node";
 import { merge } from "lodash";
+import { BadRequestException } from "@nestjs/common";
+
+import { Logger } from "@k8sd/shared";
 
 export type Resource =
   | V1Pod
@@ -19,9 +24,6 @@ export type Resource =
   | V1Ingress
   | V1ConfigMap
   | V1Secret;
-
-export type PodResource = ReturnType<BaseK8s["podResource"]>;
-export type ServiceResource = ReturnType<BaseK8s["serviceResource"]>;
 
 interface BaseMetadata {
   metadata: {
@@ -36,58 +38,82 @@ interface BaseMetadata {
 }
 
 export class BaseK8s {
-  getNamespaceResource(ns: V1Namespace) {
+  private readonly _kc: KubeConfig;
+  private __retry = 0;
+  private __maxRetry = 1e2;
+
+  constructor(protected readonly logger: Logger) {
+    this._kc = new KubeConfig();
+    this.makeApiClient();
+  }
+
+  private _k8sApi: CoreV1Api;
+
+  get k8sApi(): CoreV1Api {
+    return this._k8sApi;
+  }
+
+  get kc(): KubeConfig {
+    return this._kc;
+  }
+
+  protected async getAllNamespaces() {
+    const namespaces = await this.catch(this.k8sApi.listNamespace());
+    return namespaces.body.items.map(ns => this.getNamespaceResource(ns));
+  }
+
+  protected async allNamespace<T extends Resource>(
+    method: (namespace: string) => Promise<T[]> | T[]
+  ): Promise<T[]> {
+    const namespaces = await this.getAllNamespaces();
+    const namespacedResourcePromises = namespaces.map(ns => method.call(this, ns.metadata.name));
+    const namespacedResources = await Promise.all(namespacedResourcePromises);
+    return namespacedResources.flat();
+  }
+
+  protected getNamespaceResource(ns: V1Namespace) {
     return this.baseResource(ns);
   }
 
-  protected podResource(pod: V1Pod) {
-    return this.baseResource(pod, {
-      metadata: {
-        owners: pod.metadata.ownerReferences?.map(owner => ({
-          id: owner.uid,
-          name: owner.name,
-          kind: owner.kind
-        }))
-      },
-      spec: {
-        node: this.getNode(pod.spec.nodeName),
-        containers: pod.spec.containers?.map(container => ({
-          image: {
-            name: container.image,
-            pullPolicy: container.imagePullPolicy
-          },
-          ports: container.ports,
-          resource: container.resources,
-          volume: {
-            mounts: container.volumeMounts,
-            devices: container.volumeDevices
-          }
-        })),
-        volumes: pod.spec.volumes?.map(volume => ({
-          name: volume.name,
-          sources: volume.projected?.sources
-        })),
-        secrets: pod.spec.imagePullSecrets?.map(secret => secret.name),
-        restart: {
-          policy: pod.spec.restartPolicy
-        },
-        service: {
-          account: {
-            name: pod.spec.serviceAccountName
-          }
-        }
+  protected catch<T>(promise: Promise<T>): Promise<T> {
+    return promise.catch(error => {
+      if (["EHOSTUNREACH"].includes(error.code)) {
+        this.__retry = 0;
+        this.makeApiClient();
+        return promise;
       }
+
+      this.logger.error(error);
+      throw error;
     });
   }
 
-  protected serviceResource(service: V1Service) {
-    return this.baseResource(service, {
-      spec: {
-        type: service.spec.type,
-        app: service.spec.selector?.app,
-        ports: service.spec.ports
-      }
-    });
+  protected expect<T>(value: T | undefined, field?: string) {
+    const message = `Expected ${field ?? "value"} to be defined`;
+
+    if (value === undefined) {
+      throw new BadRequestException(message);
+    }
+
+    return value;
+  }
+
+  protected arrayOf<Value, PartialSection extends object>(
+    resources: Value | Value[],
+    partialSection?: (value: Value) => PartialSection
+  ) {
+    return Array.isArray(resources)
+      ? resources.map(res => this.baseResource(res, partialSection(res)))
+      : [this.baseResource(resources, partialSection(resources))];
+  }
+
+  protected getIpAddress(nodeName: string) {
+    switch (nodeName) {
+      case "minikube":
+        return execSync("minikube ip").toString().trim();
+      default:
+        return nodeName;
+    }
   }
 
   private baseResource<T extends Resource, P extends object>(resource: T, partial?: P) {
@@ -108,16 +134,24 @@ export class BaseK8s {
     };
   }
 
-  private getNode(nodeName: string) {
-    switch (nodeName) {
-      case "minikube":
-        return `${nodeName}/${this.minikubeIp()}`;
-      default:
-        return nodeName;
-    }
-  }
+  private makeApiClient() {
+    try {
+      this._kc.loadFromDefault();
+      this._k8sApi = this._kc.makeApiClient(CoreV1Api);
+    } catch (error) {
+      if (this.__retry === 0) this.logger.log("Kubernetes API isn't available. Retrying...");
+      else this.logger.log(`Retrying ${this.__retry}/${this.__maxRetry}...`);
 
-  private minikubeIp() {
-    return execSync("minikube ip").toString().trim();
+      this.__retry++;
+
+      let startTime = performance.now();
+      while (performance.now() - startTime < 1000) {}
+      if (this.__retry > this.__maxRetry) {
+        this.logger.error(error);
+        throw new BadRequestException("Kubernetes API isn't available", { cause: error });
+      }
+
+      return this.makeApiClient();
+    }
   }
 }
