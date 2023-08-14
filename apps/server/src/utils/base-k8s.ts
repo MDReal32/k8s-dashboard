@@ -4,6 +4,7 @@ import {
   CoreV1Api,
   KubeConfig,
   V1ConfigMap,
+  V1Container,
   V1Deployment,
   V1Ingress,
   V1Namespace,
@@ -11,6 +12,7 @@ import {
   V1Secret,
   V1Service,
   V1StatefulSet
+  V1Volume
 } from "@kubernetes/client-node";
 import { merge } from "lodash";
 import { BadRequestException } from "@nestjs/common";
@@ -67,6 +69,21 @@ export class BaseK8s {
   protected async getAllNamespaces() {
     const namespaces = await this.catch(this.k8sCoreApi.listNamespace());
     return namespaces.body.items.map(ns => this.baseResource(ns));
+  }
+
+  protected getContainers(containers: V1Container | V1Container[]) {
+    return this.arrayOfBaseResources(containers || [], container => ({
+      image: {
+        name: container.image,
+        pullPolicy: container.imagePullPolicy
+      },
+      ports: container.ports,
+      resource: container.resources,
+      volume: {
+        mounts: container.volumeMounts,
+        devices: container.volumeDevices
+      }
+    }));
   }
 
   protected getVolumes(volumes: V1Volume | V1Volume[]) {
