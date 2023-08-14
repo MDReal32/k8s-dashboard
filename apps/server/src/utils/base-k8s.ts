@@ -47,7 +47,11 @@ export class BaseK8s {
     this.makeApiClient();
   }
 
-  private _k8sApi: CoreV1Api;
+  private _k8sCoreApi: CoreV1Api;
+
+  get k8sCoreApi() {
+    return this._k8sCoreApi;
+  }
 
   get k8sApi(): CoreV1Api {
     return this._k8sApi;
