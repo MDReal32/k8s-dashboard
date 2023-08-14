@@ -17,21 +17,6 @@ export class NamespaceController {
     return this.namespaceService.getNamespace(namespace);
   }
 
-  @Get(":namespace/resource")
-  getNamespaceResources(@Param("namespace") namespace: string) {
-    return this.namespaceService.getNamespaceResources(namespace);
-  }
-
-  @Get(":namespace/resource/pod")
-  getNamespacePods(@Param("namespace") namespace: string) {
-    return this.namespaceService.getNamespacePods(namespace);
-  }
-
-  @Get(":namespace/resource/service")
-  getNamespaceServices(@Param("namespace") namespace: string) {
-    return this.namespaceService.getNamespaceServices(namespace);
-  }
-
   @Post()
   createNamespace(@Body() namespace: CreateNamespaceDto) {
     return this.namespaceService.createNamespace(namespace);
