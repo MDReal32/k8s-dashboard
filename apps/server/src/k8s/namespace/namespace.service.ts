@@ -2,12 +2,11 @@ import { Injectable } from "@nestjs/common";
 
 import { Logger } from "@k8sd/shared";
 
-import { K8sService } from "../k8s.service";
 import { CreateNamespaceDto } from "./dto/create-namespace.dto";
-import { PodResource, Resource, ServiceResource } from "../../utils/base-k8s";
+import { BaseK8s } from "../../utils/base-k8s";
 
 @Injectable()
-export class NamespaceService extends K8sService {
+export class NamespaceService extends BaseK8s {
   constructor() {
     super(new Logger("NamespaceService"));
   }
