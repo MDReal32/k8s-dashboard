@@ -11,7 +11,7 @@ import {
   V1Pod,
   V1Secret,
   V1Service,
-  V1StatefulSet
+  V1StatefulSet,
   V1Volume
 } from "@kubernetes/client-node";
 import { merge } from "lodash";
@@ -104,10 +104,6 @@ export class BaseK8s {
     const namespacedResourcePromises = namespaces.map(ns => method.call(this, ns.metadata.name));
     const namespacedResources = await Promise.all(namespacedResourcePromises);
     return namespacedResources.flat();
-  }
-
-  protected getNamespaceResource(ns: V1Namespace) {
-    return this.baseResource(ns);
   }
 
   protected catch<T>(promise: Promise<T>): Promise<T> {
