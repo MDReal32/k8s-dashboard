@@ -12,8 +12,9 @@ export class PodService extends BaseK8s {
       return this.allNamespace(this.getPodResource);
     }
 
-    return this.arrayOf(pods.body.items, pod => ({
     const pods = await this.catch(this.k8sCoreApi.listNamespacedPod(namespace));
+    return this.arrayOf(pods.body.items, this.getPod.bind(this));
+  }
       metadata: {
         owners: pod.metadata.ownerReferences?.map(owner => ({
           id: owner.uid,
