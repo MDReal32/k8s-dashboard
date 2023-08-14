@@ -1,5 +1,6 @@
 import { execSync } from "node:child_process";
 import {
+  AppsV1Api,
   CoreV1Api,
   KubeConfig,
   V1ConfigMap,
@@ -53,8 +54,10 @@ export class BaseK8s {
     return this._k8sCoreApi;
   }
 
-  get k8sApi(): CoreV1Api {
-    return this._k8sApi;
+  private _k8sAppsApi: AppsV1Api;
+
+  get k8sAppsApi() {
+    return this._k8sAppsApi;
   }
 
   get kc(): KubeConfig {
