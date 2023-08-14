@@ -7,7 +7,7 @@ import {
   V1Container,
   V1Deployment,
   V1Ingress,
-  V1Namespace,
+  V1LocalObjectReference,
   V1Pod,
   V1Secret,
   V1Service,
