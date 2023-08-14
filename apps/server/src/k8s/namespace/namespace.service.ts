@@ -13,8 +13,7 @@ export class NamespaceService extends K8sService {
   }
 
   async getAllNamespaces() {
-    const namespaces = await this.catch(this.k8sApi.listNamespace());
-    return namespaces.body.items.map(ns => this.getNamespaceResource(ns));
+    return super.getAllNamespaces();
   }
 
   async getNamespace(namespace: string) {
