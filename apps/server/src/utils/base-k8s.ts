@@ -171,7 +171,8 @@ export class BaseK8s {
   private makeApiClient() {
     try {
       this._kc.loadFromDefault();
-      this._k8sApi = this._kc.makeApiClient(CoreV1Api);
+      this._k8sCoreApi = this._kc.makeApiClient(CoreV1Api);
+      this._k8sAppsApi = this._kc.makeApiClient(AppsV1Api);
     } catch (error) {
       if (this.__retry === 0) this.logger.log("Kubernetes API isn't available. Retrying...");
       else this.logger.log(`Retrying ${this.__retry}/${this.__maxRetry}...`);
