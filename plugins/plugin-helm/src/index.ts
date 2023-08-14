@@ -1,7 +1,7 @@
 import { dirname, resolve } from "node:path";
 import { copyFileSync } from "node:fs";
 
-import { lastValueFrom } from "rxjs";
+import { filter, map, of, switchMap } from "rxjs";
 
 import { CommandBuilder, Plugin, PluginContext } from "@k8sd/plugin-sdk";
 
@@ -62,7 +62,7 @@ export const plugin = (): Plugin => {
       return !!foundFiles.helm;
     },
 
-    async install(ctx) {
+    install(ctx) {
       ctx.logger.log("Installing using @k8sd/plugin-helm");
       const foundFiles = getFile(ctx);
       const values = ctx.find(ctx.ciRoot, file => file.name === "values.yaml");
@@ -87,17 +87,6 @@ export const plugin = (): Plugin => {
       const found = apps.find(app => app.name === ctx.name);
       const newValuesFile = resolve(ctx.root, "values.yaml");
       copyFileSync(values.path, newValuesFile);
-      const namespaceResponse = await lastValueFrom(ctx.api.k8s.namespace.get$());
-      const namespaces = namespaceResponse.data.map(ns => ns.name);
-
-      if (!namespaces.includes(ctx.name)) {
-        try {
-          await lastValueFrom(ctx.api.k8s.namespace.post$(ctx.name));
-        } catch (e) {
-          ctx.logger.error(e);
-          throw new Error(e);
-        }
-      }
 
       const cmd = new CommandBuilder(ctx.executor.which("envsubst"))
         .input(newValuesFile)
@@ -108,7 +97,13 @@ export const plugin = (): Plugin => {
         .addArgument("values", "-")
         .addArgument("namespace", ctx.name);
 
-      await ctx.executor.run(cmd.toString());
+      return ctx.api.k8s.namespace.get$().pipe(
+        switchMap(response => of(...response.data)),
+        map(ns => ns.name),
+        filter(ns => ns === ctx.name),
+        switchMap(ns => (!!ns ? ctx.api.k8s.namespace.post$(ctx.name) : of(ns))),
+        switchMap(() => ctx.executor.run(cmd.toString()))
+      );
     }
   };
 };
