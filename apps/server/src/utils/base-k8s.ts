@@ -152,12 +152,8 @@ export class BaseK8s {
     }
   }
 
-  private baseResource<T extends Resource, P extends object>(resource: T, partial?: P) {
-    return merge(this.baseMetadata(resource), partial);
-  }
-
-  private baseMetadata<T extends Resource>(resource: T): BaseMetadata {
-    return {
+  protected baseResource<T extends Resource, P extends object>(resource: T, partial?: P) {
+    const baseMetadata: BaseMetadata = {
       metadata: {
         id: resource.metadata.uid,
         name: resource.metadata.name,
@@ -168,6 +164,8 @@ export class BaseK8s {
         annotations: resource.metadata.annotations
       }
     };
+
+    return merge(baseMetadata, partial);
   }
 
   private makeApiClient() {
