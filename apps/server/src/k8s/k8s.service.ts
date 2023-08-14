@@ -27,6 +27,19 @@ export class K8sService extends BaseK8s {
     return this._kc;
   }
 
+  catch<T>(promise: Promise<T>): Promise<T> {
+    return promise.catch(error => {
+      if (["EHOSTUNREACH"].includes(error.code)) {
+        this.__retry = 0;
+        this.makeApiClient();
+        return promise;
+      }
+
+      this.logger.error(error);
+      throw error;
+    });
+  }
+
   private makeApiClient() {
     try {
       this._kc.loadFromDefault();
