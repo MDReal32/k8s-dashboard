@@ -16,13 +16,13 @@ export class NamespaceService extends BaseK8s {
   }
 
   async getNamespace(namespace: string) {
-    const ns = await this.catch(this.k8sApi.readNamespace(namespace));
-    return this.getNamespaceResource(ns.body);
+    const ns = await this.catch(this.k8sCoreApi.readNamespace(namespace));
+    return this.baseResource(ns.body);
   }
 
   async createNamespace(data: CreateNamespaceDto) {
-    const ns = await this.catch(this.k8sApi.createNamespace({ metadata: { name: data.name } }));
-    return this.getNamespaceResource(ns.body);
+    const ns = await this.catch(this.k8sCoreApi.createNamespace({ metadata: { name: data.name } }));
+    return this.baseResource(ns.body);
   }
 
   async deleteNamespace(namespace: string) {
