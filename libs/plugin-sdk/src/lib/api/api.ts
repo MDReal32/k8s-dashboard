@@ -34,7 +34,11 @@ export const api = {
           {
             selector: response => response.json(),
             method: "POST",
-            body: JSON.stringify({ name })
+            body: JSON.stringify({ name }),
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json"
+            }
           }
         )
     }
