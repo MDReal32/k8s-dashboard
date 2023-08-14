@@ -1,4 +1,5 @@
 import { Promisable } from "type-fest";
+import { Observable } from "rxjs";
 
 import { Logger, File, Executor } from "@k8sd/shared";
 
@@ -25,5 +26,5 @@ export interface Plugin {
 
   detect(context: PluginContext): boolean;
 
-  install(context: PluginContext): Promisable<void>;
+  install(context: PluginContext): Promisable<void | Observable<unknown>>;
 }
