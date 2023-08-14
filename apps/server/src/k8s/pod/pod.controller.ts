@@ -7,7 +7,7 @@ export class PodController {
   constructor(private readonly podService: PodService) {}
 
   @Get()
-  getPodResources(
+  getPodResource(
     @Param("namespace")
     namespaceParam: string,
     @Query("namespace")

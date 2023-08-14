@@ -6,7 +6,7 @@ export class ServiceController {
   constructor(private readonly serviceService: ServiceService) {}
 
   @Get()
-  getServiceResources(
+  getServiceResource(
     @Param("namespace")
     namespaceParam: string,
     @Query("namespace")
