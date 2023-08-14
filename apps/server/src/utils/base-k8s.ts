@@ -69,6 +69,10 @@ export class BaseK8s {
     return namespaces.body.items.map(ns => this.baseResource(ns));
   }
 
+  protected getSecrets(secrets: V1LocalObjectReference | V1LocalObjectReference[]) {
+    return this.arrayOfBaseResources(secrets || [], secret => ({ name: secret.name }));
+  }
+
   protected async allNamespace<T extends Resource>(
     method: (namespace: string) => Promise<T[]> | T[]
   ): Promise<T[]> {
