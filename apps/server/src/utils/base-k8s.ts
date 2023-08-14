@@ -129,13 +129,18 @@ export class BaseK8s {
     return value;
   }
 
-  protected arrayOf<Value, PartialSection extends object>(
-    resources: Value | Value[],
-    partialSection?: (value: Value) => PartialSection
+  protected arrayOfBaseResources<T, Partial extends object>(
+    resources: T | T[],
+    handler: (value: T) => Partial
   ) {
-    return Array.isArray(resources)
-      ? resources.map(res => this.baseResource(res, partialSection(res)))
-      : [this.baseResource(resources, partialSection(resources))];
+    return Array.isArray(resources) ? resources.map(res => handler(res)) : [handler(resources)];
+  }
+
+  protected arrayOf<T extends Resource, Partial extends object>(
+    resources: T | T[],
+    partial?: (value: T) => Partial
+  ) {
+    return this.arrayOfBaseResources(resources, res => this.baseResource(res, partial(res)));
   }
 
   protected getIpAddress(nodeName: string) {
