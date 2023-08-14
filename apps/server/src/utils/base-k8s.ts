@@ -69,6 +69,13 @@ export class BaseK8s {
     return namespaces.body.items.map(ns => this.baseResource(ns));
   }
 
+  protected getVolumes(volumes: V1Volume | V1Volume[]) {
+    return this.arrayOfBaseResources(volumes || [], volume => ({
+      name: volume.name,
+      sources: volume.projected?.sources
+    }));
+  }
+
   protected getSecrets(secrets: V1LocalObjectReference | V1LocalObjectReference[]) {
     return this.arrayOfBaseResources(secrets || [], secret => ({ name: secret.name }));
   }
