@@ -4,6 +4,7 @@ fix_path_by_resource() {
   local resource=$1
   local name=$2
   local args=""
+  local has_directory=false
 
   while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -18,6 +19,7 @@ fix_path_by_resource() {
           args="$args --directory $2"
           shift
         fi
+        has_directory=true
 
         shift
         ;;
@@ -27,6 +29,10 @@ fix_path_by_resource() {
         ;;
     esac
   done
+
+  if [[ $has_directory == false && $resource == "gateway" ]]; then
+    args="$args --directory $name"
+  fi
 
   echo "$args"
 }
