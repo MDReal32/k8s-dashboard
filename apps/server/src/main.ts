@@ -1,4 +1,4 @@
-import EventEmiter from "node:events";
+import EventEmitter from "node:events";
 
 import { NestFactory } from "@nestjs/core";
 
@@ -13,7 +13,7 @@ const logger = new Logger("ApplicationBootstrap");
 const port = +process.env.SERVER_PORT || 3000;
 const globalPrefix = "api";
 
-EventEmiter.setMaxListeners(30);
+EventEmitter.setMaxListeners(30);
 
 (async () => {
   const app = await NestFactory.create(AppModule);
