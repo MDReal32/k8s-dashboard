@@ -1,0 +1,7 @@
+{
+  "name": "@k8sd/client-e2e",
+  "devDependencies": {
+    "@nx/playwright": "16.10.0",
+    "@playwright/test": "1.39.0"
+  }
+}

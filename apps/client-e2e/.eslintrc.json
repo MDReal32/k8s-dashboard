@@ -1,5 +1,5 @@
 {
-  "extends": ["../../.eslintrc.json"],
+  "extends": ["plugin:playwright/recommended", "../.eslintrc.json"],
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {
@@ -15,11 +15,8 @@
       "rules": {}
     },
     {
-      "files": ["*.json"],
-      "parser": "jsonc-eslint-parser",
-      "rules": {
-        "@nx/dependency-checks": "error"
-      }
+      "files": ["src/**/*.{ts,js,tsx,jsx}"],
+      "rules": {}
     }
   ]
 }
