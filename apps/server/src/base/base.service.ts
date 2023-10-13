@@ -43,24 +43,14 @@ export class BaseService {
   }
 
   add(client: WebSocket) {
-    if (!this.idClientMap.has(client.id)) {
-      client.id ||= crypto.randomBytes(16).toString("hex");
-      this.broadcast(client, WS_EVENTS.WELCOME);
-      this.clients.add(client);
-      this.idClientMap.set(client.id, client);
-    }
+    // ToDo: Handle client id through message.headers.Authorization
+    this.broadcast(client, "welcome");
+    this.clients.add(client);
   }
 
   remove(client: WebSocket) {
-    if (this.idClientMap.has(client.id)) {
-      this.broadcast(client, WS_EVENTS.GOODBYE);
-      this.clients.delete(client);
-      this.idClientMap.delete(client.id);
-
-      if (this.coreAppId === client.id) {
-        this.coreAppId = undefined;
-      }
-    }
+    // ToDo: Handle client id through message.headers.Authorization
+    this.clients.delete(client);
   }
 
   introduce(client: WebSocket, data: string) {
