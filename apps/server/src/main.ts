@@ -21,8 +21,16 @@ EventEmitter.setMaxListeners(30);
     .setGlobalPrefix(globalPrefix)
     .useGlobalInterceptors(new RequestInterceptor())
     .useGlobalPipes(new ZodValidationPipe());
+
   const wsApp = app.useWebSocketAdapter(new WsAdapter(app));
   await wsApp.listen(port);
 
-  logger.log(`🚀 Application is running on: http://localhost:${port}/${globalPrefix}`);
+  const network = networkInterfaces();
+  const networkAdapters = Object.values(network)
+    .flat(1)
+    .filter(({ family, internal }) => family === "IPv4" && !internal);
+  logger.log(`🚀 Application is running on: ${await wsApp.getUrl()}/${globalPrefix}`);
+  for (const adapter of networkAdapters) {
+    logger.log(`🚀 Application is running on: http://${adapter.address}:${port}/${globalPrefix}`);
+  }
 })();
