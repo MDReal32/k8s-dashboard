@@ -1,10 +1,13 @@
-import { Injectable } from "@nestjs/common";
-import { V1Pod } from "@kubernetes/client-node";
+import { Injectable, Logger } from "@nestjs/common";
 
-import { BaseK8s } from "../../utils/base-k8s";
+import { K8sService } from "../../base/k8s.service";
 
 @Injectable()
-export class PodService extends BaseK8s {
+export class PodService extends K8sService {
+  constructor() {
+    super(new Logger(PodService.name));
+  }
+
   async getPodResource(namespace: string) {
     this.expect(namespace, "namespace");
 
@@ -13,36 +16,10 @@ export class PodService extends BaseK8s {
     }
 
     const pods = await this.catch(this.k8sCoreApi.listNamespacedPod(namespace));
-    return this.arrayOf(pods.body.items, this.getPod.bind(this));
+    return pods.body.items;
   }
 
-  getPod(pod: V1Pod) {
-    return {
-      metadata: {
-        owners: pod.metadata.ownerReferences?.map(owner => ({
-          id: owner.uid,
-          name: owner.name,
-          kind: owner.kind
-        }))
-      },
-      spec: {
-        node: this.getNode(pod.spec.nodeName),
-        containers: this.getContainers(pod.spec.containers),
-        volumes: this.getVolumes(pod.spec.volumes),
-        secrets: this.getSecrets(pod.spec.imagePullSecrets),
-        restart: {
-          policy: pod.spec.restartPolicy
-        },
-        service: {
-          account: {
-            name: pod.spec.serviceAccountName
-          }
-        }
-      }
-    };
-  }
-
-  private getNode(nodeName: string) {
-    return `${nodeName}/${this.getIpAddress(nodeName)}`;
+  k8sWatch() {
+    return super.k8sWatcher("/api/v1/pods");
   }
 }

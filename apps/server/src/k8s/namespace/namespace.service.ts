@@ -1,32 +1,23 @@
-import { Injectable } from "@nestjs/common";
+import { WebSocket } from "ws";
 
-import { Logger } from "@k8sd/shared";
+import { Watch } from "@kubernetes/client-node";
+import { Injectable, Logger } from "@nestjs/common";
 
-import { CreateNamespaceDto } from "./dto/create-namespace.dto";
-import { BaseK8s } from "../../utils/base-k8s";
+import { K8sService } from "../../base/k8s.service";
 
 @Injectable()
-export class NamespaceService extends BaseK8s {
+export class NamespaceService extends K8sService {
   constructor() {
-    super(new Logger("NamespaceService"));
-  }
-
-  async getAllNamespaces() {
-    return super.getAllNamespaces();
+    super(new Logger(NamespaceService.name));
   }
 
   async getNamespace(namespace: string) {
+    if (namespace === "_") return super.getAllNamespaces();
     const ns = await this.catch(this.k8sCoreApi.readNamespace(namespace));
-    return this.baseResource(ns.body);
+    return ns.body;
   }
 
-  async createNamespace(data: CreateNamespaceDto) {
-    const ns = await this.catch(this.k8sCoreApi.createNamespace({ metadata: { name: data.name } }));
-    return this.baseResource(ns.body);
-  }
-
-  async deleteNamespace(namespace: string) {
-    await this.catch(this.k8sCoreApi.deleteNamespace(namespace));
-    return { message: `Namespace ${namespace} deleted` };
+  k8sWatch() {
+    return super.k8sWatcher("/api/v1/namespaces");
   }
 }

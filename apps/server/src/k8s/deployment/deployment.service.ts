@@ -1,13 +1,12 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 
-import { BaseK8s } from "../../utils/base-k8s";
-import { Logger } from "@k8sd/shared";
+import { K8sService } from "../../base/k8s.service";
 import { PodService } from "../pod/pod.service";
 
 @Injectable()
-export class DeploymentService extends BaseK8s {
-  constructor(private readonly podService: PodService) {
-    super(new Logger("DeploymentService"));
+export class DeploymentService extends K8sService {
+  constructor() {
+    super(new Logger(DeploymentService.name));
   }
 
   async getDeploymentResource(namespace: string) {
@@ -18,15 +17,10 @@ export class DeploymentService extends BaseK8s {
     }
 
     const deployments = await this.catch(this.k8sAppsApi.listNamespacedDeployment(namespace));
+    return deployments.body.items;
+  }
 
-    try {
-      return this.arrayOf(deployments.body.items, deployment => ({
-        replicas: deployment.spec.replicas,
-        selector: deployment.spec.selector.matchLabels,
-        template: this.podService.getPod(deployment.spec.template)
-      }));
-    } catch (e) {
-      console.log(e);
-    }
+  k8sWatch() {
+    return super.k8sWatcher("/api/v1/deployments");
   }
 }
