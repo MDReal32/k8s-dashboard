@@ -1,8 +1,9 @@
 import EventEmitter from "node:events";
+import { networkInterfaces } from "node:os";
 
+import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 
-import { Logger } from "@k8sd/shared";
 
 import { AppModule } from "./app.module";
 import { WsAdapter } from "./adapters/ws.adapter";
