@@ -3,6 +3,7 @@ import { Module } from "@nestjs/common";
 import { DaemonSetModule } from "./daemon-set/daemon-set.module";
 import { DeploymentModule } from "./deployment/deployment.module";
 import { IngressModule } from "./ingress/ingress.module";
+import { JobModule } from "./job/job.module";
 import { NamespaceModule } from "./namespace/namespace.module";
 import { NodeModule } from "./node/node.module";
 import { PodModule } from "./pod/pod.module";
@@ -20,6 +21,7 @@ import { StatefulSetModule } from "./stateful-set/stateful-set.module";
     StatefulSetModule,
     ReplicaSetModule,
     ServiceModule,
+    JobModule,
     PodModule
   ]
 })
