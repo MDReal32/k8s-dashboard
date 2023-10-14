@@ -1,5 +1,6 @@
 import { isMatch } from "lodash";
 import { useCallback, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { GraphEdge, GraphElementBaseAttributes, GraphNode } from "reagraph";
 
 import { V1Service } from "@kubernetes/client-node";
@@ -16,15 +17,21 @@ type GraphNodeType<T> = Omit<GraphNode, "data"> & GraphElementBaseAttributes<Clu
 export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) => {
   const getColor = useGetColorByCategory();
 
-  const nodesObject = useGetArrayObject(dataObject.node.data);
-  const ingressesObject = useGetArrayObject(dataObject.ingress.data);
-  const deploymentsObject = useGetArrayObject(dataObject.deployment.data);
-  const statefulSetsObject = useGetArrayObject(dataObject.statefulSet.data);
-  const daemonSetsObject = useGetArrayObject(dataObject.daemonSet.data);
-  const replicaSetsObject = useGetArrayObject(dataObject.replicaSet.data);
-  const jobsObject = useGetArrayObject(dataObject.job.data);
-  const servicesObject = useGetArrayObject(dataObject.service.data);
-  const podsObject = useGetArrayObject(dataObject.pod.data);
+  const nodesObject = useGetArrayObject(ResourceTypes.NODE, dataObject.node.data);
+  const ingressesObject = useGetArrayObject(ResourceTypes.INGRESS, dataObject.ingress.data);
+  const deploymentsObject = useGetArrayObject(ResourceTypes.DEPLOYMENT, dataObject.deployment.data);
+  const statefulSetsObject = useGetArrayObject(
+    ResourceTypes.STATEFUL_SET,
+    dataObject.statefulSet.data
+  );
+  const daemonSetsObject = useGetArrayObject(ResourceTypes.DAEMON_SET, dataObject.daemonSet.data);
+  const replicaSetsObject = useGetArrayObject(
+    ResourceTypes.REPLICA_SET,
+    dataObject.replicaSet.data
+  );
+  const servicesObject = useGetArrayObject(ResourceTypes.SERVICE, dataObject.service.data);
+  const jobsObject = useGetArrayObject(ResourceTypes.JOB, dataObject.job.data);
+  const podsObject = useGetArrayObject(ResourceTypes.POD, dataObject.pod.data);
 
   const allObjects = useMemo(
     () =>
@@ -52,6 +59,19 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
     ]
   );
 
+  const objectResourceTypeMap = useMemo(() => {
+    const objectResourceTypeMap = new Map<ResourceTypeMap[ResourceTypes], K8sResource>();
+
+    for (const resourceType in allObjects) {
+      const object = allObjects[resourceType as K8sResource];
+      object.forEach(item => {
+        objectResourceTypeMap.set(item, resourceType as K8sResource);
+      });
+    }
+
+    return objectResourceTypeMap;
+  }, [allObjects]);
+
   const convertToGraphNode = <TResourceType extends K8sResource>(
     resourceType: TResourceType,
     node: ResourceTypeMap[TResourceType]
@@ -63,7 +83,7 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
     const namespace = node.metadata?.namespace || "default";
 
     return {
-      id: node.metadata.uid,
+      id: [resourceType, node.metadata.uid].join(":"),
       label: node.metadata.name,
       fill: getColor(resourceType),
       data: { cluster: namespace, resourceType, ...node }
@@ -71,19 +91,25 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
   };
 
   const convertToGraphEdge = useCallback(
-    (from: ResourceTypeMap[K8sResource], to: ResourceTypeMap[K8sResource]): GraphEdge => {
-      if (!from.metadata?.uid || !to.metadata?.uid) {
-        throw new Error(`Node ${from.metadata?.name} or ${to.metadata?.name} does not have a uid.`);
+    (source: ResourceTypeMap[K8sResource], target: ResourceTypeMap[K8sResource]): GraphEdge => {
+      const sourceUId = source.metadata?.uid;
+      const targetUId = target.metadata?.uid;
+
+      if (!sourceUId || !targetUId) {
+        throw new Error(`Node ${sourceUId} or ${targetUId} does not have a uid.`);
       }
 
+      const sourceId = [objectResourceTypeMap.get(source), sourceUId].join(":");
+      const targetId = [objectResourceTypeMap.get(target), targetUId].join(":");
+
       return {
-        id: `${from.metadata.uid}-${to.metadata.uid}`,
-        target: to.metadata.uid,
-        source: from.metadata.uid,
-        data: { from, to }
+        id: `${sourceId}-${targetId}`,
+        target: targetId,
+        source: sourceId,
+        data: { from: source, to: target }
       };
     },
-    []
+    [objectResourceTypeMap]
   );
 
   return useMemo(() => {
@@ -97,16 +123,18 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
       const owners = node.metadata?.ownerReferences;
       if (owners) {
         for (const owner of owners) {
-          const ownerObject =
-            allObjects[convertKindToResourceType(owner.kind)]?.dataObject[owner.name];
-          if (ownerObject) {
-            edges.push(convertToGraphEdge(ownerObject, node));
+          const object = allObjects[convertKindToResourceType(owner.kind)];
+          const idx = object?.dataNameIndexes[owner.name];
+          const item = object?.[idx];
+          if (item) {
+            edges.push(convertToGraphEdge(item, node));
           }
         }
       }
       return !!owners;
     };
 
+    console.group(ResourceTypes.NODE);
     nodesObject.forEach(node => {
       const internalIpAddress = node.status?.addresses?.find(
         address => address.type === "InternalIP"
@@ -120,6 +148,7 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
       internalIpAddress && (ipAddresses[internalIpAddress] = node);
       node.spec?.podCIDR && (ipMappings[node.spec.podCIDR] = node);
     });
+    console.groupEnd();
 
     console.group(ResourceTypes.INGRESS);
     ingressesObject.forEach(ingress => {
@@ -135,13 +164,15 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
           edges.push(convertToGraphEdge(ipAddresses[ip], ingress));
         });
       } else {
-        edges.push(convertToGraphEdge(nodesObject.dataObject.minikube, ingress));
+        edges.push(convertToGraphEdge(nodesObject[nodesObject.dataNameIndexes.minikube], ingress));
       }
 
       ingress.spec?.rules
         ?.flatMap(rule => rule.http?.paths || [])
         .map(path => path.backend.service?.name)
-        .map(serviceName => serviceName && servicesObject.dataObject[serviceName])
+        .map(
+          serviceName => serviceName && servicesObject[servicesObject.dataNameIndexes[serviceName]]
+        )
         .filter(Boolean)
         .forEach(service => edges.push(convertToGraphEdge(ingress, service)));
     });
@@ -186,14 +217,13 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
         services.add(service);
         serviceLabelMap.set(stringifySelector, services);
       }
-
-      console.log(service);
     });
     console.groupEnd();
 
     console.group(ResourceTypes.JOB);
     jobsObject.forEach(job => {
       nodes.push(convertToGraphNode(ResourceTypes.JOB, job));
+      ownerReference(job);
     });
     console.groupEnd();
 
@@ -207,7 +237,7 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
           const parsedServiceLabel = JSON.parse(serviceLabel) as Record<string, string>;
           const matched = isMatch(labels, parsedServiceLabel);
           if (matched) {
-            services.forEach(service => edges.push(convertToGraphEdge(service, pod)));
+            services.forEach(service => edges.push(convertToGraphEdge(pod, service)));
             break;
           }
         }
