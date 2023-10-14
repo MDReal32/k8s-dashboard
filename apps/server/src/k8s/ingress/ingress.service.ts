@@ -20,6 +20,6 @@ export class IngressService extends K8sService {
   }
 
   k8sWatch() {
-    return super.k8sWatcher("/api/v1/ingresses");
+    return super.k8sWatcher("/apis/networking.k8s.io/v1/ingresses");
   }
 }

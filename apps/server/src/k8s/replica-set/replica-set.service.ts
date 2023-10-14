@@ -20,6 +20,6 @@ export class ReplicaSetService extends K8sService {
   }
 
   k8sWatch() {
-    return super.k8sWatcher("/api/v1/replica-sets");
+    return super.k8sWatcher("/apis/apps/v1/replicasets");
   }
 }

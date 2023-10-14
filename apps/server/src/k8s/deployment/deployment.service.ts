@@ -21,6 +21,6 @@ export class DeploymentService extends K8sService {
   }
 
   k8sWatch() {
-    return super.k8sWatcher("/api/v1/deployments");
+    return super.k8sWatcher("/apis/apps/v1/deployments");
   }
 }

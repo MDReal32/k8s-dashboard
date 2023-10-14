@@ -20,6 +20,6 @@ export class DaemonSetService extends K8sService {
   }
 
   k8sWatch() {
-    return super.k8sWatcher("/api/v1/daemon-set");
+    return super.k8sWatcher("/apis/apps/v1/daemonsets");
   }
 }

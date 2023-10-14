@@ -20,6 +20,6 @@ export class JobService extends K8sService {
   }
 
   k8sWatch() {
-    return super.k8sWatcher("/api/v1/jobs");
+    return super.k8sWatcher("/apis/batch/v1/jobs");
   }
 }

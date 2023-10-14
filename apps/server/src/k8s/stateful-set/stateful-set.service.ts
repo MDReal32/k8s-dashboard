@@ -20,6 +20,6 @@ export class StatefulSetService extends K8sService {
   }
 
   k8sWatch() {
-    return super.k8sWatcher("/api/v1/stateful-sets");
+    return super.k8sWatcher("/apis/apps/v1/statefulsets");
   }
 }
