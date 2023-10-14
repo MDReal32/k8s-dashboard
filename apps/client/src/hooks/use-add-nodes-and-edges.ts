@@ -250,6 +250,41 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
 
       byLabel(pod);
       ownerReference(pod);
+
+      pod.spec?.volumes?.forEach(volume => {
+        volume.configMap?.name &&
+          edges.push(
+            convertToGraphEdge(
+              pod,
+              configMapObject[configMapObject.dataNameIndexes[volume.configMap.name]]
+            )
+          );
+      });
+
+      pod.spec?.initContainers?.forEach(container => {
+        container.envFrom?.forEach(envFrom => {
+          envFrom.configMapRef?.name &&
+            edges.push(
+              convertToGraphEdge(
+                pod,
+                configMapObject[configMapObject.dataNameIndexes[envFrom.configMapRef.name]]
+              )
+            );
+        });
+
+        container.env?.forEach(env => {
+          env.valueFrom?.configMapKeyRef?.name &&
+            env.valueFrom?.configMapKeyRef?.name &&
+            edges.push(
+              convertToGraphEdge(
+                pod,
+                configMapObject[
+                  configMapObject.dataNameIndexes[env.valueFrom?.configMapKeyRef.name]
+                ]
+              )
+            );
+        });
+      });
     });
     console.groupEnd();
 
