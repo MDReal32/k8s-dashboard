@@ -1,5 +1,3 @@
-import { Observable, of, switchMap } from "rxjs";
-
 import { ResourceTypeMap, ResourceTypes, Response, RxApiStream } from "../types";
 import { fetch$ } from "../utils/fetch$";
 
