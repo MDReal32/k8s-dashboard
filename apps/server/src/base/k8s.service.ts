@@ -86,9 +86,9 @@ export class K8sService extends BaseService {
     await this.watcher.watch(
       path,
       {},
-      (type, apiObj) => {
+      (type, resource) => {
         this.watchers.forEach(client => {
-          client.send(JSON.stringify({ event: "watch:success", data: { type, apiObj } }));
+          client.send(JSON.stringify({ event: "watch:success", data: { type, resource } }));
         });
       },
       err => {
