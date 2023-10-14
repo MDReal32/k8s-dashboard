@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 
+import { ConfigMapModule } from "./config-map/config-map.module";
 import { DaemonSetModule } from "./daemon-set/daemon-set.module";
 import { DeploymentModule } from "./deployment/deployment.module";
 import { IngressModule } from "./ingress/ingress.module";
@@ -22,7 +23,8 @@ import { StatefulSetModule } from "./stateful-set/stateful-set.module";
     ReplicaSetModule,
     ServiceModule,
     JobModule,
-    PodModule
+    PodModule,
+    ConfigMapModule
   ]
 })
 export class K8sModule {}
