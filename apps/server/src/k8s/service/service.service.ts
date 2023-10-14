@@ -9,11 +9,13 @@ export class ServiceService extends K8sService {
   }
 
   async getServiceResource(namespace: string) {
-    if (namespace === "_") {
-      return this.allNamespace(this.getServiceResource);
-    }
+    this.expect(namespace, "namespace");
 
-    const services = await this.catch(this.k8sCoreApi.listNamespacedService(namespace));
+    const services = await this.catch(
+      namespace === "_"
+        ? this.k8sCoreApi.listServiceForAllNamespaces()
+        : this.k8sCoreApi.listNamespacedService(namespace)
+    );
     return services.body.items;
   }
 

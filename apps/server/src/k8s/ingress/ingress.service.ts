@@ -11,11 +11,11 @@ export class IngressService extends K8sService {
   async getIngressResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    if (namespace === "_") {
-      return this.allNamespace(this.getIngressResource);
-    }
-
-    const ingresses = await this.catch(this.k8sNetworkingApi.listNamespacedIngress(namespace));
+    const ingresses = await this.catch(
+      namespace === "_"
+        ? this.k8sNetworkingApi.listIngressForAllNamespaces()
+        : this.k8sNetworkingApi.listNamespacedIngress(namespace)
+    );
     return ingresses.body.items;
   }
 

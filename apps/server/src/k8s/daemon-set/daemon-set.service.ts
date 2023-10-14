@@ -11,12 +11,12 @@ export class DaemonSetService extends K8sService {
   async getDaemonSetResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    if (namespace === "_") {
-      return this.allNamespace(this.getDaemonSetResource);
-    }
-
-    const deployments = await this.catch(this.k8sAppsApi.listNamespacedDaemonSet(namespace));
-    return deployments.body.items;
+    const daemonSets = await this.catch(
+      namespace === "_"
+        ? this.k8sAppsApi.listDaemonSetForAllNamespaces()
+        : this.k8sAppsApi.listNamespacedDaemonSet(namespace)
+    );
+    return daemonSets.body.items;
   }
 
   k8sWatch() {

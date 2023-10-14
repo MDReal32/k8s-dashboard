@@ -11,12 +11,12 @@ export class JobService extends K8sService {
   async getJobResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    if (namespace === "_") {
-      return this.allNamespace(this.getJobResource);
-    }
-
-    const pods = await this.catch(this.k8sCoreApi.listNamespacedPod(namespace));
-    return pods.body.items;
+    const jobs = await this.catch(
+      namespace === "_"
+        ? this.k8sBatchApi.listJobForAllNamespaces()
+        : this.k8sBatchApi.listNamespacedJob(namespace)
+    );
+    return jobs.body.items;
   }
 
   k8sWatch() {

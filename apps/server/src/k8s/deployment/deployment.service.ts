@@ -12,11 +12,11 @@ export class DeploymentService extends K8sService {
   async getDeploymentResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    if (namespace === "_") {
-      return this.allNamespace(this.getDeploymentResource);
-    }
-
-    const deployments = await this.catch(this.k8sAppsApi.listNamespacedDeployment(namespace));
+    const deployments = await this.catch(
+      namespace === "_"
+        ? this.k8sAppsApi.listDeploymentForAllNamespaces()
+        : this.k8sAppsApi.listNamespacedDeployment(namespace)
+    );
     return deployments.body.items;
   }
 

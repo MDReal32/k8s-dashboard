@@ -11,11 +11,11 @@ export class PodService extends K8sService {
   async getPodResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    if (namespace === "_") {
-      return this.allNamespace(this.getPodResource);
-    }
-
-    const pods = await this.catch(this.k8sCoreApi.listNamespacedPod(namespace));
+    const pods = await this.catch(
+      namespace === "_"
+        ? this.k8sCoreApi.listPodForAllNamespaces()
+        : this.k8sCoreApi.listNamespacedPod(namespace)
+    );
     return pods.body.items;
   }
 

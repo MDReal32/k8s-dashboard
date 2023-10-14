@@ -12,9 +12,9 @@ export class NamespaceService extends K8sService {
   }
 
   async getNamespace(namespace: string) {
-    if (namespace === "_") return super.getAllNamespaces();
-    const ns = await this.catch(this.k8sCoreApi.readNamespace(namespace));
-    return ns.body;
+    return namespace === "_"
+      ? (await this.catch(this.k8sCoreApi.listNamespace())).body.items
+      : (await this.catch(this.k8sCoreApi.readNamespace(namespace))).body;
   }
 
   k8sWatch() {

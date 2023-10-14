@@ -11,12 +11,12 @@ export class StatefulSetService extends K8sService {
   async getStatefulSetResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    if (namespace === "_") {
-      return this.allNamespace(this.getStatefulSetResource);
-    }
-
-    const pods = await this.catch(this.k8sAppsApi.listNamespacedStatefulSet(namespace));
-    return pods.body.items;
+    const statefulSets = await this.catch(
+      namespace === "_"
+        ? this.k8sAppsApi.listStatefulSetForAllNamespaces()
+        : this.k8sAppsApi.listNamespacedStatefulSet(namespace)
+    );
+    return statefulSets.body.items;
   }
 
   k8sWatch() {

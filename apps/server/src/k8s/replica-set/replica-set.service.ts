@@ -11,11 +11,11 @@ export class ReplicaSetService extends K8sService {
   async getReplicaSetResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    if (namespace === "_") {
-      return this.allNamespace(this.getReplicaSetResource);
-    }
-
-    const replicaSets = await this.catch(this.k8sAppsApi.listNamespacedReplicaSet(namespace));
+    const replicaSets = await this.catch(
+      namespace === "_"
+        ? this.k8sAppsApi.listReplicaSetForAllNamespaces()
+        : this.k8sAppsApi.listNamespacedReplicaSet(namespace)
+    );
     return replicaSets.body.items;
   }
 
