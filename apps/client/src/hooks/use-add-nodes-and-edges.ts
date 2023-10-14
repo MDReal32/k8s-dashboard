@@ -137,6 +137,20 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
       return !!owners;
     };
 
+    const byLabel = (node: ResourceTypeMap[K8sResource]) => {
+      const labels = node.metadata?.labels;
+      if (labels) {
+        for (const [serviceLabel, services] of serviceLabelMap) {
+          const parsedServiceLabel = JSON.parse(serviceLabel) as Record<string, string>;
+          const matched = isMatch(labels, parsedServiceLabel);
+          if (matched) {
+            services.forEach(service => edges.push(convertToGraphEdge(node, service)));
+            break;
+          }
+        }
+      }
+    };
+
     console.group(ResourceTypes.NODE);
     nodesObject.forEach(node => {
       const internalIpAddress = node.status?.addresses?.find(
@@ -234,18 +248,7 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
     podsObject.forEach(pod => {
       nodes.push(convertToGraphNode(ResourceTypes.POD, pod));
 
-      const labels = pod.metadata?.labels;
-      if (labels) {
-        for (const [serviceLabel, services] of serviceLabelMap) {
-          const parsedServiceLabel = JSON.parse(serviceLabel) as Record<string, string>;
-          const matched = isMatch(labels, parsedServiceLabel);
-          if (matched) {
-            services.forEach(service => edges.push(convertToGraphEdge(pod, service)));
-            break;
-          }
-        }
-      }
-
+      byLabel(pod);
       ownerReference(pod);
     });
     console.groupEnd();
