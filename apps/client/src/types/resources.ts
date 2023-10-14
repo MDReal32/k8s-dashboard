@@ -5,7 +5,14 @@ import type {
   V1Service,
   V1StatefulSet
 } from "@kubernetes/client-node";
-import { V1DaemonSet, V1Ingress, V1Job, V1Node, V1ReplicaSet } from "@kubernetes/client-node";
+import {
+  V1ConfigMap,
+  V1DaemonSet,
+  V1Ingress,
+  V1Job,
+  V1Node,
+  V1ReplicaSet
+} from "@kubernetes/client-node";
 
 export enum ResourceTypes {
   NODE = "node",
@@ -17,7 +24,8 @@ export enum ResourceTypes {
   REPLICA_SET = "replica-set",
   SERVICE = "service",
   JOB = "job",
-  POD = "pod"
+  POD = "pod",
+  CONFIG_MAP = "config-map"
 }
 
 export interface ResourceTypeMap {
@@ -31,4 +39,5 @@ export interface ResourceTypeMap {
   [ResourceTypes.SERVICE]: V1Service;
   [ResourceTypes.JOB]: V1Job;
   [ResourceTypes.POD]: V1Pod;
+  [ResourceTypes.CONFIG_MAP]: V1ConfigMap;
 }

@@ -32,6 +32,7 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
   const servicesObject = useGetArrayObject(ResourceTypes.SERVICE, dataObject.service.data);
   const jobsObject = useGetArrayObject(ResourceTypes.JOB, dataObject.job.data);
   const podsObject = useGetArrayObject(ResourceTypes.POD, dataObject.pod.data);
+  const configMapObject = useGetArrayObject(ResourceTypes.CONFIG_MAP, dataObject.configMap.data);
 
   const allObjects = useMemo(
     () =>
@@ -44,7 +45,8 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
         [ResourceTypes.REPLICA_SET]: replicaSetsObject,
         [ResourceTypes.SERVICE]: servicesObject,
         [ResourceTypes.JOB]: jobsObject,
-        [ResourceTypes.POD]: podsObject
+        [ResourceTypes.POD]: podsObject,
+        [ResourceTypes.CONFIG_MAP]: configMapObject
       }) satisfies Record<K8sResource, ArrayObject<ResourceTypeMap[K8sResource]>>,
     [
       nodesObject,
@@ -55,7 +57,8 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
       replicaSetsObject,
       servicesObject,
       jobsObject,
-      podsObject
+      podsObject,
+      configMapObject
     ]
   );
 
@@ -247,6 +250,12 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
     });
     console.groupEnd();
 
+    console.group(ResourceTypes.CONFIG_MAP);
+    configMapObject.forEach(configMap => {
+      nodes.push(convertToGraphNode(ResourceTypes.CONFIG_MAP, configMap));
+    });
+    console.groupEnd();
+
     return { nodes, edges };
   }, [
     nodesObject,
@@ -258,6 +267,7 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
     servicesObject,
     jobsObject,
     podsObject,
+    configMapObject,
     allObjects
   ]);
 };
