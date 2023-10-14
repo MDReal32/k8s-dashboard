@@ -1,6 +1,5 @@
 import { isMatch } from "lodash";
 import { useCallback, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
 import { GraphEdge, GraphElementBaseAttributes, GraphNode } from "reagraph";
 
 import { V1Service } from "@kubernetes/client-node";
@@ -33,6 +32,7 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
   const jobsObject = useGetArrayObject(ResourceTypes.JOB, dataObject.job.data);
   const podsObject = useGetArrayObject(ResourceTypes.POD, dataObject.pod.data);
   const configMapObject = useGetArrayObject(ResourceTypes.CONFIG_MAP, dataObject.configMap.data);
+  const secretObject = useGetArrayObject(ResourceTypes.SECRET, dataObject.secret.data);
 
   const allObjects = useMemo(
     () =>
@@ -46,7 +46,8 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
         [ResourceTypes.SERVICE]: servicesObject,
         [ResourceTypes.JOB]: jobsObject,
         [ResourceTypes.POD]: podsObject,
-        [ResourceTypes.CONFIG_MAP]: configMapObject
+        [ResourceTypes.CONFIG_MAP]: configMapObject,
+        [ResourceTypes.SECRET]: secretObject
       }) satisfies Record<K8sResource, ArrayObject<ResourceTypeMap[K8sResource]>>,
     [
       nodesObject,
@@ -58,6 +59,7 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
       servicesObject,
       jobsObject,
       podsObject,
+      secretObject,
       configMapObject
     ]
   );
@@ -294,6 +296,12 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
     });
     console.groupEnd();
 
+    console.group(ResourceTypes.SECRET);
+    secretObject.forEach(secret => {
+      nodes.push(convertToGraphNode(ResourceTypes.SECRET, secret));
+    });
+    console.groupEnd();
+
     return { nodes, edges };
   }, [
     nodesObject,
@@ -306,6 +314,7 @@ export const useAddNodesAndEdges = (dataObject: ResourceObject<K8sResource[]>) =
     jobsObject,
     podsObject,
     configMapObject,
+    secretObject,
     allObjects
   ]);
 };

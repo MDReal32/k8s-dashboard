@@ -9,6 +9,7 @@ import { NamespaceModule } from "./namespace/namespace.module";
 import { NodeModule } from "./node/node.module";
 import { PodModule } from "./pod/pod.module";
 import { ReplicaSetModule } from "./replica-set/replica-set.module";
+import { SecretModule } from "./secret/secret.module";
 import { ServiceModule } from "./service/service.module";
 import { StatefulSetModule } from "./stateful-set/stateful-set.module";
 
@@ -24,7 +25,8 @@ import { StatefulSetModule } from "./stateful-set/stateful-set.module";
     ServiceModule,
     JobModule,
     PodModule,
-    ConfigMapModule
+    ConfigMapModule,
+    SecretModule
   ]
 })
 export class K8sModule {}

@@ -11,7 +11,8 @@ import {
   V1Ingress,
   V1Job,
   V1Node,
-  V1ReplicaSet
+  V1ReplicaSet,
+  V1Secret
 } from "@kubernetes/client-node";
 
 export enum ResourceTypes {
@@ -25,7 +26,8 @@ export enum ResourceTypes {
   SERVICE = "service",
   JOB = "job",
   POD = "pod",
-  CONFIG_MAP = "config-map"
+  CONFIG_MAP = "config-map",
+  SECRET = "secret"
 }
 
 export interface ResourceTypeMap {
@@ -40,4 +42,5 @@ export interface ResourceTypeMap {
   [ResourceTypes.JOB]: V1Job;
   [ResourceTypes.POD]: V1Pod;
   [ResourceTypes.CONFIG_MAP]: V1ConfigMap;
+  [ResourceTypes.SECRET]: V1Secret;
 }
