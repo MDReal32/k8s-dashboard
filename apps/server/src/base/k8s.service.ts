@@ -99,18 +99,6 @@ export class K8sService extends BaseService {
     );
   }
 
-  protected async getAllNamespaces() {
-    const namespaces = await this.catch(this.k8sCoreApi.listNamespace());
-    return namespaces.body.items;
-  }
-
-  protected async allNamespace<T>(method: (namespace: string) => Promise<T[]> | T[]): Promise<T[]> {
-    const namespaces = await this.getAllNamespaces();
-    const namespacedResourcePromises = namespaces.map(ns => method.call(this, ns.metadata.name));
-    const namespacedResources = await Promise.all(namespacedResourcePromises);
-    return namespacedResources.flat();
-  }
-
   protected catch<T>(promise: Promise<T>): Promise<T> {
     try {
       return promise;
