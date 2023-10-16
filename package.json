@@ -9,9 +9,13 @@
     "plugins/*"
   ],
   "devDependencies": {
+    "@nx/jest": "16.10.0",
+    "@nx/js": "16.10.0",
     "@nx/nest": "16.10.0",
+    "@nx/node": "16.10.0",
     "@nx/plugin": "16.10.0",
     "@nx/react": "16.10.0",
+    "@nx/webpack": "16.10.0",
     "@nx/workspace": "16.10.0",
     "@trivago/prettier-plugin-sort-imports": "4.2.0",
     "nx": "16.10.0",
