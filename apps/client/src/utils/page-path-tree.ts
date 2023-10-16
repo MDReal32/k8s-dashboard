@@ -30,12 +30,24 @@ type MakeAsKey<T extends string> = T extends "/"
   ? "__ROOT__"
   : T extends `${infer K}/${infer R}`
   ? K extends ""
-    ? Uppercase<MakeAsKey<R>>
-    : `${Uppercase<K>}_${MakeAsKey<R>}`
+    ? R extends `:${infer _R}`
+      ? Uppercase<MakeAsKey<_R>>
+      : Uppercase<MakeAsKey<R>>
+    : `${Uppercase<K>}_${R extends `:${infer _R}` ? `${MakeAsKey<_R>}` : `${MakeAsKey<R>}`}`
   : T;
 
+type GetVariables<T extends string> = T extends `${infer _}:${infer VARIABLE}`
+  ? VARIABLE extends `${infer _VARIABLE}/${infer _R}`
+    ? [string, ...GetVariables<_R>]
+    : [string]
+  : [];
+
+type FunctionOrString<T> = T extends `${infer _}:${infer _}`
+  ? (...variables: GetVariables<T>) => string
+  : string;
+
 type AsPathMap<T> = {
-  [K in keyof T as MakeAsKey<K & string>]: K extends keyof T ? T[K] : never;
+  [K in keyof T as MakeAsKey<K & string>]: K extends keyof T ? FunctionOrString<T[K]> : never;
 };
 
 export class PagePathTree<T> {
@@ -85,12 +97,35 @@ export class PagePathTree<T> {
     const pathMap = {} as AsPathMap<T>;
 
     for (const [path, node] of this._pathNodeMap) {
-      if (node.nodes.size > 0) {
+      if (node.nodes.size > 0 && !node.element) {
         continue;
       }
 
-      const key = path.toUpperCase().replace(/\//g, "_").replace(/^_/, "") as keyof typeof pathMap;
-      pathMap[key] = path as (typeof pathMap)[keyof typeof pathMap];
+      const urlVariables = path.match(/\/:[^/]+/g);
+      let key = path.replace(/\//g, "_").replace(/^_/, "");
+      let pathFn = path as (typeof pathMap)[keyof typeof pathMap];
+
+      if (urlVariables) {
+        const vars = new Set<string>();
+        urlVariables.map(variable => {
+          vars.add(variable.replace(/^\/:/, ""));
+          key = key.replace(variable.slice(1), variable.replace(/^\/:/, ""));
+        });
+        pathFn = ((...args: string[]) => {
+          if (args.length !== vars.size) {
+            throw new Error(
+              `The number of arguments passed to the function does not match the number of variables in the URL. Expected ${vars.size} arguments, but got ${args.length}.`
+            );
+          }
+          let url = path;
+          for (const [index, variable] of Array.from(vars).entries()) {
+            url = url.replace(`/:${variable}`, `/${args[index]}`);
+          }
+          return url;
+        }) as any;
+      }
+
+      pathMap[key.toUpperCase() as keyof typeof pathMap] = pathFn;
     }
 
     return Object.freeze(pathMap);
