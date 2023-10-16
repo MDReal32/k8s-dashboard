@@ -1,5 +1,7 @@
 import { useEffect, useMemo } from "react";
 
+import { WS_EVENTS } from "@k8sd/shared";
+
 import { ResourceTypeMap, ResourceTypes } from "../types";
 import { useWebsocket } from "./use-websocket";
 
@@ -27,8 +29,8 @@ export const useLiveListenResource = <TResourceType extends ResourceTypes>(
   const websocket = useWebsocket<UpdateEvent<TResourceType>>(path);
 
   useEffect(() => {
-    websocket.send("watch");
+    websocket.send(WS_EVENTS.K8S.WATCH);
   }, [websocket.connectionState]);
 
-  return websocket.useMessage("watch:success");
+  return websocket.useMessage(WS_EVENTS.K8S.WATCH_SUCCESS);
 };

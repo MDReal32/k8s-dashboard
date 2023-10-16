@@ -11,6 +11,8 @@ import {
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { WsException } from "@nestjs/websockets";
 
+import { WS_EVENTS } from "@k8sd/shared";
+
 import { BaseService } from "./base.service";
 
 @Injectable()
@@ -64,7 +66,7 @@ export class K8sService extends BaseService {
 
   watch(client: WebSocket) {
     if (this.watchers.has(client)) {
-      this.broadcast(client, "watch:exception", new WsException("Already watching"));
+      this.broadcast(client, WS_EVENTS.K8S.WATCH_EXCEPTION, new WsException("Already watching"));
       return;
     }
     this.watchers.add(client);
@@ -72,7 +74,11 @@ export class K8sService extends BaseService {
 
   unwatch(client: WebSocket) {
     if (!this.watchers.has(client)) {
-      this.broadcast(client, "watch:exception", new WsException("Client isn't watching"));
+      this.broadcast(
+        client,
+        WS_EVENTS.K8S.UNWATCH_EXCEPTION,
+        new WsException("Client isn't watching")
+      );
       return;
     }
     this.watchers.delete(client);
@@ -88,12 +94,12 @@ export class K8sService extends BaseService {
       {},
       (type, resource) => {
         this.watchers.forEach(client => {
-          client.send(JSON.stringify({ event: "watch:success", data: { type, resource } }));
+          this.broadcast(client, WS_EVENTS.K8S.WATCH_SUCCESS, { type, resource });
         });
       },
       err => {
         this.watchers.forEach(client => {
-          client.send(JSON.stringify({ event: "watch:error", data: { err } }));
+          this.broadcast(client, WS_EVENTS.K8S.WATCH_EXCEPTION, { err });
         });
       }
     );

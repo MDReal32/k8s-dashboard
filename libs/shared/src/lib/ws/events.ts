@@ -1,3 +1,4 @@
+import { K8S_EVENTS } from "./events/k8s-event";
 import { LOG_EVENTS } from "./events/log-events";
 import { PROJECT_EVENTS } from "./events/project-events";
 
@@ -32,6 +33,7 @@ export function actionEvent<
 export const WS_EVENTS = {
   LOG: LOG_EVENTS,
   PROJECT: PROJECT_EVENTS,
+  K8S: K8S_EVENTS,
   WELCOME: "welcome",
   INTRODUCE: "introduce",
   GOODBYE: "goodbye"
