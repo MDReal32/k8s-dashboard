@@ -8,14 +8,9 @@
     "libs/*",
     "plugins/*"
   ],
-  "scripts": {
-    "dev": "nx run-many -t serve",
-    "dev:server": "nx run server:serve",
-    "nest:g:full": "./scripts/nest:g:full.sh",
-    "plugin:generate": "node tools/scripts/generate-plugin.mjs"
-  },
   "devDependencies": {
     "@nx/nest": "16.10.0",
+    "@nx/plugin": "16.10.0",
     "@nx/react": "16.10.0",
     "@nx/workspace": "16.10.0",
     "@trivago/prettier-plugin-sort-imports": "4.2.0",
