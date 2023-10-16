@@ -4,7 +4,7 @@ import { nxViteTsPaths } from "@nx/vite/plugins/nx-tsconfig-paths.plugin";
 import react from "@vitejs/plugin-react-swc";
 
 export default defineConfig({
-  cacheDir: "../node_modules/.vite/client",
+  cacheDir: "../../node_modules/.vite/client",
   clearScreen: false,
 
   server: {
