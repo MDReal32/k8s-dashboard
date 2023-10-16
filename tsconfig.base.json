@@ -11,7 +11,9 @@
     "baseUrl": ".",
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "paths": {},
+    "paths": {
+      "@k8sd/shared": ["libs/shared/src/index.ts"]
+    },
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "skipDefaultLibCheck": true,
