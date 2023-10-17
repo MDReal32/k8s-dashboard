@@ -1,0 +1,49 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table Project {
+  id String [pk]
+  name String [not null]
+  repo GitRepo [not null]
+  repoId String [not null]
+  CI CI [not null]
+  cIId String [not null]
+}
+
+Table CI {
+  id String [pk]
+  type CIType [not null]
+  cITypeId String [not null]
+  Project Project [not null]
+}
+
+Table CIType {
+  id String [pk]
+  name String [unique, not null]
+  description String [not null]
+  CI CI [not null]
+}
+
+Table GitRepo {
+  id String [pk]
+  url String [not null]
+  credentials GitRepoCredentials [not null]
+  gitRepoCredentialsId String [not null]
+  Project Project [not null]
+}
+
+Table GitRepoCredentials {
+  id String [pk]
+  username String [not null]
+  password String [not null]
+  GitRepo GitRepo [not null]
+}
+
+Ref: Project.repoId > GitRepo.id
+
+Ref: Project.cIId > CI.id
+
+Ref: CI.cITypeId > CIType.id
+
+Ref: GitRepo.gitRepoCredentialsId > GitRepoCredentials.id

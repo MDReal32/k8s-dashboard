@@ -7,36 +7,44 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model ProjectRepository {
-  id      String   @id @default(uuid())
-  url     String
-  branch  String
-  ssh     Boolean
-  Project Project?
-}
-
-model ProjectCi {
-  id       String   @id @default(uuid())
-  dir      String
-  provider String?
-  Project  Project?
-}
-
-enum Status {
-  PROJECT_CREATING
-  PROJECT_INITIALIZING
-  PROJECT_INITIALIZED
-  RETRIEVING_PROVIDER // TODO: automatically detect provider
-  INSTALLING_PROVIDER // TODO: docker compose up / kubectl apply / helm install'
-  PROVIDER_INSTALLED
+generator dbml {
+  provider = "prisma-dbml-generator"
 }
 
 model Project {
-  id     String            @id @default(uuid())
+  id     String  @id @default(uuid())
   name   String
-  repo   ProjectRepository @relation(fields: [repoId], references: [id])
-  repoId String            @unique
-  ci     ProjectCi         @relation(fields: [ciId], references: [id])
-  ciId   String            @unique
-  status Status            @default(PROJECT_CREATING)
+  repo   GitRepo @relation(fields: [repoId], references: [id])
+  repoId String
+  CI     CI      @relation(fields: [cIId], references: [id])
+  cIId   String
+}
+
+model CI {
+  id       String    @id @default(uuid())
+  type     CIType    @relation(fields: [cITypeId], references: [id])
+  cITypeId String
+  Project  Project[]
+}
+
+model CIType {
+  id          String @id @default(uuid())
+  name        String @unique
+  description String
+  CI          CI[]
+}
+
+model GitRepo {
+  id                   String             @id @default(uuid())
+  url                  String
+  credentials          GitRepoCredentials @relation(fields: [gitRepoCredentialsId], references: [id])
+  gitRepoCredentialsId String
+  Project              Project[]
+}
+
+model GitRepoCredentials {
+  id       String    @id @default(uuid())
+  username String
+  password String
+  GitRepo  GitRepo[]
 }

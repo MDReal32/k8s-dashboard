@@ -1,0 +1,9 @@
+{
+  "table": "CIType",
+  "data": [
+    { "name": "k8s", "description": "Kubernetes" },
+    { "name": "helm", "description": "Helm" },
+    { "name": "docker", "description": "Docker" }
+  ],
+  "upsertBy": ["name"]
+}
