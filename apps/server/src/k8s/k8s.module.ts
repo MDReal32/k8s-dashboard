@@ -11,6 +11,7 @@ import { NodeModule } from "./node/node.module";
 import { PodModule } from "./pod/pod.module";
 import { ReplicaSetModule } from "./replica-set/replica-set.module";
 import { SecretModule } from "./secret/secret.module";
+import { ServiceAccountService } from "./service-account/service-account.service";
 import { ServiceModule } from "./service/service.module";
 import { StatefulSetModule } from "./stateful-set/stateful-set.module";
 
@@ -30,6 +31,7 @@ import { StatefulSetModule } from "./stateful-set/stateful-set.module";
     // Networking
     IngressModule,
     ServiceModule,
+    ServiceAccountService,
 
     // Containers
     JobModule,

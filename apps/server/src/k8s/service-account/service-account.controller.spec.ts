@@ -1,18 +1,19 @@
 import { Test, TestingModule } from "@nestjs/testing";
+
 import { ServiceAccountController } from "./service-account.controller";
 
 describe("ServiceAccountController", () => {
-  let controller: ServiceAccountController;
+  let serviceAccountController: ServiceAccountController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ServiceAccountController]
     }).compile();
 
-    controller = module.get<ServiceAccountController>(ServiceAccountController);
+    serviceAccountController = module.get<ServiceAccountController>(ServiceAccountController);
   });
 
   it("should be defined", () => {
-    expect(controller).toBeDefined();
+    expect(serviceAccountController).toBeDefined();
   });
 });
