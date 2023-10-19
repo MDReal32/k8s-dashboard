@@ -1,4 +1,5 @@
 import { Test, TestingModule } from "@nestjs/testing";
+
 import { SecretService } from "./secret.service";
 
 describe("SecretService", () => {

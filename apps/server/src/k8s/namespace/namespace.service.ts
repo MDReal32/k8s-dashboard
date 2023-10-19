@@ -1,6 +1,3 @@
-import { WebSocket } from "ws";
-
-import { Watch } from "@kubernetes/client-node";
 import { Injectable, Logger } from "@nestjs/common";
 
 import { K8sService } from "../../base/k8s.service";

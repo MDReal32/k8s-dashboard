@@ -1,7 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 
 import { K8sService } from "../../base/k8s.service";
-import { PodService } from "../pod/pod.service";
 
 @Injectable()
 export class DeploymentService extends K8sService {
