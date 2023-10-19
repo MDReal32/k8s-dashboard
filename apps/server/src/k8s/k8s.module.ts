@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 
 import { ConfigMapModule } from "./config-map/config-map.module";
+import { CronJobModule } from "./cron-job/cron-job.module";
 import { DaemonSetModule } from "./daemon-set/daemon-set.module";
 import { DeploymentModule } from "./deployment/deployment.module";
 import { IngressModule } from "./ingress/ingress.module";
@@ -22,6 +23,7 @@ import { StatefulSetModule } from "./stateful-set/stateful-set.module";
     DaemonSetModule,
     StatefulSetModule,
     ReplicaSetModule,
+    CronJobModule,
     ServiceModule,
     JobModule,
     PodModule,
