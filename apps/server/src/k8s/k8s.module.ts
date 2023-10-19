@@ -14,6 +14,7 @@ import { SecretModule } from "./secret/secret.module";
 import { ServiceAccountService } from "./service-account/service-account.service";
 import { ServiceModule } from "./service/service.module";
 import { StatefulSetModule } from "./stateful-set/stateful-set.module";
+import { StorageClassModule } from "./storage-class/storage-class.module";
 
 @Module({
   imports: [
@@ -39,7 +40,10 @@ import { StatefulSetModule } from "./stateful-set/stateful-set.module";
 
     // Configs
     ConfigMapModule,
-    SecretModule
+    SecretModule,
+
+    // Misc
+    StorageClassModule
   ]
 })
 export class K8sModule {}

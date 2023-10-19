@@ -1,18 +1,19 @@
 import { Test, TestingModule } from "@nestjs/testing";
+
 import { StorageClassService } from "./storage-class.service";
 
 describe("StorageClassService", () => {
-  let service: StorageClassService;
+  let storageClassService: StorageClassService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [StorageClassService]
     }).compile();
 
-    service = module.get<StorageClassService>(StorageClassService);
+    storageClassService = module.get<StorageClassService>(StorageClassService);
   });
 
   it("should be defined", () => {
-    expect(service).toBeDefined();
+    expect(storageClassService).toBeDefined();
   });
 });
