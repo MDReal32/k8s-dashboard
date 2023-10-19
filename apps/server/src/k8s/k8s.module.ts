@@ -4,6 +4,7 @@ import { ConfigMapModule } from "./config-map/config-map.module";
 import { CronJobModule } from "./cron-job/cron-job.module";
 import { DaemonSetModule } from "./daemon-set/daemon-set.module";
 import { DeploymentModule } from "./deployment/deployment.module";
+import { HorizontalPodAutoscalerModule } from "./horizontal-pod-autoscaler/horizontal-pod-autoscaler.module";
 import { IngressModule } from "./ingress/ingress.module";
 import { JobModule } from "./job/job.module";
 import { NamespaceModule } from "./namespace/namespace.module";
@@ -32,7 +33,10 @@ import { StorageClassModule } from "./storage-class/storage-class.module";
     // Networking
     IngressModule,
     ServiceModule,
+
+    // Pod Management
     ServiceAccountService,
+    HorizontalPodAutoscalerModule,
 
     // Containers
     JobModule,
