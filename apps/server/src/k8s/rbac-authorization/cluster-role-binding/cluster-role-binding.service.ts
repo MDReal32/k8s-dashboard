@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { K8sService } from "../../base/k8s.service";
+import { K8sService } from "../../../base/k8s.service";
 
 @Injectable()
 export class ClusterRoleBindingService extends K8sService {
@@ -10,7 +10,7 @@ export class ClusterRoleBindingService extends K8sService {
 
   async getClusterRoleBindingResource() {
     const clusterRoleBindings = await this.catch(
-      this.rbacAuthorization.listRoleBindingForAllNamespaces()
+      this.k8sRbacAuthorization.listRoleBindingForAllNamespaces()
     );
     return clusterRoleBindings.body.items;
   }

@@ -1,6 +1,5 @@
 import { Module } from "@nestjs/common";
 
-import { ClusterRoleBindingModule } from "./cluster-role-binding/cluster-role-binding.module";
 import { ConfigMapModule } from "./config-map/config-map.module";
 import { CronJobModule } from "./cron-job/cron-job.module";
 import { DaemonSetModule } from "./daemon-set/daemon-set.module";
@@ -11,9 +10,8 @@ import { JobModule } from "./job/job.module";
 import { NamespaceModule } from "./namespace/namespace.module";
 import { NodeModule } from "./node/node.module";
 import { PodModule } from "./pod/pod.module";
+import { RbacAuthorizationModule } from "./rbac-authorization/rbac-authorization.module";
 import { ReplicaSetModule } from "./replica-set/replica-set.module";
-import { RoleBindingModule } from "./role-binding/role-binding.module";
-import { RoleModule } from "./role/role.module";
 import { SecretModule } from "./secret/secret.module";
 import { ServiceAccountService } from "./service-account/service-account.service";
 import { ServiceModule } from "./service/service.module";
@@ -49,10 +47,7 @@ import { StorageClassModule } from "./storage-class/storage-class.module";
     ConfigMapModule,
     SecretModule,
 
-    // Roles
-    RoleModule,
-    RoleBindingModule,
-    ClusterRoleBindingModule,
+    RbacAuthorizationModule,
 
     // Misc
     StorageClassModule
