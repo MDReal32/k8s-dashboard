@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { K8sService } from "../../base/k8s.service";
+import { K8sService } from "../../../base/k8s.service";
 
 @Injectable()
 export class ServiceAccountService extends K8sService {
