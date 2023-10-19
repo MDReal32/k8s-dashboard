@@ -13,6 +13,7 @@ import { NodeModule } from "./node/node.module";
 import { PodModule } from "./pod/pod.module";
 import { ReplicaSetModule } from "./replica-set/replica-set.module";
 import { RoleBindingModule } from "./role-binding/role-binding.module";
+import { RoleModule } from "./role/role.module";
 import { SecretModule } from "./secret/secret.module";
 import { ServiceAccountService } from "./service-account/service-account.service";
 import { ServiceModule } from "./service/service.module";
@@ -49,6 +50,7 @@ import { StorageClassModule } from "./storage-class/storage-class.module";
     SecretModule,
 
     // Roles
+    RoleModule,
     RoleBindingModule,
     ClusterRoleBindingModule,
 
