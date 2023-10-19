@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 
+import { ClusterRoleBindingModule } from "./cluster-role-binding/cluster-role-binding.module";
 import { ConfigMapModule } from "./config-map/config-map.module";
 import { CronJobModule } from "./cron-job/cron-job.module";
 import { DaemonSetModule } from "./daemon-set/daemon-set.module";
@@ -45,6 +46,9 @@ import { StorageClassModule } from "./storage-class/storage-class.module";
     // Configs
     ConfigMapModule,
     SecretModule,
+
+    // Roles
+    ClusterRoleBindingModule,
 
     // Misc
     StorageClassModule
