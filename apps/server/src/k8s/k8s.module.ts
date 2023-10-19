@@ -16,17 +16,26 @@ import { StatefulSetModule } from "./stateful-set/stateful-set.module";
 
 @Module({
   imports: [
+    // Root
     NodeModule,
-    IngressModule,
     NamespaceModule,
     DeploymentModule,
+
+    // Groups
     DaemonSetModule,
     StatefulSetModule,
     ReplicaSetModule,
     CronJobModule,
+
+    // Networking
+    IngressModule,
     ServiceModule,
+
+    // Containers
     JobModule,
     PodModule,
+
+    // Configs
     ConfigMapModule,
     SecretModule
   ]
