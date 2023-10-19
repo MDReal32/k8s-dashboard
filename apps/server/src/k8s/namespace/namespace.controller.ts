@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from "@nestjs/common";
+import { Controller, Get, Param, Query } from "@nestjs/common";
 
 import { NamespaceService } from "./namespace.service";
 
@@ -7,7 +7,12 @@ export class NamespaceController {
   constructor(private readonly namespaceService: NamespaceService) {}
 
   @Get()
-  getNamespace(@Param("namespace") namespace: string) {
-    return this.namespaceService.getNamespace(namespace);
+  getNamespaceResource(
+    @Param("namespace")
+    namespaceParam: string,
+    @Query("namespace")
+    namespaceQuery: string
+  ) {
+    return this.namespaceService.getNamespaceResource(namespaceParam || namespaceQuery);
   }
 }

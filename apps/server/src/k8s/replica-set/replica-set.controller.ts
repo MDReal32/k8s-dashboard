@@ -7,7 +7,7 @@ export class ReplicaSetController {
   constructor(private readonly replicaSetService: ReplicaSetService) {}
 
   @Get()
-  getPodResource(
+  getReplicaSetResource(
     @Param("namespace")
     namespaceParam: string,
     @Query("namespace")

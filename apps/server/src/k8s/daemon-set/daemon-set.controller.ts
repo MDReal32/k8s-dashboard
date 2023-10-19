@@ -7,7 +7,7 @@ export class DaemonSetController {
   constructor(private readonly daemonSetService: DaemonSetService) {}
 
   @Get()
-  getDeploymentResource(
+  getDaemonSetResource(
     @Param("namespace")
     namespaceParam: string,
     @Query("namespace")

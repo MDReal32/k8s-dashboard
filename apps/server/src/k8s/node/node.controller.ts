@@ -7,7 +7,7 @@ export class NodeController {
   constructor(private readonly nodeService: NodeService) {}
 
   @Get()
-  getPodResource() {
+  getNodeResource() {
     return this.nodeService.getNodeResource();
   }
 }

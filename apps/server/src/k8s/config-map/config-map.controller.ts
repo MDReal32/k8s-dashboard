@@ -7,7 +7,7 @@ export class ConfigMapController {
   constructor(private readonly configMapService: ConfigMapService) {}
 
   @Get()
-  getDeploymentResource(
+  getConfigMapResource(
     @Param("namespace")
     namespaceParam: string,
     @Query("namespace")

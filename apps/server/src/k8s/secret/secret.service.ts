@@ -9,6 +9,8 @@ export class SecretService extends K8sService {
   }
 
   async getSecretResource(namespace: string) {
+    this.expect(namespace, "namespace");
+
     const secrets = await this.catch(
       namespace === "_"
         ? this.k8sCoreApi.listSecretForAllNamespaces()

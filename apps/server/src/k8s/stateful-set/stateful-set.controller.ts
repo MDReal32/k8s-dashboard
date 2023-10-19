@@ -7,7 +7,7 @@ export class StatefulSetController {
   constructor(private readonly statefulSetService: StatefulSetService) {}
 
   @Get()
-  getPodResource(
+  getStatefulSetResource(
     @Param("namespace")
     namespaceParam: string,
     @Query("namespace")

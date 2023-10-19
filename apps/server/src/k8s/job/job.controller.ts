@@ -7,7 +7,7 @@ export class JobController {
   constructor(private readonly jobService: JobService) {}
 
   @Get()
-  getPodResource(
+  getJobResource(
     @Param("namespace")
     namespaceParam: string,
     @Query("namespace")

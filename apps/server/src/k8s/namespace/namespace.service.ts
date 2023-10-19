@@ -8,7 +8,7 @@ export class NamespaceService extends K8sService {
     super(new Logger(NamespaceService.name));
   }
 
-  async getNamespace(namespace: string) {
+  async getNamespaceResource(namespace: string) {
     return namespace === "_"
       ? (await this.catch(this.k8sCoreApi.listNamespace())).body.items
       : (await this.catch(this.k8sCoreApi.readNamespace(namespace))).body;

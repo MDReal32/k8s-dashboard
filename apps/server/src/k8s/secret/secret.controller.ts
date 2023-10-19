@@ -7,7 +7,7 @@ export class SecretController {
   constructor(private readonly secretService: SecretService) {}
 
   @Get()
-  getServiceResource(
+  getSecretResource(
     @Param("namespace")
     namespaceParam: string,
     @Query("namespace")
