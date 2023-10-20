@@ -7,8 +7,8 @@ Table Project {
   name String [not null]
   repo GitRepo [not null]
   repoId String [not null]
-  CI CI [not null]
-  cIId String [not null]
+  ci CI [not null]
+  ciId String [not null]
 }
 
 Table CI {
@@ -42,7 +42,7 @@ Table GitRepoCredentials {
 
 Ref: Project.repoId > GitRepo.id
 
-Ref: Project.cIId > CI.id
+Ref: Project.ciId > CI.id
 
 Ref: CI.cITypeId > CIType.id
 

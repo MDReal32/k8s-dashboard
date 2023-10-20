@@ -16,8 +16,8 @@ model Project {
   name   String
   repo   GitRepo @relation(fields: [repoId], references: [id])
   repoId String
-  CI     CI      @relation(fields: [cIId], references: [id])
-  cIId   String
+  ci     CI      @relation(fields: [ciId], references: [id])
+  ciId   String
 }
 
 model CI {
