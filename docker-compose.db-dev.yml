@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+  pql:
+    image: postgres:latest
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    env_file:
+      - .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+      - .ci/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  mongo:
+    image: mongo
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "${MONGO_PORT}:27017"
+    volumes:
+      - .ci/init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - mongo:/data/db
+
+
+volumes:
+  postgres:
+  mongo:
