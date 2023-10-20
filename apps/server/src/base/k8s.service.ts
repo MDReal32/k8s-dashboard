@@ -1,3 +1,4 @@
+import { Promisable } from "type-fest";
 import { WebSocket } from "ws";
 
 import { KubeConfig, Watch } from "@kubernetes/client-node";
