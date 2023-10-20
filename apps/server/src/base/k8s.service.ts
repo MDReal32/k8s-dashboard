@@ -10,16 +10,20 @@ import { BaseService } from "./base.service";
 
 @Injectable()
 export class K8sService extends BaseService {
-  private readonly _kc: KubeConfig;
   private __retry = 0;
   private __maxRetry = 1e2;
   private __watchers = new Set<WebSocket>();
   private readonly __watcher: Watch;
+  private readonly _kc: KubeConfig;
 
   constructor(protected readonly logger: Logger) {
     super();
     this._kc = new KubeConfig();
     this.__watcher = new Watch(this._kc);
+  }
+
+  get kc() {
+    return this._kc;
   }
 
   protected get watcher() {

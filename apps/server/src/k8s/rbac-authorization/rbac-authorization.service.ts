@@ -17,7 +17,7 @@ export class RbacAuthorizationService extends K8sService {
 
   init() {
     return super.init(() => {
-      RbacAuthorizationService._k8sApi = this._kc.makeApiClient(RbacAuthorizationV1Api);
+      RbacAuthorizationService._k8sApi = this.kc.makeApiClient(RbacAuthorizationV1Api);
     });
   }
 }

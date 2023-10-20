@@ -17,7 +17,7 @@ export class StorageService extends K8sService {
 
   init() {
     return super.init(() => {
-      StorageService._k8sApi = this._kc.makeApiClient(StorageV1Api);
+      StorageService._k8sApi = this.kc.makeApiClient(StorageV1Api);
     });
   }
 }

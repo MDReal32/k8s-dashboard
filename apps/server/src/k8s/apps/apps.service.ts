@@ -3,7 +3,6 @@ import { Injectable, Logger } from "@nestjs/common";
 
 import { K8sService } from "../../base/k8s.service";
 
-
 @Injectable()
 export class AppsService extends K8sService {
   constructor(protected readonly logger: Logger = new Logger(AppsService.name)) {
@@ -18,7 +17,7 @@ export class AppsService extends K8sService {
 
   init() {
     return super.init(() => {
-      AppsService._k8sApi = this._kc.makeApiClient(AppsV1Api);
+      AppsService._k8sApi = this.kc.makeApiClient(AppsV1Api);
     });
   }
 }

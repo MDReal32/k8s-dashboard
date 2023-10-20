@@ -17,7 +17,7 @@ export class AutoScalingService extends K8sService {
 
   init() {
     return super.init(() => {
-      AutoScalingService._k8sApi = this._kc.makeApiClient(AutoscalingV2Api);
+      AutoScalingService._k8sApi = this.kc.makeApiClient(AutoscalingV2Api);
     });
   }
 }

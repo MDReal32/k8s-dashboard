@@ -17,7 +17,7 @@ export class NetworkService extends K8sService {
 
   init() {
     return super.init(() => {
-      NetworkService._k8sApi = this._kc.makeApiClient(NetworkingV1Api);
+      NetworkService._k8sApi = this.kc.makeApiClient(NetworkingV1Api);
     });
   }
 }
