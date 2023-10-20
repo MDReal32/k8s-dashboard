@@ -4,6 +4,7 @@ import { AppsModule } from "./apps/apps.module";
 import { AutoScalingModule } from "./auto-scaling/auto-scaling.module";
 import { BatchModule } from "./batch/batch.module";
 import { CoreModule } from "./core/core.module";
+import { NetworkModule } from "./network/network.module";
 import { RbacAuthorizationModule } from "./rbac-authorization/rbac-authorization.module";
 import { StorageModule } from "./storage/storage.module";
 
@@ -14,6 +15,7 @@ import { StorageModule } from "./storage/storage.module";
     BatchModule,
     AutoScalingModule,
     RbacAuthorizationModule,
+    NetworkModule,
     StorageModule
   ]
 })
