@@ -24,9 +24,13 @@ export function actionEvent<
   return actions.reduce(
     (acc, action) => ({
       ...acc,
-      [`${name}_${action}`.toUpperCase()]: `ws-events::${event}::${action}`.toLowerCase()
+      [`${name}_${action}`.toUpperCase()]: ["ws-events", event, action].join("::").toLowerCase()
     }),
-    { [name.toUpperCase()]: event.toLowerCase() } as ActionEvent<EventName, Event, Actions>
+    { [name.toUpperCase()]: ["ws-events", event.toLowerCase()].join("::") } as ActionEvent<
+      EventName,
+      Event,
+      Actions
+    >
   );
 }
 
