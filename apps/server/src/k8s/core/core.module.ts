@@ -1,22 +1,32 @@
-import { Module } from "@nestjs/common";
+import { Logger, Module, OnModuleInit } from "@nestjs/common";
 
 import { ConfigMapModule } from "./config-map/config-map.module";
+import { CoreService } from "./core.service";
 import { NamespaceModule } from "./namespace/namespace.module";
 import { NodeModule } from "./node/node.module";
 import { PodModule } from "./pod/pod.module";
 import { SecretModule } from "./secret/secret.module";
-import { ServiceAccountService } from "./service-account/service-account.service";
+import { ServiceAccountModule } from "./service-account/service-account.module";
 import { ServiceModule } from "./service/service.module";
+
 
 @Module({
   imports: [
     NodeModule,
     NamespaceModule,
-    ServiceAccountService,
+    ServiceAccountModule,
     ServiceModule,
     PodModule,
     ConfigMapModule,
     SecretModule
-  ]
+  ],
+  providers: [CoreService, Logger],
+  exports: [CoreService]
 })
-export class CoreModule {}
+export class CoreModule implements OnModuleInit {
+  constructor(private readonly coreService: CoreService) {}
+
+  async onModuleInit() {
+    await this.coreService.init();
+  }
+}

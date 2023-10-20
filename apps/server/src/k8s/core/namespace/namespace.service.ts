@@ -1,17 +1,18 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { K8sService } from "../../../base/k8s.service";
+import { CoreService } from "../core.service";
+
 
 @Injectable()
-export class NamespaceService extends K8sService {
+export class NamespaceService extends CoreService {
   constructor() {
     super(new Logger(NamespaceService.name));
   }
 
   async getNamespaceResource(namespace: string) {
     return namespace === "_"
-      ? (await this.catch(this.k8sCoreApi.listNamespace())).body.items
-      : (await this.catch(this.k8sCoreApi.readNamespace(namespace))).body;
+      ? (await this.catch(this.k8sApi.listNamespace())).body.items
+      : (await this.catch(this.k8sApi.readNamespace(namespace))).body;
   }
 
   k8sWatch() {

@@ -1,9 +1,10 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { K8sService } from "../../../base/k8s.service";
+import { CoreService } from "../core.service";
+
 
 @Injectable()
-export class ServiceService extends K8sService {
+export class ServiceService extends CoreService {
   constructor() {
     super(new Logger(ServiceService.name));
   }
@@ -13,8 +14,8 @@ export class ServiceService extends K8sService {
 
     const services = await this.catch(
       namespace === "_"
-        ? this.k8sCoreApi.listServiceForAllNamespaces()
-        : this.k8sCoreApi.listNamespacedService(namespace)
+        ? this.k8sApi.listServiceForAllNamespaces()
+        : this.k8sApi.listNamespacedService(namespace)
     );
     return services.body.items;
   }

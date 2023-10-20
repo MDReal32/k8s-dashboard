@@ -1,13 +1,6 @@
 import { WebSocket } from "ws";
 
-import {
-  AppsV1Api,
-  BatchV1Api,
-  CoreV1Api,
-  KubeConfig,
-  NetworkingV1Api,
-  Watch
-} from "@kubernetes/client-node";
+import { KubeConfig, Watch } from "@kubernetes/client-node";
 import { BadRequestException, Injectable, Logger } from "@nestjs/common";
 import { WsException } from "@nestjs/websockets";
 
@@ -30,30 +23,6 @@ export class K8sService extends BaseService {
     this.__watcher = new Watch(this._kc);
 
     this.k8sWatch().then();
-  }
-
-  private _k8sCoreApi: CoreV1Api;
-
-  get k8sCoreApi() {
-    return this._k8sCoreApi;
-  }
-
-  private _k8sAppsApi: AppsV1Api;
-
-  get k8sAppsApi() {
-    return this._k8sAppsApi;
-  }
-
-  private _k8sNetworkingApi: NetworkingV1Api;
-
-  get k8sNetworkingApi() {
-    return this._k8sNetworkingApi;
-  }
-
-  private _k8sBatchApi: BatchV1Api;
-
-  get k8sBatchApi() {
-    return this._k8sBatchApi;
   }
 
   protected get watcher() {
@@ -133,10 +102,6 @@ export class K8sService extends BaseService {
   private makeApiClient() {
     try {
       this._kc.loadFromDefault();
-      this._k8sCoreApi = this._kc.makeApiClient(CoreV1Api);
-      this._k8sAppsApi = this._kc.makeApiClient(AppsV1Api);
-      this._k8sNetworkingApi = this._kc.makeApiClient(NetworkingV1Api);
-      this._k8sBatchApi = this._kc.makeApiClient(BatchV1Api);
     } catch (error) {
       if (this.__retry === 0) this.logger.log("Kubernetes API isn't available. Retrying...");
       else this.logger.log(`Retrying ${this.__retry}/${this.__maxRetry}...`);

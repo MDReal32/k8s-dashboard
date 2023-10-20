@@ -1,43 +1,20 @@
 import { Module } from "@nestjs/common";
 
+import { AppsModule } from "./apps/apps.module";
+import { AutoScalingModule } from "./auto-scaling/auto-scaling.module";
+import { BatchModule } from "./batch/batch.module";
 import { CoreModule } from "./core/core.module";
-import { CronJobModule } from "./cron-job/cron-job.module";
-import { DaemonSetModule } from "./daemon-set/daemon-set.module";
-import { DeploymentModule } from "./deployment/deployment.module";
-import { HorizontalPodAutoscalerModule } from "./horizontal-pod-autoscaler/horizontal-pod-autoscaler.module";
-import { IngressModule } from "./ingress/ingress.module";
-import { JobModule } from "./job/job.module";
 import { RbacAuthorizationModule } from "./rbac-authorization/rbac-authorization.module";
-import { ReplicaSetModule } from "./replica-set/replica-set.module";
-import { StatefulSetModule } from "./stateful-set/stateful-set.module";
-import { StorageClassModule } from "./storage-class/storage-class.module";
+import { StorageModule } from "./storage/storage.module";
 
 @Module({
   imports: [
+    AppsModule,
     CoreModule,
-
-    // Root
-    DeploymentModule,
-
-    // Groups
-    DaemonSetModule,
-    StatefulSetModule,
-    ReplicaSetModule,
-    CronJobModule,
-
-    // Networking
-    IngressModule,
-
-    // Pod Management
-    HorizontalPodAutoscalerModule,
-
-    // Containers
-    JobModule,
-
+    BatchModule,
+    AutoScalingModule,
     RbacAuthorizationModule,
-
-    // Misc
-    StorageClassModule
+    StorageModule
   ]
 })
 export class K8sModule {}

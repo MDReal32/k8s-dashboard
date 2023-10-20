@@ -1,9 +1,10 @@
 import { Injectable, Logger } from "@nestjs/common";
 
 import { K8sService } from "../../../base/k8s.service";
+import { RbacAuthorizationService } from "../rbac-authorization.service";
 
 @Injectable()
-export class RoleService extends K8sService {
+export class RoleService extends RbacAuthorizationService {
   constructor() {
     super(new Logger(RoleService.name));
   }
@@ -13,13 +14,13 @@ export class RoleService extends K8sService {
 
     const roles = await this.catch(
       namespace === "_"
-        ? this.k8sRbacAuthorization.listRoleForAllNamespaces()
-        : this.k8sRbacAuthorization.listNamespacedRole(namespace)
+        ? this.k8sApi.listRoleForAllNamespaces()
+        : this.k8sApi.listNamespacedRole(namespace)
     );
     return roles.body.items;
   }
 
   k8sWatch() {
-    return super.k8sWatcher("someEndpoint");
+    return super.k8sWatcher("/apis/rbac.authorization.k8s.io/v1/roles");
   }
 }
