@@ -1,4 +1,4 @@
-import { actionEvent } from "@k8sd/shared";
+import { actionEvent } from "..";
 
 export const K8S_EVENTS = {
   ...actionEvent("watch", "k8s::watch", "success", "exception"),
