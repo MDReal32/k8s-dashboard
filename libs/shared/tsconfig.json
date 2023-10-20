@@ -2,7 +2,6 @@
   "compilerOptions": {
     "module": "commonjs",
     "strict": true,
-    "types": ["vitest"],
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "forceConsistentCasingInFileNames": true,

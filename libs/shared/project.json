@@ -5,28 +5,25 @@
   "projectType": "library",
   "targets": {
     "build": {
-      "executor": "@nx/js:swc",
+      "executor": "@nx/vite:build",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "build/libs/shared",
-        "main": "libs/shared/src/index.ts",
-        "tsConfig": "libs/shared/tsconfig.lib.json",
-        "assets": ["libs/shared/*.md"]
+        "outputPath": "build/libs/shared"
+      }
+    },
+    "test": {
+      "executor": "@nx/vite:test",
+      "outputs": ["{options.reportsDirectory}"],
+      "options": {
+        "passWithNoTests": true,
+        "reportsDirectory": "../../coverage/libs/shared"
       }
     },
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/shared/**/*.ts"]
-      }
-    },
-    "test": {
-      "executor": "@nx/vite:test",
-      "outputs": ["coverage/libs/shared"],
-      "options": {
-        "passWithNoTests": true,
-        "reportsDirectory": "../../coverage/libs/shared"
+        "lintFilePatterns": ["libs/shared/**/*.ts", "libs/shared/package.json"]
       }
     }
   },
