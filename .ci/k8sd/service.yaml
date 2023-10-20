@@ -3,6 +3,7 @@ kind: Service
 
 metadata:
   name: k8sd
+  namespace: k8sd
   labels:
     app: k8sd
 

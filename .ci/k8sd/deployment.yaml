@@ -3,12 +3,13 @@ kind: Deployment
 
 metadata:
   name: k8sd
+  namespace: k8sd
 
 spec:
   selector:
     matchLabels:
       app: k8sd
-  replicas: 2
+  replicas: 5
   template:
     metadata:
       labels:
