@@ -14,5 +14,6 @@ export const routeBuilder = new PagePathTree()
   .addRoute("Graph (:namespace)", "/graph/:namespace", <Graph />);
 
 export const routes = routeBuilder.getRoutes();
+export const routePaths = routeBuilder.getRoutePaths();
 export const pathMap = routeBuilder.getPathMap();
 export const router = createBrowserRouter(routes);
