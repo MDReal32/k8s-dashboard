@@ -4,10 +4,7 @@ import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
 import { requests } from "../api/requests";
 import { SuccessResponse } from "../types";
-
-type FixName<T extends string> = T extends `${infer F}-${infer R}` ? `${F}${Capitalize<R>}` : T;
-const fixName = <T extends string>(name: T): FixName<T> =>
-  name.replace(/-(\w)/g, (_, c) => c.toUpperCase()) as FixName<T>;
+import { FixName, fixName } from "../utils/fix-name";
 
 export type ResourceObject<T extends ResourceTypes[]> = {
   [Key in T[number] as FixName<Key>]: SuccessResponse<ResourceTypeMap[Key][]>;
