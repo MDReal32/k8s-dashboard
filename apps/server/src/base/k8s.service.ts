@@ -20,8 +20,6 @@ export class K8sService extends BaseService {
     super();
     this._kc = new KubeConfig();
     this.__watcher = new Watch(this._kc);
-
-    this.k8sWatch().then();
   }
 
   protected get watcher() {
@@ -50,10 +48,6 @@ export class K8sService extends BaseService {
       return;
     }
     this.watchers.delete(client);
-  }
-
-  async k8sWatch() {
-    throw new Error("Method not implemented.");
   }
 
   protected async k8sWatcher(path: string) {
@@ -116,5 +110,9 @@ export class K8sService extends BaseService {
 
       return this.init(fn);
     }
+
+    await this.k8sWatch();
   }
+
+  async k8sWatch() {}
 }
