@@ -1,11 +1,12 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { GraphCanvas, GraphCanvasRef, useSelection } from "reagraph";
+import { GraphCanvas } from "reagraph";
 
 import { ResourceTypes } from "@k8sd/shared";
 
 import { Controls } from "../../components/controls";
 import { useAddNodesAndEdges } from "../../hooks/use-add-nodes-and-edges";
+import { useGetArrayObject } from "../../hooks/use-get-array-object";
 import { useGetResources } from "../../hooks/use-get-resources";
 import { pathMap } from "../../routes";
 
@@ -26,32 +27,28 @@ export const Graph = () => {
     [urlSearchParams]
   );
 
-  const graphRef = useRef<GraphCanvasRef | null>(null);
-
   const { namespace: namespaces, ...resources } = useGetResources(
     namespace,
     Object.values(ResourceTypes)
   );
 
   const [graphLayoutType, setGraphLayoutType] = useState<GraphLayoutType>(defaultGraphLayoutType);
+  const namespacesObject = useGetArrayObject(ResourceTypes.NAMESPACE, namespaces.data);
 
   const { nodes, edges } = useAddNodesAndEdges(resources);
 
-  const { selections, onNodeClick, onCanvasClick } = useSelection({
-    ref: graphRef,
-    nodes,
-    edges,
-    focusOnSelect: false
-  });
-
   return (
-    <div>
+    <>
       <Controls>
-        <select value={namespace} onChange={e => navigate(pathMap.GRAPH_NAMESPACE(e.target.value))}>
+        <select
+          className="w-full"
+          value={namespace}
+          onChange={e => navigate(pathMap.GRAPH_NAMESPACE(e.target.value))}
+        >
           <option key="_" value="_">
             all
           </option>
-          {namespaces.data?.map(namespace => (
+          {namespacesObject.map(namespace => (
             <option key={namespace.metadata?.name} value={namespace.metadata?.name || ""}>
               {namespace.metadata?.name}
             </option>
@@ -59,6 +56,7 @@ export const Graph = () => {
         </select>
 
         <select
+          className="w-full"
           value={graphLayoutType}
           onChange={e => setGraphLayoutType(e.target.value as GraphLayoutType)}
         >
@@ -70,18 +68,17 @@ export const Graph = () => {
         </select>
       </Controls>
 
-      <GraphCanvas
-        nodes={nodes}
-        edges={edges}
-        cameraMode="pan"
-        layoutType={graphLayoutType === "2d" ? "forceDirected2d" : "forceDirected3d"}
-        selections={selections}
-        onNodeClick={onNodeClick}
-        onCanvasClick={onCanvasClick}
-        onNodeContextMenu={node => {
-          console.log(node.data);
-        }}
-      />
-    </div>
+      <div className="h-full">
+        <GraphCanvas
+          nodes={nodes}
+          edges={edges}
+          cameraMode="pan"
+          layoutType={graphLayoutType === "2d" ? "forceDirected2d" : "forceDirected3d"}
+          onNodeContextMenu={node => {
+            console.log(node.data);
+          }}
+        />
+      </div>
+    </>
   );
 };
