@@ -19,7 +19,6 @@ export class K8sService extends BaseService {
   constructor(protected readonly logger: Logger) {
     super();
     this._kc = new KubeConfig();
-    this.makeApiClient();
     this.__watcher = new Watch(this._kc);
 
     this.k8sWatch().then();
@@ -80,8 +79,7 @@ export class K8sService extends BaseService {
     } catch (error) {
       if (["EHOSTUNREACH"].includes(error.code)) {
         this.__retry = 0;
-        this.makeApiClient();
-        return promise;
+        return this.init().then(promise);
       }
 
       this.logger.error(error);
@@ -99,9 +97,10 @@ export class K8sService extends BaseService {
     return value;
   }
 
-  private makeApiClient() {
+  protected async init(fn?: () => Promisable<void>) {
     try {
       this._kc.loadFromDefault();
+      await fn?.();
     } catch (error) {
       if (this.__retry === 0) this.logger.log("Kubernetes API isn't available. Retrying...");
       else this.logger.log(`Retrying ${this.__retry}/${this.__maxRetry}...`);
@@ -115,7 +114,7 @@ export class K8sService extends BaseService {
         throw new BadRequestException("Kubernetes API isn't available", { cause: error });
       }
 
-      return this.makeApiClient();
+      return this.init(fn);
     }
   }
 }
