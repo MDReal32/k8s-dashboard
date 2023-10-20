@@ -2,6 +2,6 @@
   "name": "@k8sd/verdaccio",
   "version": "0.0.0-development",
   "devDependencies": {
-    "verdaccio": "5.0.4"
+    "verdaccio": "5.27.0"
   }
 }
