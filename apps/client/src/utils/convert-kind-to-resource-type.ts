@@ -1,4 +1,4 @@
-import { K8sResource } from "../types";
+import { K8sResource } from "@k8sd/shared";
 
 export const convertKindToResourceType = (kind?: string) =>
   kind?.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase() as K8sResource;

@@ -1,4 +1,6 @@
-import { ResourceTypeMap, ResourceTypes, Response, RxApiStream } from "../types";
+import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
+
+import { Response, RxApiStream } from "../types";
 import { fetch$ } from "../utils/fetch$";
 
 const resource =

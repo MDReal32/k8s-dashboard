@@ -1,8 +1,7 @@
 import { useEffect, useMemo } from "react";
 
-import { WS_EVENTS } from "@k8sd/shared";
+import { ResourceTypeMap, ResourceTypes, WS_EVENTS } from "@k8sd/shared";
 
-import { ResourceTypeMap, ResourceTypes } from "../types";
 import { useWebsocket } from "./use-websocket";
 
 export enum UpdateEventTypeEnum {

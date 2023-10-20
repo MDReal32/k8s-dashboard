@@ -1,18 +1,16 @@
 import type {
-  V1Deployment,
-  V1Namespace,
-  V1Pod,
-  V1Service,
-  V1StatefulSet
-} from "@kubernetes/client-node";
-import {
   V1ConfigMap,
   V1DaemonSet,
+  V1Deployment,
   V1Ingress,
   V1Job,
+  V1Namespace,
   V1Node,
+  V1Pod,
   V1ReplicaSet,
-  V1Secret
+  V1Secret,
+  V1Service,
+  V1StatefulSet
 } from "@kubernetes/client-node";
 
 export enum ResourceTypes {
@@ -44,3 +42,5 @@ export interface ResourceTypeMap {
   [ResourceTypes.CONFIG_MAP]: V1ConfigMap;
   [ResourceTypes.SECRET]: V1Secret;
 }
+
+export type K8sResource = Exclude<ResourceTypes, ResourceTypes.NAMESPACE>;

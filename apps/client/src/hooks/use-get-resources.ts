@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 
+import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
+
 import { requests } from "../api/requests";
-import { ResourceTypeMap, ResourceTypes, SuccessResponse } from "../types";
+import { SuccessResponse } from "../types";
 
 type FixName<T extends string> = T extends `${infer F}-${infer R}` ? `${F}${Capitalize<R>}` : T;
 const fixName = <T extends string>(name: T): FixName<T> =>

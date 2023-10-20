@@ -2,11 +2,12 @@ import { useMemo, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { GraphCanvas, GraphCanvasRef, useSelection } from "reagraph";
 
+import { ResourceTypes } from "@k8sd/shared";
+
 import { Controls } from "../../components/controls";
 import { useAddNodesAndEdges } from "../../hooks/use-add-nodes-and-edges";
 import { useGetResources } from "../../hooks/use-get-resources";
 import { pathMap } from "../../routes";
-import { ResourceTypes } from "../../types";
 
 type GraphLayoutType = "2d" | "3d";
 

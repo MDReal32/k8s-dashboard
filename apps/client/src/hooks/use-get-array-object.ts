@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { K8sResource, ResourceTypeMap } from "../types";
+import { K8sResource, ResourceTypeMap } from "@k8sd/shared";
+
 import { getAppName } from "../utils/get-app-name";
 import { UpdateEventTypeEnum, useLiveListenResource } from "./use-live-listen-resource";
 

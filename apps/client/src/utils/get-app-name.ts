@@ -1,4 +1,4 @@
-import { ResourceTypeMap, ResourceTypes } from "../types";
+import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
 export const getAppName = (node: ResourceTypeMap[ResourceTypes]) =>
   ["app", "k8s-app"].map(key => node.metadata?.labels?.[key]).filter(Boolean)[0];

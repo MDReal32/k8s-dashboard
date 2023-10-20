@@ -4,7 +4,8 @@ import { GraphEdge, GraphElementBaseAttributes, GraphNode } from "reagraph";
 
 import { V1Service } from "@kubernetes/client-node";
 
-import { K8sResource, ResourceTypeMap, ResourceTypes } from "../types";
+import { K8sResource, ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
+
 import { convertKindToResourceType } from "../utils/convert-kind-to-resource-type";
 import { ArrayObject, useGetArrayObject } from "./use-get-array-object";
 import { useGetColorByCategory } from "./use-get-color-by-category";

@@ -1,8 +1,10 @@
 import { Subscription, from, switchMap } from "rxjs";
 import { fromFetch } from "rxjs/fetch";
 
+import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
+
 import { API_URL } from "../const";
-import { ResourceTypeMap, ResourceTypes, Response, RxApiStream } from "../types";
+import { Response, RxApiStream } from "../types";
 
 export const fetch$ = <T extends ResourceTypes>(
   url: string,

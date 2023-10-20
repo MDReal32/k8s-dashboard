@@ -13,7 +13,6 @@
     "rxjs": "7.8.1"
   },
   "devDependencies": {
-    "@kubernetes/client-node": "0.19.0",
     "@nx/js": "16.10.0",
     "@nx/react": "16.10.0",
     "@nx/vite": "16.10.0",
