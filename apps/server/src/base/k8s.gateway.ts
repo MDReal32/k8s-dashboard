@@ -7,7 +7,7 @@ import { WS_EVENTS } from "@k8sd/shared";
 import { BaseGateway } from "./base.gateway";
 import { K8sService } from "./k8s.service";
 
-export class BaseK8sGateway extends BaseGateway implements OnGatewayConnection {
+export class K8sGateway extends BaseGateway implements OnGatewayConnection {
   constructor(private readonly __service: K8sService) {
     super(__service);
   }
