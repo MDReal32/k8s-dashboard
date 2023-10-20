@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 
-import { K8sResource, ResourceTypeMap } from "@k8sd/shared";
+import { K8sResource, ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
 import { getAppName } from "../utils/get-app-name";
 import { UpdateEventTypeEnum, useLiveListenResource } from "./use-live-listen-resource";
@@ -13,7 +13,7 @@ type ArrayObjectExtra = {
 export type ArrayObject<TResource extends ResourceTypeMap[K8sResource]> = TResource[] &
   ArrayObjectExtra;
 
-export const useGetArrayObject = <TResourceType extends K8sResource>(
+export const useGetArrayObject = <TResourceType extends ResourceTypes>(
   resourceType: TResourceType,
   initialData: ResourceTypeMap[TResourceType][] | null
 ): ArrayObject<ResourceTypeMap[TResourceType]> => {
