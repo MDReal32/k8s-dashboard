@@ -11,7 +11,7 @@ export class StatefulSetService extends AppsService {
   async getStatefulSetResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    const statefulSets = await this.catch(
+    const statefulSets = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listStatefulSetForAllNamespaces()
         : this.k8sApi.listNamespacedStatefulSet(namespace)

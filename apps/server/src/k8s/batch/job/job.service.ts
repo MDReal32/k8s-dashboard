@@ -11,7 +11,7 @@ export class JobService extends BatchService {
   async getJobResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    const jobs = await this.catch(
+    const jobs = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listJobForAllNamespaces()
         : this.k8sApi.listNamespacedJob(namespace)

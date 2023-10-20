@@ -11,7 +11,7 @@ export class IngressService extends NetworkService {
   async getIngressResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    const ingresses = await this.catch(
+    const ingresses = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listIngressForAllNamespaces()
         : this.k8sApi.listNamespacedIngress(namespace)

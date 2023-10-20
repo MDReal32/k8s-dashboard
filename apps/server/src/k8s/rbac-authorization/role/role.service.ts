@@ -12,7 +12,7 @@ export class RoleService extends RbacAuthorizationService {
   async getRoleResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    const roles = await this.catch(
+    const roles = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listRoleForAllNamespaces()
         : this.k8sApi.listNamespacedRole(namespace)

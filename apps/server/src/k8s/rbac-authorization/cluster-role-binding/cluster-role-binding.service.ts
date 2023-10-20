@@ -10,7 +10,9 @@ export class ClusterRoleBindingService extends RbacAuthorizationService {
   }
 
   async getClusterRoleBindingResource() {
-    const clusterRoleBindings = await this.catch(this.k8sApi.listRoleBindingForAllNamespaces());
+    const clusterRoleBindings = await this.catch(() =>
+      this.k8sApi.listRoleBindingForAllNamespaces()
+    );
     return clusterRoleBindings.body.items;
   }
 

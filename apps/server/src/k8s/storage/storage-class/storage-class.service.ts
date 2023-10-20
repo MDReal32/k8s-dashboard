@@ -10,7 +10,7 @@ export class StorageClassService extends StorageService {
   }
 
   async getStorageClassResource() {
-    const storageClasses = await this.catch(this.k8sApi.listStorageClass());
+    const storageClasses = await this.catch(() => this.k8sApi.listStorageClass());
     return storageClasses.body.items;
   }
 

@@ -74,9 +74,9 @@ export class K8sService extends BaseService {
     );
   }
 
-  protected catch<T>(promise: Promise<T>): Promise<T> {
+  protected catch<T>(promise: () => Promise<T>): Promise<T> {
     try {
-      return promise;
+      return promise();
     } catch (error) {
       if (["EHOSTUNREACH"].includes(error.code)) {
         this.__retry = 0;

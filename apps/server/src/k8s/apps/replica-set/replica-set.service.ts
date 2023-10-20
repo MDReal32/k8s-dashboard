@@ -11,7 +11,7 @@ export class ReplicaSetService extends AppsService {
   async getReplicaSetResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    const replicaSets = await this.catch(
+    const replicaSets = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listReplicaSetForAllNamespaces()
         : this.k8sApi.listNamespacedReplicaSet(namespace)

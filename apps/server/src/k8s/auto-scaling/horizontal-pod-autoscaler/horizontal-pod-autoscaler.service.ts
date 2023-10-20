@@ -11,7 +11,7 @@ export class HorizontalPodAutoscalerService extends AutoScalingService {
   async getHorizontalPodAutoscalerResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    const horizontalPodAutoscalers = await this.catch(
+    const horizontalPodAutoscalers = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listHorizontalPodAutoscalerForAllNamespaces()
         : this.k8sApi.listNamespacedHorizontalPodAutoscaler(namespace)

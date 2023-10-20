@@ -2,7 +2,6 @@ import { Injectable, Logger } from "@nestjs/common";
 
 import { CoreService } from "../core.service";
 
-
 @Injectable()
 export class ServiceService extends CoreService {
   constructor() {
@@ -12,7 +11,7 @@ export class ServiceService extends CoreService {
   async getServiceResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    const services = await this.catch(
+    const services = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listServiceForAllNamespaces()
         : this.k8sApi.listNamespacedService(namespace)

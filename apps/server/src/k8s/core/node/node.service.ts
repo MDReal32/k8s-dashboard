@@ -2,7 +2,6 @@ import { Injectable, Logger } from "@nestjs/common";
 
 import { CoreService } from "../core.service";
 
-
 @Injectable()
 export class NodeService extends CoreService {
   constructor() {
@@ -10,7 +9,7 @@ export class NodeService extends CoreService {
   }
 
   async getNodeResource() {
-    const nodes = await this.catch(this.k8sApi.listNode());
+    const nodes = await this.catch(() => this.k8sApi.listNode());
     return nodes.body.items;
   }
 

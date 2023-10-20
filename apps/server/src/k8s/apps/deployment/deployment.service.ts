@@ -11,7 +11,7 @@ export class DeploymentService extends AppsService {
   async getDeploymentResource(namespace: string) {
     this.expect(namespace, "namespace");
 
-    const deployments = await this.catch(
+    const deployments = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listDeploymentForAllNamespaces()
         : this.k8sApi.listNamespacedDeployment(namespace)
