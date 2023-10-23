@@ -5,22 +5,33 @@
   "projectType": "application",
   "targets": {
     "build": {
-      "executor": "@nx/webpack:webpack",
+      "executor": "@nx/esbuild:esbuild",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "target": "node",
-        "compiler": "swc",
+        "platform": "node",
         "outputPath": "build/apps/core",
+        "format": ["cjs"],
+        "bundle": false,
         "main": "apps/core/src/main.ts",
         "tsConfig": "apps/core/tsconfig.app.json",
-        "isolatedConfig": true,
-        "webpackConfig": "apps/core/webpack.config.js"
+        "generatePackageJson": true,
+        "esbuildOptions": {
+          "sourcemap": true,
+          "outExtension": {
+            ".js": ".js"
+          }
+        }
       },
       "configurations": {
         "development": {},
         "production": {
-          "generateLockfile": true
+          "esbuildOptions": {
+            "sourcemap": false,
+            "outExtension": {
+              ".js": ".js"
+            }
+          }
         }
       }
     },
