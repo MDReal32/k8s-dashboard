@@ -2,13 +2,21 @@
   "name": "@k8sd/monorepo",
   "version": "0.0.0-development",
   "private": true,
-  "license": "MIT",
   "workspaces": [
     "apps/*",
     "libs/*",
     "plugins/*"
   ],
+  "scripts": {
+    "prisma:migrate": "yarn prisma:migrate:core $0 && yarn prisma:migrate:logs $0",
+    "prisma:migrate:core": "yarn prisma migrate dev --schema prisma/core/schema.prisma --name",
+    "prisma:migrate:logs": "yarn prisma migrate dev --schema prisma/logs/schema.prisma --name"
+  },
+  "dependencies": {
+    "@prisma/client": "5.4.2"
+  },
   "devDependencies": {
+    "@iarna/toml": "2.2.5",
     "@nx/devkit": "17.0.0",
     "@nx/eslint-plugin": "17.0.0",
     "@nx/jest": "17.0.0",
@@ -23,7 +31,12 @@
     "nx": "17.0.0",
     "nx-cloud": "latest",
     "prettier": "3.0.3",
-    "prettier-plugin-packagejson": "2.4.6"
+    "prettier-plugin-packagejson": "2.4.6",
+    "prisma": "5.4.2",
+    "prisma-dbml-generator": "0.10.0"
   },
-  "packageManager": "yarn@3.6.3"
+  "packageManager": "yarn@3.6.3",
+  "prisma": {
+    "seed": "ts-node --project tsconfig.app.json --transpile-only prisma/seed.ts"
+  }
 }

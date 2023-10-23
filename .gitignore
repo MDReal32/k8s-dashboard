@@ -225,3 +225,4 @@ dist
 /build
 .nx
 /tmp
+!prisma/logs

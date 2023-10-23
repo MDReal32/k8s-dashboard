@@ -1,11 +1,11 @@
 import { Module } from "@nestjs/common";
-import { PrismaModule } from "nestjs-prisma";
 
 import { K8sModule } from "./k8s/k8s.module";
-import { ProjectModule } from "./project/project.module";
 import { LogModule } from "./log/log.module";
+import { PrismaModule } from "./prisma/prisma.module";
+import { ProjectModule } from "./project/project.module";
 
 @Module({
-  imports: [K8sModule, ProjectModule, LogModule, PrismaModule.forRoot()]
+  imports: [K8sModule, ProjectModule, LogModule, PrismaModule]
 })
 export class AppModule {}

@@ -1,5 +1,10 @@
 {
   "compileOnSave": false,
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  },
   "compilerOptions": {
     "declaration": false,
     "resolveJsonModule": true,
@@ -8,11 +13,14 @@
     "rootDir": ".",
     "sourceMap": true,
     "target": "ESNext",
+    "allowJs": true,
     "baseUrl": ".",
     "esModuleInterop": true,
     "moduleResolution": "node",
     "paths": {
-      "@k8sd/shared": ["libs/shared/src/index.ts"]
+      "@k8sd/shared": ["libs/shared/src/index.ts"],
+      "@prisma/client-core": ["node_modules/.prisma/client/core"],
+      "@prisma/client-logs": ["node_modules/.prisma/client/logs"]
     },
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

@@ -5,7 +5,7 @@ import { extname, resolve } from "node:path";
 import { isEqual } from "lodash";
 
 import { parse, stringify } from "@iarna/toml";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client-core";
 
 const prisma = new PrismaClient();
 const seedsDir = resolve(__dirname, "seeds");

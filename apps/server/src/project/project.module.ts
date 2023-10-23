@@ -1,12 +1,12 @@
 import { Module } from "@nestjs/common";
-import { PrismaModule } from "nestjs-prisma";
 
+import { PrismaCoreModule } from "../prisma/prisma-core/prisma-core.module";
 import { ProjectController } from "./project.controller";
-import { ProjectService } from "./project.service";
 import { ProjectGateway } from "./project.gateway";
+import { ProjectService } from "./project.service";
 
 @Module({
-  imports: [PrismaModule],
+  imports: [PrismaCoreModule],
   controllers: [ProjectController],
   providers: [ProjectService, ProjectGateway]
 })

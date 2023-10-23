@@ -1,28 +1,35 @@
 version: "3"
 
 services:
-  pql:
+  main_pql:
     image: postgres:latest
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "${POSTGRES_CORE_PORT}:5432"
     env_file:
       - .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_CORE_DB}
+      - POSTGRES_USER=${POSTGRES_CORE_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_CORE_PASSWORD}
     volumes:
-      - postgres:/var/lib/postgresql/data
-      - .ci/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - postgres_core_volume:/var/lib/postgresql/data
+      - .ci/init-core.sql:/docker-entrypoint-initdb.d/init.sql
 
-  mongo:
-    image: mongo
+  logs_pql:
+    image: postgres:latest
     restart: always
     env_file:
       - .env
+    environment:
+      - POSTGRES_DB=${POSTGRES_LOGS_DB}
+      - POSTGRES_USER=${POSTGRES_LOGS_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_LOGS_PASSWORD}
     ports:
-      - "${MONGO_PORT}:27017"
+      - "${POSTGRES_LOGS_PORT}:5432"
     volumes:
-      - .ci/init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - mongo:/data/db
-
+      - postgres_logs_volume:/data/db
+      - .ci/init-logs.sql:/docker-entrypoint-initdb.d/init.sql
 
 volumes:
-  postgres:
-  mongo:
+  postgres_core_volume:
+  postgres_logs_volume:

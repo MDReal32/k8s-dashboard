@@ -1,0 +1,41 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_LOGS_DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../node_modules/.prisma/client/logs"
+}
+
+generator dbml {
+  provider = "prisma-dbml-generator"
+}
+
+enum LogLevel {
+  DEBUG
+  INFO
+  WARN
+  ERROR
+  FATAL
+}
+
+model Log {
+  id        String   @id @default(uuid())
+  message   String
+  level     LogLevel
+  meta      LogMeta  @relation(fields: [metaId], references: [id])
+  metaId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model LogMeta {
+  id        String   @id @default(uuid())
+  code      String
+  message   String
+  details   String
+  Log       Log?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
