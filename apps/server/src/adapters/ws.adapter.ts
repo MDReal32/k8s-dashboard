@@ -1,17 +1,9 @@
+import { Observable, first, fromEvent, map, share, takeUntil } from "rxjs";
 import { WebSocket } from "ws";
+
 import { WsAdapter as _WsAdapter } from "@nestjs/platform-ws";
 import { MessageMappingProperties } from "@nestjs/websockets";
 import { CLOSE_EVENT } from "@nestjs/websockets/constants";
-import { first, fromEvent, map, Observable, share, takeUntil } from "rxjs";
-
-import { WebSocketData } from "@k8sd/shared";
-
-declare module "ws" {
-  interface WebSocket {
-    id: string;
-    message: WebSocketData;
-  }
-}
 
 export class WsAdapter extends _WsAdapter {
   bindMessageHandlers(
