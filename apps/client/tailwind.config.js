@@ -7,8 +7,7 @@ module.exports = {
   content: [
     join(__dirname, "index.html"),
     join(__dirname, "src/**/*!(*.stories|*.spec).{ts,tsx,html}"),
-    ...createGlobPatternsForDependencies(__dirname),
-    join(__dirname, "../../node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}")
+    ...createGlobPatternsForDependencies(__dirname)
   ],
   theme: {
     extend: {
@@ -16,6 +15,5 @@ module.exports = {
         primary: colors.blue[500]
       }
     }
-  },
-  plugins: [require("flowbite/plugin")]
+  }
 };
