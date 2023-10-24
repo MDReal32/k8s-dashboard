@@ -1,19 +1,32 @@
 import { JSX } from "react";
 import { RouteObject } from "react-router-dom";
 
-class PagePathBinaryTreeNode {
-  constructor(readonly path: string) {}
+import { PagePathBinaryTreeNode } from "./page-path-binary-tree";
 
-  declare name: string;
-  declare element: RouteObject["element"];
+type SetValue<TKey extends string, TValue> = { [TK in TKey]: TValue };
 
-  get routeObject(): RouteObject {
-    const route: RouteObject = { element: this.element };
-    if (this.path) route.path = this.path;
-    if (this.name) route.id = this.name;
-    return route;
-  }
-}
+type GetVariables<
+  TPath extends string,
+  TQueryParams extends readonly string[] | undefined
+> = TPath extends `${infer _}:${infer Variable}`
+  ? Variable extends `${infer VariablePart}/${infer Rest}`
+    ? { [K in VariablePart]: string } & GetVariables<Rest, TQueryParams>
+    : { [K in Variable]: string } & GetVariables<"", TQueryParams>
+  : TQueryParams extends readonly string[]
+  ? TQueryParams extends [
+      infer TQueryParam extends string,
+      ...infer RestParams extends readonly string[]
+    ]
+    ? Partial<GetVariables<`:${TQueryParam}`, RestParams>>
+    : unknown
+  : unknown;
+
+type ParseParams<T extends { route: string; qs?: readonly string[] }> =
+  T["route"] extends `${infer _}:${infer _}`
+    ? (variables: GetVariables<T["route"], T["qs"]>) => string
+    : T["qs"] extends readonly string[]
+    ? (variables: GetVariables<T["route"], T["qs"]>) => string
+    : string;
 
 type MakeAsKey<T extends string> = T extends "/"
   ? "__ROOT__"
@@ -25,46 +38,39 @@ type MakeAsKey<T extends string> = T extends "/"
     : `${Uppercase<K>}_${R extends `:${infer _R}` ? `${MakeAsKey<_R>}` : `${MakeAsKey<R>}`}`
   : T;
 
-type GetVariables<T extends string> = T extends `${infer _}:${infer VARIABLE}`
-  ? VARIABLE extends `${infer _VARIABLE}/${infer _R}`
-    ? [string, ...GetVariables<_R>]
-    : [string]
-  : [];
-
-type FunctionOrString<T> = T extends `${infer _}:${infer _}`
-  ? (...variables: GetVariables<T>) => string
-  : string;
-
-type AsPathMap<T> = {
-  [K in keyof T as MakeAsKey<K & string>]: FunctionOrString<T[K]>;
+type AsPathMap<T extends Record<string, { route: string; qs?: readonly string[] }>> = {
+  [K in keyof T as MakeAsKey<K & string>]: ParseParams<T[K]>;
 };
 
-type AsRouteMap<T> = {
-  [K in keyof T as MakeAsKey<K & string>]: K;
-};
-
-export class PagePathTree<T> {
-  private readonly _root = new PagePathBinaryTreeNode("");
+export class PagePathTree<T extends Record<string, { route: string; qs?: readonly string[] }>> {
+  private readonly _root = new PagePathBinaryTreeNode();
   private readonly _pathNodeMap = new Map<string, PagePathBinaryTreeNode>();
   private readonly _names = new Set<string>();
 
-  addRoute<K extends string>(
+  addRoute<TKey extends string>(
     name: string,
-    route: K,
+    route: TKey,
     element: JSX.Element
-  ): PagePathTree<T & { [TK in K as TK]: TK }>;
-  addRoute<K extends keyof T>(name: string, route: K, element: JSX.Element): this;
-  addRoute<K extends string>(
+  ): PagePathTree<T & SetValue<TKey, { route: TKey }>>;
+  addRoute<TKey extends string, TQueryParams extends readonly string[]>(
     name: string,
-    route: K,
-    element: JSX.Element
-  ): PagePathTree<T & { [TK in K as TK]: TK }> | this {
+    route: TKey,
+    element: JSX.Element,
+    ...queryParams: TQueryParams
+  ): PagePathTree<T & SetValue<TKey, { route: TKey; qs: TQueryParams }>>;
+  addRoute<TKey extends string, TQueryParams extends readonly string[]>(
+    name: string,
+    route: TKey,
+    element: JSX.Element,
+    ...queryParams: TQueryParams
+  ): any {
     const path = route as unknown as string;
     if (this._names.has(name)) throw new Error(`The name "${name}" is already in use.`);
 
     let node = this._pathNodeMap.get(path) || new PagePathBinaryTreeNode(path);
     node.name = name;
     node.element = element;
+    node.queryParams = queryParams;
     this._pathNodeMap.set(path, node);
     this._names.add(name);
 
@@ -95,51 +101,33 @@ export class PagePathTree<T> {
     return routes;
   }
 
-  getRoutePaths() {
-    const routeMap = {} as AsRouteMap<T>;
-
-    for (const [path] of this._pathNodeMap) {
-      const urlVariables = path.match(/\/:[^/]+/g);
-      let key = path.replace(/\//g, "_").replace(/^_/, "");
-
-      if (urlVariables) {
-        const vars = new Set<string>();
-        urlVariables.forEach(variable => {
-          vars.add(variable.replace(/^\/:/, ""));
-          key = key.replace(variable.slice(1), variable.replace(/^\/:/, ""));
-        });
-      }
-
-      routeMap[(key || "__root__").toUpperCase() as keyof typeof routeMap] = path as any;
-    }
-
-    return Object.freeze(routeMap);
-  }
-
   getPathMap() {
     const pathMap = {} as AsPathMap<T>;
 
-    for (const [path] of this._pathNodeMap) {
-      const urlVariables = path.match(/\/:[^/]+/g);
+    for (const [path, page] of this._pathNodeMap) {
       let key = path.replace(/\//g, "_").replace(/^_/, "");
       let pathFn = path as (typeof pathMap)[keyof typeof pathMap];
 
-      if (urlVariables) {
+      const urlVariables = path.match(/\/:[^/]+/g);
+      const qsParams = page.queryParams;
+      if (urlVariables || qsParams) {
         const vars = new Set<string>();
-        urlVariables.forEach(variable => {
+        urlVariables?.forEach(variable => {
           vars.add(variable.replace(/^\/:/, ""));
           key = key.replace(variable.slice(1), variable.replace(/^\/:/, ""));
         });
-        pathFn = ((...args: string[]) => {
-          if (args.length !== vars.size) {
-            throw new Error(
-              `The number of arguments passed to the function does not match the number of variables in the URL. Expected ${vars.size} arguments, but got ${args.length}.`
-            );
-          }
+        pathFn = ((variables: Record<string, string>) => {
           let url = path;
-          for (const [index, variable] of Array.from(vars).entries()) {
-            url = url.replace(`/:${variable}`, `/${args[index]}`);
+          for (const [, variable] of Array.from(vars).entries()) {
+            url = url.replace(`/:${variable}`, `/${variables[variable]}`);
           }
+          let qs: string[] = [];
+          page.queryParams?.forEach(queryParam => {
+            if (variables[queryParam]) {
+              qs.push(`${queryParam}=${variables[queryParam]}`);
+            }
+          });
+          qs.length > 0 && (url = `${url}?${qs.join("&")}`);
           return url;
         }) as any;
       }

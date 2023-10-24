@@ -10,10 +10,9 @@ export const routeBuilder = new PagePathTree()
   .setLayout(<ApplicationLayout />)
   .addRoute("Main", "/", <Main />)
   .addRoute("Projects", "/projects", <Project />)
-  .addRoute("Graph", "/graph", <Graph />)
-  .addRoute("Graph (:namespace)", "/graph/:namespace", <Graph />);
+  .addRoute("Graph", "/graph", <Graph />, "namespace", "mode")
+  .addRoute("Graph (:namespace)", "/graph/:namespace", <Graph />, "mode");
 
 export const routes = routeBuilder.getRoutes();
-export const routePaths = routeBuilder.getRoutePaths();
 export const pathMap = routeBuilder.getPathMap();
 export const router = createBrowserRouter(routes);
