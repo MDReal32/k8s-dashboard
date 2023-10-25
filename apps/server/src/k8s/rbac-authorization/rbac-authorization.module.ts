@@ -1,4 +1,4 @@
-import { Logger, Module, OnModuleInit } from "@nestjs/common";
+import { Logger, Module } from "@nestjs/common";
 
 import { ClusterRoleBindingModule } from "./cluster-role-binding/cluster-role-binding.module";
 import { RbacAuthorizationService } from "./rbac-authorization.service";
@@ -10,10 +10,4 @@ import { RoleModule } from "./role/role.module";
   providers: [RbacAuthorizationService, Logger],
   exports: [RbacAuthorizationService]
 })
-export class RbacAuthorizationModule implements OnModuleInit {
-  constructor(private readonly appsService: RbacAuthorizationService) {}
-
-  async onModuleInit() {
-    await this.appsService.init();
-  }
-}
+export class RbacAuthorizationModule {}

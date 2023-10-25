@@ -4,9 +4,8 @@ import { networkInterfaces } from "node:os";
 import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 
-
-import { AppModule } from "./app.module";
 import { WsAdapter } from "./adapters/ws.adapter";
+import { AppModule } from "./app.module";
 import { RequestInterceptor } from "./interceptors/request.interceptor";
 import { ZodValidationPipe } from "./validations/zod-validation.pipe";
 

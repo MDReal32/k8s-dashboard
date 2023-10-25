@@ -1,4 +1,4 @@
-import { Logger, Module, OnModuleInit } from "@nestjs/common";
+import { Logger, Module } from "@nestjs/common";
 
 import { ConfigMapModule } from "./config-map/config-map.module";
 import { CoreService } from "./core.service";
@@ -23,10 +23,4 @@ import { ServiceModule } from "./service/service.module";
   providers: [CoreService, Logger],
   exports: [CoreService]
 })
-export class CoreModule implements OnModuleInit {
-  constructor(private readonly coreService: CoreService) {}
-
-  async onModuleInit() {
-    await this.coreService.init();
-  }
-}
+export class CoreModule {}

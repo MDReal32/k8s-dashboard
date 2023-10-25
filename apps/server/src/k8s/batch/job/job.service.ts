@@ -2,6 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 
 import { BatchService } from "../batch.service";
 
+
 @Injectable()
 export class JobService extends BatchService {
   constructor() {

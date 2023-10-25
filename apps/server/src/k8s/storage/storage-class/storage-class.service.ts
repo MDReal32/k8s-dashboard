@@ -1,6 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { K8sService } from "../../../base/k8s.service";
 import { StorageService } from "../storage.service";
 
 @Injectable()

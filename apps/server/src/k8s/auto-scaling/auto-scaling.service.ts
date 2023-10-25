@@ -1,23 +1,23 @@
 import { AutoscalingV2Api } from "@kubernetes/client-node";
-import { Injectable, Logger } from "@nestjs/common";
+import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 
 import { K8sService } from "../../base/k8s.service";
 
 @Injectable()
-export class AutoScalingService extends K8sService {
+export class AutoScalingService extends K8sService implements OnModuleInit {
   constructor(protected readonly logger: Logger = new Logger(AutoScalingService.name)) {
     super(logger);
   }
 
-  private static _k8sApi: AutoscalingV2Api;
+  private _k8sApi: AutoscalingV2Api;
 
   get k8sApi() {
-    return AutoScalingService._k8sApi;
+    return this._k8sApi;
   }
 
-  init() {
+  onModuleInit() {
     return super.init(() => {
-      AutoScalingService._k8sApi = this.kc.makeApiClient(AutoscalingV2Api);
+      this._k8sApi = this.kc.makeApiClient(AutoscalingV2Api);
     });
   }
 }

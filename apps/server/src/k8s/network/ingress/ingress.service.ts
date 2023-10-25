@@ -2,6 +2,7 @@ import { Injectable, Logger } from "@nestjs/common";
 
 import { NetworkService } from "../network.service";
 
+
 @Injectable()
 export class IngressService extends NetworkService {
   constructor() {

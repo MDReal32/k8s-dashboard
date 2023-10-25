@@ -1,4 +1,4 @@
-import { Logger, Module, OnModuleInit } from "@nestjs/common";
+import { Logger, Module } from "@nestjs/common";
 
 import { IngressModule } from "./ingress/ingress.module";
 import { NetworkService } from "./network.service";
@@ -8,10 +8,4 @@ import { NetworkService } from "./network.service";
   providers: [NetworkService, Logger],
   exports: [NetworkService]
 })
-export class NetworkModule implements OnModuleInit {
-  constructor(private readonly networkService: NetworkService) {}
-
-  async onModuleInit() {
-    await this.networkService.init();
-  }
-}
+export class NetworkModule {}

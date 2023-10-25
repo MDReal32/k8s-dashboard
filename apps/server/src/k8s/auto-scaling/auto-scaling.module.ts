@@ -1,4 +1,4 @@
-import { Logger, Module, OnModuleInit } from "@nestjs/common";
+import { Logger, Module } from "@nestjs/common";
 
 import { AutoScalingService } from "./auto-scaling.service";
 import { HorizontalPodAutoscalerModule } from "./horizontal-pod-autoscaler/horizontal-pod-autoscaler.module";
@@ -8,10 +8,4 @@ import { HorizontalPodAutoscalerModule } from "./horizontal-pod-autoscaler/horiz
   providers: [AutoScalingService, Logger],
   exports: [AutoScalingService]
 })
-export class AutoScalingModule implements OnModuleInit {
-  constructor(private readonly appsService: AutoScalingService) {}
-
-  async onModuleInit() {
-    await this.appsService.init();
-  }
-}
+export class AutoScalingModule {}
