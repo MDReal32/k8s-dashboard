@@ -1,14 +1,9 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
 
 import "@total-typescript/ts-reset";
 
-import "./core.css";
-import { router } from "./routes";
+import { App } from "./app";
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <RouterProvider router={router} />
-  </StrictMode>
-);
+import "./core.css";
+
+createRoot(document.getElementById("root")!).render(<App />);

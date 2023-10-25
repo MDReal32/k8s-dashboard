@@ -1,88 +1,61 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useParams } from "react-router-dom";
 
-import { K8sResource, ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
+import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
+import { resourcesApi } from "../redux/api";
 import { getAppName } from "../utils/get-app-name";
-import { UpdateEventTypeEnum, useLiveListenResource } from "./use-live-listen-resource";
 
 type ArrayObjectExtra = {
   dataNameIndexes: Record<string, number>;
   appNameIndexes: Record<string, number[]>;
   uidIndexes: Record<string, number>;
 };
-export type ArrayObject<TResource extends ResourceTypeMap[K8sResource]> = TResource[] &
+export type ArrayObject<TResource extends ResourceTypeMap[ResourceTypes]> = TResource[] &
   ArrayObjectExtra;
 
 export const useGetArrayObject = <TResourceType extends ResourceTypes>(
-  resourceType: TResourceType,
-  initialData: ResourceTypeMap[TResourceType][] | null
+  resourceType: TResourceType
 ): ArrayObject<ResourceTypeMap[TResourceType]> => {
-  const action = useLiveListenResource(resourceType);
+  const { namespace = "default" } = useParams();
+  const { data: nodes } = resourcesApi.endpoints[resourceType].useQuery(namespace);
 
-  const [data, setData] = useState<ResourceTypeMap[TResourceType][]>([]);
-  const [dataNameIndexes, setDataNameIndexes] = useState<Record<string, number>>(() => ({}));
-  const [appNameIndexes, setAppNameIndexes] = useState<Record<string, number[]>>(() => ({}));
-  const [uidIndexes, setUidIndexes] = useState<Record<string, number>>(() => ({}));
+  return useMemo(() => {
+    const dataNameIndexes: Record<string, number> = {};
+    const appNameIndexes: Record<string, number[]> = {};
+    const uidIndexes: Record<string, number> = {};
 
-  const object = useMemo(() => {
-    return Object.assign<ResourceTypeMap[TResourceType][], ArrayObjectExtra>(data, {
+    if (!nodes || !nodes.success) {
+      return Object.assign([], {
+        dataNameIndexes,
+        appNameIndexes,
+        uidIndexes
+      });
+    }
+
+    nodes.data.forEach((node, idx) => {
+      const datumName = node.metadata?.name;
+      if (datumName) {
+        dataNameIndexes[datumName] = idx;
+      }
+
+      const appName = getAppName(node);
+      if (appName) {
+        appNameIndexes[appName] = appNameIndexes[appName] || [];
+        appNameIndexes[appName].push(idx);
+      }
+
+      const uid = node.metadata?.uid;
+      if (uid) {
+        uidIndexes[uid] = idx;
+      }
+    });
+
+    // @ts-ignore
+    return Object.assign<ResourceTypeMap[TResourceType][], ArrayObjectExtra>([...nodes.data], {
       dataNameIndexes,
       appNameIndexes,
       uidIndexes
     });
-  }, [data, dataNameIndexes, appNameIndexes, uidIndexes]);
-
-  useEffect(() => {
-    setData(initialData || []);
-
-    initialData?.forEach((datum, idx) => {
-      const datumName = datum.metadata?.name;
-      if (datumName) {
-        setDataNameIndexes(dataNameIndexes => ({ ...dataNameIndexes, [datumName]: idx }));
-      }
-
-      const appName = getAppName(datum);
-      if (appName) {
-        setAppNameIndexes(appNameIndexes => ({
-          ...appNameIndexes,
-          [appName]: [...(appNameIndexes[appName] || []), idx]
-        }));
-      }
-
-      const uid = datum.metadata?.uid;
-      if (uid) {
-        setUidIndexes(uidIndexes => ({ ...uidIndexes, [uid]: idx }));
-      }
-    });
-  }, [initialData]);
-
-  useEffect(() => {
-    switch (action?.type) {
-      case UpdateEventTypeEnum.ADDED:
-        setData(data => {
-          return [...data, action.resource];
-        });
-        break;
-      case UpdateEventTypeEnum.MODIFIED:
-        setData(data => {
-          return data.map(datum => {
-            if (datum.metadata?.name === action.resource.metadata?.name) {
-              return action.resource;
-            }
-            return datum;
-          });
-        });
-
-        break;
-      case UpdateEventTypeEnum.DELETED:
-        setData(data => {
-          return data.filter(datum => {
-            return datum.metadata?.name !== action.resource.metadata?.name;
-          });
-        });
-        break;
-    }
-  }, [action]);
-
-  return object;
+  }, [nodes]);
 };

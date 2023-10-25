@@ -1,13 +1,12 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { GraphCanvas } from "reagraph";
+import { GraphCanvas, darkTheme } from "reagraph";
 
 import { ResourceTypes } from "@k8sd/shared";
 
 import { Controls } from "../../components/controls";
 import { useAddNodesAndEdges } from "../../hooks/use-add-nodes-and-edges";
 import { useGetArrayObject } from "../../hooks/use-get-array-object";
-import { useGetResources } from "../../hooks/use-get-resources";
 import { pathMap } from "../../routes";
 
 type GraphLayoutType = "2d" | "3d";
@@ -21,21 +20,21 @@ export const Graph = () => {
     () => params.namespace || urlSearchParams.get("namespace") || "default",
     [urlSearchParams, params]
   );
-
-  const defaultGraphLayoutType = useMemo<GraphLayoutType>(
+  const graphLayout = useMemo<GraphLayoutType>(
     () => (urlSearchParams.get("mode") as GraphLayoutType) || "2d",
     [urlSearchParams]
   );
 
-  const { namespace: namespaces, ...resources } = useGetResources(
-    namespace,
-    Object.values(ResourceTypes)
-  );
+  const namespaces = useGetArrayObject(ResourceTypes.NAMESPACE);
+  const { nodes, edges } = useAddNodesAndEdges();
 
-  const [graphLayoutType, setGraphLayoutType] = useState<GraphLayoutType>(defaultGraphLayoutType);
-  const namespacesObject = useGetArrayObject(ResourceTypes.NAMESPACE, namespaces.data);
-
-  const { nodes, edges } = useAddNodesAndEdges(resources);
+  const navigateTo = ({ namespace: ns, mode }: { namespace?: string; mode?: GraphLayoutType }) => {
+    const variables: Record<string, unknown> = { namespace: ns || namespace };
+    if (mode !== "2d" && mode !== graphLayout) {
+      variables.mode = mode;
+    }
+    navigate(pathMap.GRAPH_NAMESPACE(variables as any));
+  };
 
   return (
     <>
@@ -43,12 +42,12 @@ export const Graph = () => {
         <select
           className="w-full"
           value={namespace}
-          onChange={e => navigate(pathMap.GRAPH_NAMESPACE(e.target.value))}
+          onChange={e => navigateTo({ namespace: e.target.value })}
         >
           <option key="_" value="_">
             all
           </option>
-          {namespacesObject.map(namespace => (
+          {namespaces.map(namespace => (
             <option key={namespace.metadata?.name} value={namespace.metadata?.name || ""}>
               {namespace.metadata?.name}
             </option>
@@ -57,8 +56,8 @@ export const Graph = () => {
 
         <select
           className="w-full"
-          value={graphLayoutType}
-          onChange={e => setGraphLayoutType(e.target.value as GraphLayoutType)}
+          value={graphLayout}
+          onChange={e => navigateTo({ mode: e.target.value as GraphLayoutType })}
         >
           {(["2d", "3d"] as GraphLayoutType[]).map(layout => (
             <option key={layout} value={layout}>
@@ -73,10 +72,11 @@ export const Graph = () => {
           nodes={nodes}
           edges={edges}
           cameraMode="pan"
-          layoutType={graphLayoutType === "2d" ? "forceDirected2d" : "forceDirected3d"}
+          layoutType={graphLayout === "2d" ? "forceDirected2d" : "forceDirected3d"}
           onNodeContextMenu={node => {
             console.log(node.data);
           }}
+          theme={darkTheme}
         />
       </div>
     </>

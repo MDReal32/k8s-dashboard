@@ -14,9 +14,9 @@ import type {
 } from "@kubernetes/client-node";
 
 export enum ResourceTypes {
+  NAMESPACE = "namespace",
   NODE = "node",
   INGRESS = "ingress",
-  NAMESPACE = "namespace",
   DEPLOYMENT = "deployment",
   STATEFUL_SET = "stateful-set",
   DAEMON_SET = "daemon-set",
@@ -29,9 +29,9 @@ export enum ResourceTypes {
 }
 
 export interface ResourceTypeMap {
+  [ResourceTypes.NAMESPACE]: V1Namespace;
   [ResourceTypes.NODE]: V1Node;
   [ResourceTypes.INGRESS]: V1Ingress;
-  [ResourceTypes.NAMESPACE]: V1Namespace;
   [ResourceTypes.DEPLOYMENT]: V1Deployment;
   [ResourceTypes.STATEFUL_SET]: V1StatefulSet;
   [ResourceTypes.DAEMON_SET]: V1DaemonSet;
