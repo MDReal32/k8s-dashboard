@@ -1,8 +1,9 @@
 version: "3"
 
 services:
-  main_pql:
+  core_pql:
     image: postgres:latest
+    restart: always
     ports:
       - "${POSTGRES_CORE_PORT}:5432"
     env_file:
