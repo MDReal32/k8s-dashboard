@@ -1,7 +1,7 @@
 import { isMatch } from "lodash";
 import { useCallback } from "react";
 
-import { ResourceTypes } from "@k8sd/shared";
+import { ParsableResourceTypes, ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
 import { UseResource } from "../../types/use-resource";
 import { convertKindToResourceType } from "../../utils/convert-kind-to-resource-type";
@@ -31,10 +31,25 @@ export const useEndpoint: UseResource = () => {
             addQueue(() => {
               services.forEach(service => {
                 addressNodes?.forEach(addressNode => {
-                  const objects = allObjects[convertKindToResourceType(addressNode?.kind || "")];
+                  const targetResourceType = convertKindToResourceType<ParsableResourceTypes>(
+                    addressNode?.kind || ""
+                  );
+                  const objects = allObjects[targetResourceType];
                   const object = objects[objects.uidIndexes[addressNode.uid || ""]];
 
-                  if (object) {
+                  if (targetResourceType === ResourceTypes.POD) {
+                    const obj = object as ResourceTypeMap[ResourceTypes.POD];
+                    const serviceAccounts = allObjects[ResourceTypes.SERVICE_ACCOUNT];
+                    const serviceAccount =
+                      serviceAccounts[
+                        serviceAccounts.dataNameIndexes[obj?.spec?.serviceAccountName || "default"]
+                      ];
+
+                    if (object && serviceAccount) {
+                      addEdge(convertToGraphEdge(serviceAccount, object));
+                      addEdge(convertToGraphEdge(service, serviceAccount));
+                    }
+                  } else if (object) {
                     addEdge(convertToGraphEdge(service, object));
                   }
                 });
