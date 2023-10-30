@@ -1,9 +1,10 @@
 import e from "express";
 
-import { BadRequestException, createParamDecorator } from "@nestjs/common";
+import { BadRequestException, ExecutionContext, createParamDecorator } from "@nestjs/common";
 
-export const Namespace = createParamDecorator((_data: void, req: e.Request) => {
-  const ns = req.params.namespace || req.query.namespace;
+export const Namespace = createParamDecorator((_data: void, context: ExecutionContext) => {
+  const req = context.switchToHttp().getRequest<e.Request>();
+  const ns = req.params?.namespace || req.query?.namespace;
   if (!ns) {
     const message = `Expected namespace to be defined`;
     throw new BadRequestException(message);
