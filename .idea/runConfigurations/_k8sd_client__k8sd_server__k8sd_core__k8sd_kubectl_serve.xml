@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="client,server,core:serve" type="NxRunConfigurationType" nameIsGenerated="true">
-    <option name="nx-projects" value="client,server,core" />
+  <configuration default="false" name="@k8sd/client,@k8sd/server,@k8sd/core,@k8sd/kubectl:serve" type="NxRunConfigurationType" nameIsGenerated="true">
+    <option name="nx-projects" value="@k8sd/client,@k8sd/server,@k8sd/core,@k8sd/kubectl" />
     <option name="nx-targets" value="serve" />
     <option name="nx-target-configuration" value="" />
     <envs />
