@@ -1,12 +1,12 @@
 import { useEffect, useMemo } from "react";
 
-import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
+import { ParsableResourceTypes, ResourceTypeMap } from "@k8sd/shared";
 
 import { apis } from "../redux/api/resources";
 import { useDispatch, useSelector } from "../redux/store";
 import { useGetArrayObject } from "./resources/extends/use-get-array-object";
 
-export const useFetchAllResourcesForType = <TResourceType extends ResourceTypes>(
+export const useFetchAllResourcesForType = <TResourceType extends ParsableResourceTypes>(
   resourceType: TResourceType
 ) => {
   const dispatch = useDispatch();

@@ -1,18 +1,16 @@
 import { useCallback } from "react";
 
-import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
+import { ParsableResourceTypes, ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
-import { UseResourceReturnFnOptions } from "../types/use-resource";
-import { useConvertToGraphEdge } from "./resources/extends/use-convert-to-graph-edge";
-import { useGetArrayObject } from "./resources/extends/use-get-array-object";
+import { UseResourceReturnFnOptions } from "../../../types/use-resource";
+import { useGetArrayObject } from "./use-get-array-object";
 
 interface UseAddVolumes extends Pick<UseResourceReturnFnOptions, "addEdge"> {
-  source: ResourceTypeMap[ResourceTypes];
+  source: ResourceTypeMap[ParsableResourceTypes];
 }
 
 export const useAddVolumes = () => {
   const configMaps = useGetArrayObject(ResourceTypes.CONFIG_MAP);
-  const convertToGraphEdge = useConvertToGraphEdge();
 
   return useCallback(
     (
@@ -39,7 +37,7 @@ export const useAddVolumes = () => {
             if (source.configMap) {
               const configMap = configMaps[configMaps.nodeNameIndexes[source.configMap.name || ""]];
               if (configMap) {
-                addEdge(convertToGraphEdge(sourceNode, configMap));
+                addEdge(sourceNode, configMap);
               }
             }
 
@@ -64,6 +62,6 @@ export const useAddVolumes = () => {
         }
       }
     },
-    [configMaps, convertToGraphEdge]
+    [configMaps]
   );
 };

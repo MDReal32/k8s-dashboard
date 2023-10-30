@@ -5,21 +5,17 @@ import { ResourceTypes } from "@k8sd/shared";
 
 import { ServiceType } from "../../types";
 import { UseResource } from "../../types/use-resource";
-import { useConvertToGraphEdge } from "./extends/use-convert-to-graph-edge";
-import { useConvertToGraphNode } from "./extends/use-convert-to-graph-node";
 import { useGetArrayObject } from "./extends/use-get-array-object";
 import { useLoadBalancer } from "./extends/use-load-balancer";
 
 export const useService: UseResource = () => {
-  const convertToGraphNode = useConvertToGraphNode();
-  const convertToGraphEdge = useConvertToGraphEdge();
   const services = useGetArrayObject(ResourceTypes.SERVICE);
   const loadBalancer = useLoadBalancer();
 
   return useCallback(
     ({ addNode, addEdge, addQueue, ipAddresses, serviceLabelMap }) => {
       services.forEach(service => {
-        addNode(convertToGraphNode(ResourceTypes.SERVICE, service));
+        addNode(ResourceTypes.SERVICE, service);
 
         service.spec?.clusterIP && (ipAddresses[service.spec.clusterIP] = service);
         const selector = service.spec?.selector;
@@ -44,8 +40,7 @@ export const useService: UseResource = () => {
                 if (matched) {
                   services.forEach(
                     _service =>
-                      _service.spec?.type === ServiceType.CLUSTER_IP &&
-                      addEdge(convertToGraphEdge(service, _service))
+                      _service.spec?.type === ServiceType.CLUSTER_IP && addEdge(service, _service)
                   );
                 }
               });
@@ -59,6 +54,6 @@ export const useService: UseResource = () => {
         });
       });
     },
-    [services, convertToGraphNode, convertToGraphEdge, loadBalancer]
+    [services, loadBalancer]
   );
 };

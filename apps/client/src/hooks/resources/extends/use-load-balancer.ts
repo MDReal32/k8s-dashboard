@@ -3,7 +3,6 @@ import { useCallback } from "react";
 import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
 import { UseResourceReturnFnOptions } from "../../../types/use-resource";
-import { useConvertToGraphEdge } from "./use-convert-to-graph-edge";
 import { useGetArrayObject } from "./use-get-array-object";
 
 interface UseLoadBalancerOptions
@@ -11,7 +10,6 @@ interface UseLoadBalancerOptions
 
 export const useLoadBalancer = () => {
   const nodesObject = useGetArrayObject(ResourceTypes.NODE);
-  const convertToGraphEdge = useConvertToGraphEdge();
 
   return useCallback(
     (
@@ -23,12 +21,12 @@ export const useLoadBalancer = () => {
         loadBalancer.ingress?.forEach(ingressLoadBalancer => {
           const ip = ingressLoadBalancer.ip;
           if (!ip) return;
-          if (ip in ipAddresses) addEdge(convertToGraphEdge(ipAddresses[ip], node));
+          if (ip in ipAddresses) addEdge(ipAddresses[ip], node);
         });
       } else {
-        addEdge(convertToGraphEdge(nodesObject[nodesObject.dataNameIndexes.minikube], node));
+        addEdge(nodesObject[nodesObject.dataNameIndexes.minikube], node);
       }
     },
-    [nodesObject, convertToGraphEdge]
+    [nodesObject]
   );
 };

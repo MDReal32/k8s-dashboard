@@ -2,7 +2,7 @@ import { Reducer } from "redux";
 
 import { CombinedState } from "@reduxjs/toolkit/query";
 
-import { ResourceTypes } from "@k8sd/shared";
+import { ParsableResourceTypes } from "@k8sd/shared";
 
 import { FixName } from "../../../utils/fix-name";
 import { clusterRoleBindingApi } from "./cluster-role-binding";
@@ -57,7 +57,10 @@ export const apis = {
   "role-binding": roleBindingApi,
   "roleBinding": roleBindingApi,
   "role": roleApi
-} satisfies Record<ResourceTypes | FixName<ResourceTypes[keyof ResourceTypes] & string>, any>;
+} satisfies Record<
+  ParsableResourceTypes | FixName<ParsableResourceTypes[keyof ParsableResourceTypes] & string>,
+  any
+>;
 
 export const apiReducers = {
   [namespaceApi.reducerPath]: namespaceApi.reducer,
@@ -81,6 +84,6 @@ export const apiReducers = {
   [roleBindingApi.reducerPath]: roleBindingApi.reducer,
   [roleApi.reducerPath]: roleApi.reducer
 } satisfies Record<
-  `api.k8sd.${ResourceTypes[keyof ResourceTypes] & string}`,
+  `api.k8sd.${ParsableResourceTypes[keyof ParsableResourceTypes] & string}`,
   Reducer<CombinedState<any, any, any>>
 >;

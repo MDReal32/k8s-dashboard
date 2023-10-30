@@ -4,13 +4,11 @@ import { ParsableResourceTypes, ResourceTypeMap } from "@k8sd/shared";
 
 import { UseResourceReturnFnOptions } from "../../../types/use-resource";
 import { convertKindToResourceType } from "../../../utils/convert-kind-to-resource-type";
-import { useConvertToGraphEdge } from "./use-convert-to-graph-edge";
 import { useGetAllResources } from "./use-get-all-resources";
 
 interface AddOwnerReferences extends Pick<UseResourceReturnFnOptions, "addEdge"> {}
 
 export const useAddOwnerReferences = () => {
-  const convertToGraphEdge = useConvertToGraphEdge();
   const allObjects = useGetAllResources();
 
   return useCallback(
@@ -25,12 +23,12 @@ export const useAddOwnerReferences = () => {
           const idx = objects?.dataNameIndexes[owner.name];
           const object = objects?.[idx];
           if (object) {
-            addEdge(convertToGraphEdge(object, node));
+            addEdge(object, node);
           }
         }
       }
       return !!owners;
     },
-    [allObjects, convertToGraphEdge]
+    [allObjects]
   );
 };

@@ -2,9 +2,11 @@ import { useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 import { GraphEdge, GraphNode } from "reagraph";
 
-import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
+import { ParsableResourceTypes, ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
 import { UseResourceReturnFnOptions } from "../types/use-resource";
+import { useConvertToGraphEdge } from "./internal/use-convert-to-graph-edge";
+import { useConvertToGraphNode } from "./internal/use-convert-to-graph-node";
 import { useConfigMap } from "./resources/use-config-map";
 import { useCronJob } from "./resources/use-cron-job";
 import { useDaemonSet } from "./resources/use-daemon-set";
@@ -29,6 +31,8 @@ interface NodesAndEdges {
 
 export const useAddNodesAndEdges = () => {
   const [nodesAndEdges, setNodesAndEdges] = useState<NodesAndEdges>({ nodes: [], edges: [] });
+  const convertToGraphNode = useConvertToGraphNode();
+  const convertToGraphEdge = useConvertToGraphEdge();
 
   const nodeFn = useNode();
   const ingressFn = useIngress();
@@ -52,16 +56,30 @@ export const useAddNodesAndEdges = () => {
     const edges = new Map<string, GraphEdge>();
 
     const queue: (() => void)[] = [];
-    const ipAddresses: Record<string, ResourceTypeMap[ResourceTypes]> = {};
-    const ipMappings: Record<string, ResourceTypeMap[ResourceTypes]> = {};
+    const ipAddresses: Record<string, ResourceTypeMap[ParsableResourceTypes]> = {};
+    const ipMappings: Record<string, ResourceTypeMap[ParsableResourceTypes]> = {};
     const serviceLabelMap = new Map<string, Set<ResourceTypeMap[ResourceTypes.SERVICE]>>();
 
     const resourceReturnFnOptions: UseResourceReturnFnOptions = {
       ipAddresses,
       ipMappings,
       serviceLabelMap,
-      addNode: (node: GraphNode) => nodes.set(node.id, node),
-      addEdge: (edge: GraphEdge) => edges.set(edge.id, edge),
+      addNode(resourceType, node) {
+        const graphNode = convertToGraphNode(resourceType, node);
+        nodes.set(graphNode.id, graphNode);
+        return nodeFn => {
+          nodeFn(graphNode);
+          nodes.set(graphNode.id, graphNode);
+        };
+      },
+      addEdge(source, target) {
+        const graphEdge = convertToGraphEdge(source, target);
+        edges.set(graphEdge.id, graphEdge);
+        return edgeFn => {
+          edgeFn(graphEdge);
+          edges.set(graphEdge.id, graphEdge);
+        };
+      },
       addQueue: (fn: () => void) => queue.push(fn)
     };
 
@@ -84,7 +102,10 @@ export const useAddNodesAndEdges = () => {
 
     queue.forEach(fn => fn());
 
-    return { nodes: Array.from(nodes.values()), edges: Array.from(edges.values()) };
+    return {
+      nodes: Array.from(nodes.values()).map(node => ({ ...node, id: node.id })),
+      edges: Array.from(edges.values()).map(edge => ({ ...edge, id: edge.id }))
+    };
   }, [
     nodeFn,
     ingressFn,
@@ -101,7 +122,9 @@ export const useAddNodesAndEdges = () => {
     endpointFn,
     configMapFn,
     secretFn,
-    storageClassFn
+    storageClassFn,
+    convertToGraphNode,
+    convertToGraphEdge
   ]);
 
   useDebounce(() => setNodesAndEdges(data), 300, [data]);

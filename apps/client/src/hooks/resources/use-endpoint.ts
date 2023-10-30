@@ -5,14 +5,10 @@ import { ParsableResourceTypes, ResourceTypeMap, ResourceTypes } from "@k8sd/sha
 
 import { UseResource } from "../../types/use-resource";
 import { convertKindToResourceType } from "../../utils/convert-kind-to-resource-type";
-import { useConvertToGraphEdge } from "./extends/use-convert-to-graph-edge";
-import { useConvertToGraphNode } from "./extends/use-convert-to-graph-node";
 import { useGetAllResources } from "./extends/use-get-all-resources";
 import { useGetArrayObject } from "./extends/use-get-array-object";
 
 export const useEndpoint: UseResource = () => {
-  const convertToGraphNode = useConvertToGraphNode();
-  const convertToGraphEdge = useConvertToGraphEdge();
   const endpoints = useGetArrayObject(ResourceTypes.ENDPOINT);
   const allObjects = useGetAllResources();
 
@@ -45,12 +41,11 @@ export const useEndpoint: UseResource = () => {
                         serviceAccounts.dataNameIndexes[obj?.spec?.serviceAccountName || "default"]
                       ];
 
-                    if (object && serviceAccount) {
-                      addEdge(convertToGraphEdge(serviceAccount, object));
-                      addEdge(convertToGraphEdge(service, serviceAccount));
+                    if (serviceAccount) {
+                      addEdge(service, serviceAccount);
                     }
                   } else if (object) {
-                    addEdge(convertToGraphEdge(service, object));
+                    addEdge(service, object);
                   }
                 });
               });
@@ -59,6 +54,6 @@ export const useEndpoint: UseResource = () => {
         }
       });
     },
-    [endpoints, allObjects, convertToGraphNode, convertToGraphEdge]
+    [endpoints, allObjects]
   );
 };

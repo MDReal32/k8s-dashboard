@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 
-import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
+import { ParsableResourceTypes, ResourceTypeMap } from "@k8sd/shared";
 
 import { apis } from "../../../redux/api/resources";
 import { getAppName } from "../../../utils/get-app-name";
@@ -12,10 +12,10 @@ type ArrayObjectExtra = {
   appNameIndexes: Record<string, number[]>;
   uidIndexes: Record<string, number>;
 };
-export type ArrayObject<TResource extends ResourceTypeMap[ResourceTypes]> = TResource[] &
+export type ArrayObject<TResource extends ResourceTypeMap[ParsableResourceTypes]> = TResource[] &
   ArrayObjectExtra;
 
-export const useGetArrayObject = <TResourceType extends ResourceTypes>(
+export const useGetArrayObject = <TResourceType extends ParsableResourceTypes>(
   resourceType: TResourceType
 ): ArrayObject<ResourceTypeMap[TResourceType]> => {
   const { namespace = "default" } = useParams();

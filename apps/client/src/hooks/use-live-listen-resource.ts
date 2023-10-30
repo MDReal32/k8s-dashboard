@@ -9,6 +9,7 @@ export enum UpdateEventTypeEnum {
   MODIFIED = "MODIFIED",
   DELETED = "DELETED"
 }
+
 export type UpdateEvent<TResourceType extends ResourceTypes> = {
   type: UpdateEventTypeEnum;
   resource: ResourceTypeMap[TResourceType];

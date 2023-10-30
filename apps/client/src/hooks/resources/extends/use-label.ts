@@ -1,28 +1,29 @@
 import { isMatch } from "lodash";
+import { useCallback } from "react";
 
-import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
+import { ParsableResourceTypes, ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
 import { UseResourceReturnFnOptions } from "../../../types/use-resource";
-import { useConvertToGraphEdge } from "./use-convert-to-graph-edge";
 
 interface UseLabelOptions extends Pick<UseResourceReturnFnOptions, "addEdge" | "serviceLabelMap"> {}
 
 export const useLabel = () => {
-  const convertToGraphEdge = useConvertToGraphEdge();
-
-  return (
-    node: ResourceTypeMap[Exclude<ResourceTypes, ResourceTypes.ENDPOINT>],
-    { addEdge, serviceLabelMap }: UseLabelOptions
-  ) => {
-    const labels = node.metadata?.labels;
-    if (labels) {
-      for (const [serviceLabel, services] of serviceLabelMap) {
-        const parsedServiceLabel = JSON.parse(serviceLabel) as Record<string, string>;
-        const matched = isMatch(labels, parsedServiceLabel);
-        if (matched) {
-          services.forEach(service => addEdge(convertToGraphEdge(node, service)));
+  return useCallback(
+    (
+      node: ResourceTypeMap[Exclude<ParsableResourceTypes, ResourceTypes.ENDPOINT>],
+      { addEdge, serviceLabelMap }: UseLabelOptions
+    ) => {
+      const labels = node.metadata?.labels;
+      if (labels) {
+        for (const [serviceLabel, services] of serviceLabelMap) {
+          const parsedServiceLabel = JSON.parse(serviceLabel) as Record<string, string>;
+          const matched = isMatch(labels, parsedServiceLabel);
+          if (matched) {
+            services.forEach(service => addEdge(node, service));
+          }
         }
       }
-    }
-  };
+    },
+    []
+  );
 };
