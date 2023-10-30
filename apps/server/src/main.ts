@@ -4,13 +4,16 @@ import { networkInterfaces } from "node:os";
 import { Logger } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 
+import { env } from "@k8sd/shared";
+
 import { WsAdapter } from "./adapters/ws.adapter";
 import { AppModule } from "./app.module";
 import { RequestInterceptor } from "./interceptors/request.interceptor";
 import { ZodValidationPipe } from "./validations/zod-validation.pipe";
 
 const logger = new Logger("ApplicationBootstrap");
-const port = +process.env.SERVER_PORT || 3000;
+const address = env.SERVER_ADDRESS;
+const port = +new URL(address).port || 3000;
 const globalPrefix = "api";
 
 EventEmitter.setMaxListeners(30);

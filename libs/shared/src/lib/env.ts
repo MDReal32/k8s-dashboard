@@ -1,25 +1,29 @@
 import { z } from "zod";
 
-const env = z.object({
+const envSchema = z.object({
   NODE_ENV: z.string(),
   PROJECT_CWD: z.string(),
-  STORAGE_ROOT: z.string(),
+  SERVER_ADDRESS: z.string(),
 
-  SERVER_PORT: z.string(),
-  SERVER_HOST: z.string(),
-  BASE_URL: z.string(),
-  WS_PATH: z.string(),
+  POSTGRES_CORE_HOST: z.string(),
+  POSTGRES_CORE_PORT: z.string(),
+  POSTGRES_CORE_USER: z.string(),
+  POSTGRES_CORE_PASSWORD: z.string(),
+  POSTGRES_CORE_DB: z.string(),
+  POSTGRES_CORE_DATABASE_URL: z.string(),
 
-  POSTGRES_HOST: z.string(),
-  POSTGRES_PORT: z.string(),
-  POSTGRES_USER: z.string(),
-  POSTGRES_PASSWORD: z.string(),
-  POSTGRES_DB: z.string(),
-  DB_URL: z.string()
+  POSTGRES_LOGS_HOST: z.string(),
+  POSTGRES_LOGS_PORT: z.string(),
+  POSTGRES_LOGS_USER: z.string(),
+  POSTGRES_LOGS_PASSWORD: z.string(),
+  POSTGRES_LOGS_DB: z.string(),
+  POSTGRES_LOGS_DATABASE_URL: z.string()
 });
+
+export const env = envSchema.parse(process.env);
 
 declare global {
   namespace NodeJS {
-    interface ProcessEnv extends z.infer<typeof env> {}
+    interface ProcessEnv extends z.infer<typeof envSchema> {}
   }
 }
