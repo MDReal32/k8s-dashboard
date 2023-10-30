@@ -8,7 +8,7 @@
     "plugins/*"
   ],
   "scripts": {
-    "dev": "nx run-many --target=serve --projects=server",
+    "dev": "nx run-many --targets=serve --projects=@k8sd/client,@k8sd/server,@k8sd/core,@k8sd/kubectl",
     "prisma:migrate": "yarn prisma:migrate:core $0 && yarn prisma:migrate:logs $0",
     "prisma:migrate:core": "yarn prisma migrate dev --schema prisma/core/schema.prisma --name",
     "prisma:migrate:logs": "yarn prisma migrate dev --schema prisma/logs/schema.prisma --name"
