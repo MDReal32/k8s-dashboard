@@ -1,0 +1,12 @@
+{
+  "name": "@k8sd/kubectl",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "kubectl proxy --port=8080 &"
+      }
+    }
+  }
+}
