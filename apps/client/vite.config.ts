@@ -7,6 +7,10 @@ export default defineConfig({
   cacheDir: "../../node_modules/.vite/client",
   clearScreen: false,
 
+  define: {
+    "process.env": process.env
+  },
+
   server: {
     port: 4200,
     host: "localhost"
