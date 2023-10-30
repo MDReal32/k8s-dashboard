@@ -1,5 +1,5 @@
 {
-  "name": "client",
+  "name": "@k8sd/client",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "client/src",
   "projectType": "application",
@@ -24,17 +24,17 @@
       "executor": "@nx/vite:dev-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "client:build",
+        "buildTarget": "@k8sd/client:build",
         "proxyConfig": "apps/client/proxy.conf.json",
         "host": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "client:build:development",
+          "buildTarget": "@k8sd/client:build:development",
           "hmr": true
         },
         "production": {
-          "buildTarget": "client:build:production",
+          "buildTarget": "@k8sd/client:build:production",
           "hmr": false
         }
       }
@@ -43,7 +43,7 @@
       "executor": "@nx/vite:preview-server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "client:build"
+        "buildTarget": "@k8sd/client:build"
       },
       "configurations": {
         "development": {
@@ -70,5 +70,5 @@
       }
     }
   },
-  "tags": []
+  "tags": ["client"]
 }

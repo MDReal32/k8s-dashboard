@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@k8sd/server",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/server/src",
   "projectType": "application",
@@ -26,15 +26,15 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "server:build",
+        "buildTarget": "@k8sd/server:build",
         "inspect": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "server:build:development"
+          "buildTarget": "@k8sd/server:build:development"
         },
         "production": {
-          "buildTarget": "server:build:production"
+          "buildTarget": "@k8sd/server:build:production"
         }
       }
     },
@@ -60,5 +60,5 @@
       }
     }
   },
-  "tags": []
+  "tags": ["server"]
 }

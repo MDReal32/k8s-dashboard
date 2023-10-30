@@ -18,5 +18,5 @@
       }
     }
   },
-  "implicitDependencies": ["client"]
+  "implicitDependencies": ["@k8sd/client"]
 }

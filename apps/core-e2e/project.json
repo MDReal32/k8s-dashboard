@@ -1,7 +1,7 @@
 {
   "name": "core-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": ["core"],
+  "implicitDependencies": ["@k8sd/core"],
   "projectType": "application",
   "targets": {
     "e2e": {
