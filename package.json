@@ -8,6 +8,7 @@
     "plugins/*"
   ],
   "scripts": {
+    "dev": "nx run-many --target=serve --projects=server",
     "prisma:migrate": "yarn prisma:migrate:core $0 && yarn prisma:migrate:logs $0",
     "prisma:migrate:core": "yarn prisma migrate dev --schema prisma/core/schema.prisma --name",
     "prisma:migrate:logs": "yarn prisma migrate dev --schema prisma/logs/schema.prisma --name"
