@@ -1,0 +1,3 @@
+[submodule "kubeview"]
+	path = .ci/external/kubeview
+	url = https://github.com/benc-uk/kubeview
