@@ -2,15 +2,18 @@ import { isMatch } from "lodash";
 
 import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
-import { UseResourceReturnOptions } from "../../../types/use-resource";
+import { UseResourceReturnFnOptions } from "../../../types/use-resource";
 import { useConvertToGraphEdge } from "./use-convert-to-graph-edge";
 
-interface UseLabelOptions extends Pick<UseResourceReturnOptions, "addEdge" | "serviceLabelMap"> {}
+interface UseLabelOptions extends Pick<UseResourceReturnFnOptions, "addEdge" | "serviceLabelMap"> {}
 
 export const useLabel = () => {
   const convertToGraphEdge = useConvertToGraphEdge();
 
-  return (node: ResourceTypeMap[ResourceTypes], { addEdge, serviceLabelMap }: UseLabelOptions) => {
+  return (
+    node: ResourceTypeMap[Exclude<ResourceTypes, ResourceTypes.ENDPOINT>],
+    { addEdge, serviceLabelMap }: UseLabelOptions
+  ) => {
     const labels = node.metadata?.labels;
     if (labels) {
       for (const [serviceLabel, services] of serviceLabelMap) {

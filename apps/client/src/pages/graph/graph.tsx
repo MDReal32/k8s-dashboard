@@ -5,8 +5,8 @@ import { GraphCanvas, darkTheme } from "reagraph";
 import { ResourceTypes } from "@k8sd/shared";
 
 import { Controls } from "../../components/controls";
+import { useGetArrayObject } from "../../hooks/resources/extends/use-get-array-object";
 import { useAddNodesAndEdges } from "../../hooks/use-add-nodes-and-edges";
-import { useGetArrayObject } from "../../hooks/use-get-array-object";
 import { pathMap } from "../../routes";
 
 type GraphLayoutType = "2d" | "3d";

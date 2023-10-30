@@ -6,16 +6,16 @@ import { UseResource } from "../../types/use-resource";
 import { useConvertToGraphNode } from "./extends/use-convert-to-graph-node";
 import { useGetArrayObject } from "./extends/use-get-array-object";
 
-export const useConfigMap: UseResource = () => {
+export const useCronJob: UseResource = () => {
   const convertToGraphNode = useConvertToGraphNode();
-  const configMaps = useGetArrayObject(ResourceTypes.CONFIG_MAP);
+  const cronJobs = useGetArrayObject(ResourceTypes.CRON_JOB);
 
   return useCallback(
     ({ addNode }) => {
-      configMaps.forEach(configMap => {
-        addNode(convertToGraphNode(ResourceTypes.CONFIG_MAP, configMap));
+      cronJobs.forEach(cronJob => {
+        addNode(convertToGraphNode(ResourceTypes.CRON_JOB, cronJob));
       });
     },
-    [configMaps, convertToGraphNode]
+    [cronJobs, convertToGraphNode]
   );
 };

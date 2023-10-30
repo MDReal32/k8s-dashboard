@@ -3,8 +3,8 @@ import { useCallback } from "react";
 import { ResourceTypes } from "@k8sd/shared";
 
 import { UseResource } from "../../types/use-resource";
-import { useGetArrayObject } from "../use-get-array-object";
 import { useConvertToGraphNode } from "./extends/use-convert-to-graph-node";
+import { useGetArrayObject } from "./extends/use-get-array-object";
 
 export const useSecret: UseResource = () => {
   const convertToGraphNode = useConvertToGraphNode();

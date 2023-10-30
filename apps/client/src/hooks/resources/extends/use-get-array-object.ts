@@ -3,11 +3,12 @@ import { useParams } from "react-router-dom";
 
 import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
-import { resourcesApi } from "../redux/api";
-import { getAppName } from "../utils/get-app-name";
+import { apis } from "../../../redux/api/resources";
+import { getAppName } from "../../../utils/get-app-name";
 
 type ArrayObjectExtra = {
   dataNameIndexes: Record<string, number>;
+  nodeNameIndexes: Record<string, number>;
   appNameIndexes: Record<string, number[]>;
   uidIndexes: Record<string, number>;
 };
@@ -18,16 +19,18 @@ export const useGetArrayObject = <TResourceType extends ResourceTypes>(
   resourceType: TResourceType
 ): ArrayObject<ResourceTypeMap[TResourceType]> => {
   const { namespace = "default" } = useParams();
-  const { data: nodes } = resourcesApi.endpoints[resourceType].useQuery(namespace);
+  const { data: nodes } = apis[resourceType].endpoints.listAll.useQuery(namespace);
 
   return useMemo(() => {
     const dataNameIndexes: Record<string, number> = {};
+    const nodeNameIndexes: Record<string, number> = {};
     const appNameIndexes: Record<string, number[]> = {};
     const uidIndexes: Record<string, number> = {};
 
     if (!nodes || !nodes.success) {
       return Object.assign([], {
         dataNameIndexes,
+        nodeNameIndexes,
         appNameIndexes,
         uidIndexes
       });
@@ -37,6 +40,11 @@ export const useGetArrayObject = <TResourceType extends ResourceTypes>(
       const datumName = node.metadata?.name;
       if (datumName) {
         dataNameIndexes[datumName] = idx;
+      }
+
+      const nodeName = node.metadata?.name;
+      if (nodeName) {
+        nodeNameIndexes[nodeName] = idx;
       }
 
       const appName = getAppName(node);
@@ -54,6 +62,7 @@ export const useGetArrayObject = <TResourceType extends ResourceTypes>(
     // @ts-ignore
     return Object.assign<ResourceTypeMap[TResourceType][], ArrayObjectExtra>([...nodes.data], {
       dataNameIndexes,
+      nodeNameIndexes,
       appNameIndexes,
       uidIndexes
     });

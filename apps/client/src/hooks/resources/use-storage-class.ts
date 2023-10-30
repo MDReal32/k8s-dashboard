@@ -7,21 +7,17 @@ import { useAddOwnerReferences } from "./extends/use-add-owner-references";
 import { useConvertToGraphNode } from "./extends/use-convert-to-graph-node";
 import { useGetArrayObject } from "./extends/use-get-array-object";
 
-export const useJob: UseResource = () => {
+export const useStorageClass: UseResource = () => {
   const convertToGraphNode = useConvertToGraphNode();
-  const jobs = useGetArrayObject(ResourceTypes.JOB);
+  const storageClasses = useGetArrayObject(ResourceTypes.STORAGE_CLASS);
   const addOwnerReference = useAddOwnerReferences();
 
   return useCallback(
-    ({ addNode, addEdge, addQueue }) => {
-      jobs.forEach(job => {
-        addNode(convertToGraphNode(ResourceTypes.JOB, job));
-
-        addQueue(() => {
-          addOwnerReference(job, { addEdge });
-        });
+    ({ addNode }) => {
+      storageClasses.forEach(storageClass => {
+        addNode(convertToGraphNode(ResourceTypes.STORAGE_CLASS, storageClass));
       });
     },
-    [jobs, convertToGraphNode, addOwnerReference]
+    [storageClasses, convertToGraphNode, addOwnerReference]
   );
 };
