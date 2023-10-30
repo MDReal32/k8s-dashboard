@@ -1,19 +1,19 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
 
+import { ResourceTypes } from "@k8sd/shared";
+
+import { Namespace } from "../../../decorators/namespace.decorator";
 import { SecretService } from "./secret.service";
 
-
-@Controller(["k8s/v1/namespace/:namespace/resource/secret", "k8s/v1/secret"])
+@Controller([
+  `k8s/v1/${ResourceTypes.NAMESPACE}/:namespace/resource/${ResourceTypes.SECRET}`,
+  `k8s/v1/${ResourceTypes.SECRET}`
+])
 export class SecretController {
   constructor(private readonly secretService: SecretService) {}
 
   @Get()
-  getSecretResource(
-    @Param("namespace")
-    namespaceParam: string,
-    @Query("namespace")
-    namespaceQuery: string
-  ) {
-    return this.secretService.getSecretResource(namespaceParam || namespaceQuery);
+  getSecretResource(@Namespace() namespace: string) {
+    return this.secretService.getSecretResource(namespace);
   }
 }

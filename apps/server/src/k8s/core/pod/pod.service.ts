@@ -2,7 +2,6 @@ import { Injectable, Logger } from "@nestjs/common";
 
 import { CoreService } from "../core.service";
 
-
 @Injectable()
 export class PodService extends CoreService {
   constructor() {
@@ -10,8 +9,6 @@ export class PodService extends CoreService {
   }
 
   async getPodResource(namespace: string) {
-    this.expect(namespace, "namespace");
-
     const pods = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listPodForAllNamespaces()

@@ -2,7 +2,6 @@ import { Injectable, Logger } from "@nestjs/common";
 
 import { CoreService } from "../core.service";
 
-
 @Injectable()
 export class ConfigMapService extends CoreService {
   constructor() {
@@ -10,8 +9,6 @@ export class ConfigMapService extends CoreService {
   }
 
   async getConfigMapResource(namespace: string) {
-    this.expect(namespace, "namespace");
-
     const configMaps = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listConfigMapForAllNamespaces()

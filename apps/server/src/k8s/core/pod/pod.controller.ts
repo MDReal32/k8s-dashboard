@@ -1,19 +1,19 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
 
+import { ResourceTypes } from "@k8sd/shared";
+
+import { Namespace } from "../../../decorators/namespace.decorator";
 import { PodService } from "./pod.service";
 
-
-@Controller(["k8s/v1/namespace/:namespace/resource/pod", "k8s/v1/pod"])
+@Controller([
+  `k8s/v1/${ResourceTypes.NAMESPACE}/:namespace/resource/${ResourceTypes.POD}`,
+  `k8s/v1/${ResourceTypes.POD}`
+])
 export class PodController {
   constructor(private readonly podService: PodService) {}
 
   @Get()
-  getPodResource(
-    @Param("namespace")
-    namespaceParam: string,
-    @Query("namespace")
-    namespaceQuery: string
-  ) {
-    return this.podService.getPodResource(namespaceParam || namespaceQuery);
+  getPodResource(@Namespace() namespace: string) {
+    return this.podService.getPodResource(namespace);
   }
 }

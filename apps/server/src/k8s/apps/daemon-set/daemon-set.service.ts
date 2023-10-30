@@ -9,8 +9,6 @@ export class DaemonSetService extends AppsService {
   }
 
   async getDaemonSetResource(namespace: string) {
-    this.expect(namespace, "namespace");
-
     const daemonSets = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listDaemonSetForAllNamespaces()

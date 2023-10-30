@@ -1,8 +1,10 @@
 import { Controller, Get } from "@nestjs/common";
 
+import { ResourceTypes } from "@k8sd/shared";
+
 import { StorageClassService } from "./storage-class.service";
 
-@Controller(["k8s/v1/namespace/:namespace/resource/storage-class", "k8s/v1/storage-class"])
+@Controller([`k8s/v1/${ResourceTypes.STORAGE_CLASS}`])
 export class StorageClassController {
   constructor(private readonly storageClassService: StorageClassService) {}
 

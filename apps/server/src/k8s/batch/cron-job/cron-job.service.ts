@@ -2,7 +2,6 @@ import { Injectable, Logger } from "@nestjs/common";
 
 import { BatchService } from "../batch.service";
 
-
 @Injectable()
 export class CronJobService extends BatchService {
   constructor() {
@@ -10,8 +9,6 @@ export class CronJobService extends BatchService {
   }
 
   async getCronJobResource(namespace: string) {
-    this.expect(namespace, "namespace");
-
     const cronJobs = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listCronJobForAllNamespaces()

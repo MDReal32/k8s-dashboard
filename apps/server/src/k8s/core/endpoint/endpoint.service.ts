@@ -9,8 +9,6 @@ export class EndpointService extends CoreService {
   }
 
   async getEndpointResource(namespace: string) {
-    this.expect(namespace, "namespace");
-
     const endpoints = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listEndpointsForAllNamespaces()

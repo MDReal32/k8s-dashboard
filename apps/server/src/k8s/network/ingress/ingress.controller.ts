@@ -1,18 +1,19 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
 
+import { ResourceTypes } from "@k8sd/shared";
+
+import { Namespace } from "../../../decorators/namespace.decorator";
 import { IngressService } from "./ingress.service";
 
-@Controller(["k8s/v1/namespace/:namespace/resource/ingress", "k8s/v1/ingress"])
+@Controller([
+  `k8s/v1/${ResourceTypes.NAMESPACE}/:namespace/resource/${ResourceTypes.INGRESS}`,
+  `k8s/v1/${ResourceTypes.INGRESS}`
+])
 export class IngressController {
   constructor(private readonly ingressService: IngressService) {}
 
   @Get()
-  getIngressResource(
-    @Param("namespace")
-    namespaceParam: string,
-    @Query("namespace")
-    namespaceQuery: string
-  ) {
-    return this.ingressService.getIngressResource(namespaceParam || namespaceQuery);
+  getIngressResource(@Namespace() namespace: string) {
+    return this.ingressService.getIngressResource(namespace);
   }
 }

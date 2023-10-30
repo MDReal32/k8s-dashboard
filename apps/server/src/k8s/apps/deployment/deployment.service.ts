@@ -2,7 +2,6 @@ import { Injectable, Logger } from "@nestjs/common";
 
 import { AppsService } from "../apps.service";
 
-
 @Injectable()
 export class DeploymentService extends AppsService {
   constructor() {
@@ -10,8 +9,6 @@ export class DeploymentService extends AppsService {
   }
 
   async getDeploymentResource(namespace: string) {
-    this.expect(namespace, "namespace");
-
     const deployments = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listDeploymentForAllNamespaces()

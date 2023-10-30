@@ -1,19 +1,19 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
 
+import { ResourceTypes } from "@k8sd/shared";
+
+import { Namespace } from "../../../decorators/namespace.decorator";
 import { DaemonSetService } from "./daemon-set.service";
 
-
-@Controller(["k8s/v1/namespace/:namespace/resource/daemon-set", "k8s/v1/daemon-set"])
+@Controller([
+  `k8s/v1/${ResourceTypes.NAMESPACE}/:namespace/resource/${ResourceTypes.DAEMON_SET}`,
+  `k8s/v1/${ResourceTypes.DAEMON_SET}`
+])
 export class DaemonSetController {
   constructor(private readonly daemonSetService: DaemonSetService) {}
 
   @Get()
-  getDaemonSetResource(
-    @Param("namespace")
-    namespaceParam: string,
-    @Query("namespace")
-    namespaceQuery: string
-  ) {
-    return this.daemonSetService.getDaemonSetResource(namespaceParam || namespaceQuery);
+  getDaemonSetResource(@Namespace() namespace: string) {
+    return this.daemonSetService.getDaemonSetResource(namespace);
   }
 }

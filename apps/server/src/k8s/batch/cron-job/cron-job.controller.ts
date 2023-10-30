@@ -1,19 +1,19 @@
 import { Controller, Get, Param, Query } from "@nestjs/common";
 
+import { ResourceTypes } from "@k8sd/shared";
+
+import { Namespace } from "../../../decorators/namespace.decorator";
 import { CronJobService } from "./cron-job.service";
 
-
-@Controller(["k8s/v1/namespace/:namespace/resource/cron-job", "k8s/v1/cron-job"])
+@Controller([
+  `k8s/v1/${ResourceTypes.NAMESPACE}/:namespace/resource/${ResourceTypes.CRON_JOB}`,
+  `k8s/v1/${ResourceTypes.CRON_JOB}`
+])
 export class CronJobController {
   constructor(private readonly cronJobService: CronJobService) {}
 
   @Get()
-  getCronJobResource(
-    @Param("namespace")
-    namespaceParam: string,
-    @Query("namespace")
-    namespaceQuery: string
-  ) {
-    return this.cronJobService.getCronJobResource(namespaceParam || namespaceQuery);
+  getCronJobResource(@Namespace() namespace: string) {
+    return this.cronJobService.getCronJobResource(namespace);
   }
 }

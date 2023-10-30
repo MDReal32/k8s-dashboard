@@ -2,7 +2,6 @@ import { Injectable, Logger } from "@nestjs/common";
 
 import { BatchService } from "../batch.service";
 
-
 @Injectable()
 export class JobService extends BatchService {
   constructor() {
@@ -10,8 +9,6 @@ export class JobService extends BatchService {
   }
 
   async getJobResource(namespace: string) {
-    this.expect(namespace, "namespace");
-
     const jobs = await this.catch(() =>
       namespace === "_"
         ? this.k8sApi.listJobForAllNamespaces()

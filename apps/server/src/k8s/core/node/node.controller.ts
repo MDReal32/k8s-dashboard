@@ -1,9 +1,10 @@
 import { Controller, Get } from "@nestjs/common";
 
+import { ResourceTypes } from "@k8sd/shared";
+
 import { NodeService } from "./node.service";
 
-
-@Controller(["k8s/v1/namespace/:namespace/resource/node", "k8s/v1/node"])
+@Controller([`k8s/v1/${ResourceTypes.NODE}`])
 export class NodeController {
   constructor(private readonly nodeService: NodeService) {}
 
