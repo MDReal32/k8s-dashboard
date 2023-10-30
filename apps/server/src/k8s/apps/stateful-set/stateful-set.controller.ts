@@ -1,9 +1,10 @@
-import { Controller, Get, Param, Query } from "@nestjs/common";
+import { Controller, Get } from "@nestjs/common";
 
 import { ResourceTypes } from "@k8sd/shared";
 
 import { Namespace } from "../../../decorators/namespace.decorator";
 import { StatefulSetService } from "./stateful-set.service";
+
 
 @Controller([
   `k8s/v1/${ResourceTypes.NAMESPACE}/:namespace/resource/${ResourceTypes.STATEFUL_SET}`,

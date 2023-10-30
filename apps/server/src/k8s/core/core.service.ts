@@ -3,6 +3,7 @@ import { Injectable, Logger, OnModuleInit } from "@nestjs/common";
 
 import { K8sService } from "../../base/k8s.service";
 
+
 @Injectable()
 export class CoreService extends K8sService implements OnModuleInit {
   constructor(protected readonly logger: Logger = new Logger(CoreService.name)) {
