@@ -42,6 +42,10 @@ type AsPathMap<T extends Record<string, { route: string; qs?: readonly string[] 
   [K in keyof T as MakeAsKey<K & string>]: ParseParams<T[K]>;
 };
 
+type AsRouteMap<T> = {
+  [K in keyof T as MakeAsKey<K & string>]: K;
+};
+
 export class PagePathTree<T extends Record<string, { route: string; qs?: readonly string[] }>> {
   private readonly _root = new PagePathBinaryTreeNode();
   private readonly _pathNodeMap = new Map<string, PagePathBinaryTreeNode>();
@@ -99,6 +103,27 @@ export class PagePathTree<T extends Record<string, { route: string; qs?: readonl
     }
 
     return routes;
+  }
+
+  getRoutePaths() {
+    const routeMap = {} as AsRouteMap<T>;
+
+    for (const [path] of this._pathNodeMap) {
+      const urlVariables = path.match(/\/:[^/]+/g);
+      let key = path.replace(/\//g, "_").replace(/^_/, "");
+
+      if (urlVariables) {
+        const vars = new Set<string>();
+        urlVariables.forEach(variable => {
+          vars.add(variable.replace(/^\/:/, ""));
+          key = key.replace(variable.slice(1), variable.replace(/^\/:/, ""));
+        });
+      }
+
+      routeMap[(key || "__root__").toUpperCase() as keyof typeof routeMap] = path as any;
+    }
+
+    return Object.freeze(routeMap);
   }
 
   getPathMap() {

@@ -15,4 +15,5 @@ export const routeBuilder = new PagePathTree()
 
 export const routes = routeBuilder.getRoutes();
 export const pathMap = routeBuilder.getPathMap();
+export const routePaths = routeBuilder.getRoutePaths();
 export const router = createBrowserRouter(routes);
