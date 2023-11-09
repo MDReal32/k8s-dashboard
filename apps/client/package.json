@@ -1,10 +1,12 @@
 {
   "name": "@k8sd/client",
   "dependencies": {
+    "@headlessui/react": "^1.7.17",
     "@k8sd/shared": "workspace:^",
     "@reduxjs/toolkit": "1.9.7",
     "@swc-node/register": "1.6.8",
     "@swc/helpers": "0.5.3",
+    "clsx": "^2.0.0",
     "lodash": "4.17.21",
     "react": "18.2.0",
     "react-dom": "18.2.0",
