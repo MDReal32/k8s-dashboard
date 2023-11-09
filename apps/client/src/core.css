@@ -3,6 +3,6 @@
 @tailwind utilities;
 
 body {
-  @apply bg-screen-light;
-  @apply dark:bg-screen-dark;
+  @apply bg-screen-light dark:bg-screen-dark;
+  @apply text-screen-dark dark:text-screen-light;
 }
