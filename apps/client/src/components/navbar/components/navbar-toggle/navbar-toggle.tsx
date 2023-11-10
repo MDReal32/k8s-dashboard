@@ -7,7 +7,7 @@ import { NavbarCtx } from "../../context";
 interface NavbarToggleProps {}
 
 export const NavbarToggle: FC<PropsWithChildren<NavbarToggleProps>> = ({ children }) => {
-  const { isHidden, setIsSidebarOpen } = useContext(NavbarCtx);
+  const { isHidden, isSidebarOpen, setIsSidebarOpen } = useContext(NavbarCtx);
 
   return (
     <Transition
@@ -19,7 +19,7 @@ export const NavbarToggle: FC<PropsWithChildren<NavbarToggleProps>> = ({ childre
       leaveFrom="opacity-100"
       leaveTo="opacity-0"
     >
-      <button onClick={() => setIsSidebarOpen(isSidebarOpen => !isSidebarOpen)}>{children}</button>
+      <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>{children}</button>
     </Transition>
   );
 };

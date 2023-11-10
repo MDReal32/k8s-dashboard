@@ -1,8 +1,13 @@
 import clsx from "clsx";
-import { ComponentProps, FC, PropsWithChildren, useEffect, useRef, useState } from "react";
+import { ComponentProps, FC, PropsWithChildren, useRef, useState } from "react";
 
-import { NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "./components";
-import { NavbarGetStarted } from "./components/navbar-get-started/navbar-get-started";
+import {
+  NavbarBrand,
+  NavbarCollapse,
+  NavbarGetStarted,
+  NavbarLink,
+  NavbarToggle
+} from "./components";
 import { NavbarCtx } from "./context";
 import { useNavbarContext } from "./hooks/use-navbar-context";
 import { useOnUpdateClientWidth } from "./hooks/use-on-update-client-width";
@@ -32,8 +37,8 @@ export const Navbar: NavbarType = ({ children, className }) => {
   );
 };
 
-Navbar.Link = NavbarLink;
 Navbar.Brand = NavbarBrand;
 Navbar.Collapse = NavbarCollapse;
-Navbar.Toggle = NavbarToggle;
 Navbar.GetStarted = NavbarGetStarted;
+Navbar.Link = NavbarLink;
+Navbar.Toggle = NavbarToggle;

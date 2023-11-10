@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { ComponentProps, FC, PropsWithChildren, useContext, useEffect, useRef } from "react";
+import { ComponentProps, FC, PropsWithChildren, useContext, useRef } from "react";
 
 import { NavbarCtx } from "../../context";
 import { useOnUpdateClientWidth } from "../../hooks/use-on-update-client-width";

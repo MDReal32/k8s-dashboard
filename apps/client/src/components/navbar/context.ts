@@ -1,10 +1,10 @@
-import { Dispatch, SetStateAction, createContext } from "react";
+import { createContext } from "react";
 
 export interface NavbarContext {
   isHidden: boolean;
   isSidebarOpen: boolean;
 
-  setIsSidebarOpen: Dispatch<SetStateAction<boolean>>;
+  setIsSidebarOpen(value: boolean): void;
 
   setBrandWidth(value: number): void;
 
