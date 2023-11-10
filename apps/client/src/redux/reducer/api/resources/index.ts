@@ -63,6 +63,29 @@ export const resourceApis = {
 >;
 
 export const apiReducers = {
+export const resourceApiMiddlewares = [
+  namespaceApi.middleware,
+  nodeApi.middleware,
+  ingressApi.middleware,
+  deploymentApi.middleware,
+  statefulSetApi.middleware,
+  daemonSetApi.middleware,
+  replicaSetApi.middleware,
+  cronJobApi.middleware,
+  serviceApi.middleware,
+  serviceAccountApi.middleware,
+  horizontalPodAutoscalerApi.middleware,
+  jobApi.middleware,
+  podApi.middleware,
+  endpointApi.middleware,
+  configMapApi.middleware,
+  secretApi.middleware,
+  storageClassApi.middleware,
+  clusterRoleBindingApi.middleware,
+  roleBindingApi.middleware,
+  roleApi.middleware
+];
+
   [namespaceApi.reducerPath]: namespaceApi.reducer,
   [nodeApi.reducerPath]: nodeApi.reducer,
   [ingressApi.reducerPath]: ingressApi.reducer,
