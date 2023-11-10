@@ -1,7 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { CoreService } from "../core.service";
+import { ALL_NAMESPACES } from "@k8sd/shared";
 
+import { CoreService } from "../core.service";
 
 @Injectable()
 export class ConfigMapService extends CoreService {
@@ -11,7 +12,7 @@ export class ConfigMapService extends CoreService {
 
   async getConfigMapResource(namespace: string) {
     const configMaps = await this.catch(() =>
-      namespace === "_"
+      namespace === ALL_NAMESPACES
         ? this.k8sApi.listConfigMapForAllNamespaces()
         : this.k8sApi.listNamespacedConfigMap(namespace)
     );

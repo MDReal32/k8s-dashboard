@@ -1,5 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 
+import { ALL_NAMESPACES } from "@k8sd/shared";
+
 import { NetworkService } from "../network.service";
 
 @Injectable()
@@ -10,7 +12,7 @@ export class IngressService extends NetworkService {
 
   async getIngressResource(namespace: string) {
     const ingresses = await this.catch(() =>
-      namespace === "_"
+      namespace === ALL_NAMESPACES
         ? this.k8sApi.listIngressForAllNamespaces()
         : this.k8sApi.listNamespacedIngress(namespace)
     );

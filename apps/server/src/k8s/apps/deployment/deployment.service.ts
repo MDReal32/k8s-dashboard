@@ -1,7 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { AppsService } from "../apps.service";
+import { ALL_NAMESPACES } from "@k8sd/shared";
 
+import { AppsService } from "../apps.service";
 
 @Injectable()
 export class DeploymentService extends AppsService {
@@ -11,7 +12,7 @@ export class DeploymentService extends AppsService {
 
   async getDeploymentResource(namespace: string) {
     const deployments = await this.catch(() =>
-      namespace === "_"
+      namespace === ALL_NAMESPACES
         ? this.k8sApi.listDeploymentForAllNamespaces()
         : this.k8sApi.listNamespacedDeployment(namespace)
     );

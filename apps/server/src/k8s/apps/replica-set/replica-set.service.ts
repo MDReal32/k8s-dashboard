@@ -1,7 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { AppsService } from "../apps.service";
+import { ALL_NAMESPACES } from "@k8sd/shared";
 
+import { AppsService } from "../apps.service";
 
 @Injectable()
 export class ReplicaSetService extends AppsService {
@@ -11,7 +12,7 @@ export class ReplicaSetService extends AppsService {
 
   async getReplicaSetResource(namespace: string) {
     const replicaSets = await this.catch(() =>
-      namespace === "_"
+      namespace === ALL_NAMESPACES
         ? this.k8sApi.listReplicaSetForAllNamespaces()
         : this.k8sApi.listNamespacedReplicaSet(namespace)
     );

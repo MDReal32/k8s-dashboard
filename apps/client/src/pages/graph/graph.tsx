@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { GraphCanvas, darkTheme } from "reagraph";
 
-import { ResourceTypes } from "@k8sd/shared";
+import { ALL_NAMESPACES, ResourceTypes } from "@k8sd/shared";
 
 import { Controls } from "../../components/controls";
 import { useGetArrayObject } from "../../hooks/resources/extends/use-get-array-object";
@@ -44,7 +44,7 @@ export const Graph = () => {
           value={namespace}
           onChange={e => navigateTo({ namespace: e.target.value })}
         >
-          <option key="_" value="_">
+          <option key={ALL_NAMESPACES} value={ALL_NAMESPACES}>
             all
           </option>
           {namespaces.map(namespace => (

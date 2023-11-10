@@ -1,5 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 
+import { ALL_NAMESPACES } from "@k8sd/shared";
+
 import { AutoScalingService } from "../auto-scaling.service";
 
 @Injectable()
@@ -10,7 +12,7 @@ export class HorizontalPodAutoscalerService extends AutoScalingService {
 
   async getHorizontalPodAutoscalerResource(namespace: string) {
     const horizontalPodAutoscalers = await this.catch(() =>
-      namespace === "_"
+      namespace === ALL_NAMESPACES
         ? this.k8sApi.listHorizontalPodAutoscalerForAllNamespaces()
         : this.k8sApi.listNamespacedHorizontalPodAutoscaler(namespace)
     );

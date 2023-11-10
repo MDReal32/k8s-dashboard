@@ -1,7 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { AppsService } from "../apps.service";
+import { ALL_NAMESPACES } from "@k8sd/shared";
 
+import { AppsService } from "../apps.service";
 
 @Injectable()
 export class StatefulSetService extends AppsService {
@@ -11,7 +12,7 @@ export class StatefulSetService extends AppsService {
 
   async getStatefulSetResource(namespace: string) {
     const statefulSets = await this.catch(() =>
-      namespace === "_"
+      namespace === ALL_NAMESPACES
         ? this.k8sApi.listStatefulSetForAllNamespaces()
         : this.k8sApi.listNamespacedStatefulSet(namespace)
     );

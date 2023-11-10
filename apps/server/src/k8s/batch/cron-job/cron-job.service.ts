@@ -1,7 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { BatchService } from "../batch.service";
+import { ALL_NAMESPACES } from "@k8sd/shared";
 
+import { BatchService } from "../batch.service";
 
 @Injectable()
 export class CronJobService extends BatchService {
@@ -11,7 +12,7 @@ export class CronJobService extends BatchService {
 
   async getCronJobResource(namespace: string) {
     const cronJobs = await this.catch(() =>
-      namespace === "_"
+      namespace === ALL_NAMESPACES
         ? this.k8sApi.listCronJobForAllNamespaces()
         : this.k8sApi.listNamespacedCronJob(namespace)
     );

@@ -1,7 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { CoreService } from "../core.service";
+import { ALL_NAMESPACES } from "@k8sd/shared";
 
+import { CoreService } from "../core.service";
 
 @Injectable()
 export class EndpointService extends CoreService {
@@ -11,7 +12,7 @@ export class EndpointService extends CoreService {
 
   async getEndpointResource(namespace: string) {
     const endpoints = await this.catch(() =>
-      namespace === "_"
+      namespace === ALL_NAMESPACES
         ? this.k8sApi.listEndpointsForAllNamespaces()
         : this.k8sApi.listNamespacedEndpoints(namespace)
     );

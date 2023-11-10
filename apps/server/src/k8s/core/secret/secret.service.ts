@@ -1,7 +1,8 @@
 import { Injectable, Logger } from "@nestjs/common";
 
-import { CoreService } from "../core.service";
+import { ALL_NAMESPACES } from "@k8sd/shared";
 
+import { CoreService } from "../core.service";
 
 @Injectable()
 export class SecretService extends CoreService {
@@ -11,7 +12,7 @@ export class SecretService extends CoreService {
 
   async getSecretResource(namespace: string) {
     const secrets = await this.catch(() =>
-      namespace === "_"
+      namespace === ALL_NAMESPACES
         ? this.k8sApi.listSecretForAllNamespaces()
         : this.k8sApi.listNamespacedSecret(namespace)
     );

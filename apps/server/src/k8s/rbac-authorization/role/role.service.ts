@@ -1,5 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 
+import { ALL_NAMESPACES } from "@k8sd/shared";
+
 import { RbacAuthorizationService } from "../rbac-authorization.service";
 
 @Injectable()
@@ -10,7 +12,7 @@ export class RoleService extends RbacAuthorizationService {
 
   async getRoleResource(namespace: string) {
     const roles = await this.catch(() =>
-      namespace === "_"
+      namespace === ALL_NAMESPACES
         ? this.k8sApi.listRoleForAllNamespaces()
         : this.k8sApi.listNamespacedRole(namespace)
     );
