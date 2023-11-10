@@ -1,22 +1,8 @@
-import crypto from "node:crypto";
-
 import { WebSocket } from "ws";
+
 import { Injectable } from "@nestjs/common";
 
 import { CORE_APP_NAME, Logger, WebSocketData, WS_EVENTS } from "@k8sd/shared";
-
-type PrismaCRUDActions = "create" | "createOrConnect" | "connect" | "update";
-type PrismaCRUDData<T, TO extends PrismaCRUDActions> = {
-  [Key in keyof T]-?: T[Key] extends object
-    ? {
-        [K in TO]-?: TO extends "create"
-          ? PrismaCRUDData<T[Key], TO>
-          : TO extends "update"
-          ? { data: PrismaCRUDData<T[Key], TO> }
-          : never;
-      }
-    : T[Key];
-};
 
 @Injectable()
 export class BaseService {
@@ -66,42 +52,6 @@ export class BaseService {
       this._logger.log(`Triggering core-app with event ${event}`);
       this.broadcast(this.coreAppId, event, data, headers);
     }
-  }
-
-  protected toCreate<T>(data: T, connect?: false): PrismaCRUDData<T, "create">;
-  protected toCreate<T>(data: T, connect: "or"): PrismaCRUDData<T, "createOrConnect">;
-  protected toCreate<T>(data: T, connect: true): PrismaCRUDData<T, "connect">;
-  protected toCreate<T>(data: T, connect: boolean | "or" = false) {
-    return this.to(data, connect ? "connect" : connect === "or" ? "createOrConnect" : "create");
-  }
-
-  protected toUpdate<T>(data: T) {
-    return this.to(data, "update");
-  }
-
-  private to<T, Action extends PrismaCRUDActions>(
-    data: T,
-    type: Action
-  ): PrismaCRUDData<T, Action> {
-    const newData: any = {};
-
-    for (const key in data) {
-      if (data && data[key]) {
-        const value = data[key];
-
-        if (typeof value === "object") {
-          if (type === "update") {
-            newData[key] = { [type]: { data: this.to(value, type) } };
-          } else {
-            newData[key] = { [type]: this.to(value, type) };
-          }
-        } else {
-          newData[key] = value;
-        }
-      }
-    }
-
-    return newData;
   }
 
   protected broadcast<T, H extends object>(
