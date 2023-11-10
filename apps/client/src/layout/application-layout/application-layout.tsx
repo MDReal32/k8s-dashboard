@@ -1,6 +1,8 @@
 import { FC } from "react";
 import { Link, Outlet } from "react-router-dom";
 
+import { ALL_NAMESPACES } from "@k8sd/shared";
+
 import { Container } from "../../components/container";
 import { Navbar } from "../../components/navbar";
 import { NavbarLink } from "../../components/navbar-link";
@@ -54,7 +56,7 @@ export const ApplicationLayout: FC = () => {
               <NavbarLink paths={[routePaths.PROJECTS]} />
               <NavbarLink
                 paths={[routePaths.GRAPH, routePaths.GRAPH_NAMESPACE]}
-                updateVariable={namespace => (namespace === "_" ? "All" : namespace)}
+                updateVariable={namespace => (namespace === ALL_NAMESPACES ? "All" : namespace)}
               />
             </Navbar.Collapse>
           </Navbar>
