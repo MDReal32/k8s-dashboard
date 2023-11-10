@@ -1,4 +1,4 @@
-import { RefObject, useCallback } from "react";
+import { RefObject, useCallback, useEffect } from "react";
 import { useEvent } from "react-use";
 
 export const useOnUpdateClientWidth = <TElement extends HTMLElement>(
@@ -12,4 +12,7 @@ export const useOnUpdateClientWidth = <TElement extends HTMLElement>(
   }, []);
 
   useEvent("resize", handleResize);
+  useEffect(() => {
+    handleResize();
+  }, []);
 };
