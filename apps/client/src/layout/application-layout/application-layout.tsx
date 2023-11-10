@@ -61,7 +61,7 @@ export const ApplicationLayout: FC = () => {
         </header>
       </Container>
 
-      <div className="relative h-[2000px] w-full">
+      <div className="relative">
         <Outlet />
       </div>
 
