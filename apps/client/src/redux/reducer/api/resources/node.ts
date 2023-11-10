@@ -2,29 +2,29 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
-import { Response } from "../../../types";
-import { GetBody } from "../../../types/get-body";
+import { Response } from "../../../../types";
+import { GetBody } from "../../../../types/get-body";
 
 interface ResourceBody {}
 
-export const secretApi = createApi({
-  reducerPath: `api.k8sd.${ResourceTypes.SECRET}`,
+export const nodeApi = createApi({
+  reducerPath: `api.k8sd.${ResourceTypes.NODE}`,
   baseQuery: fetchBaseQuery({
-    baseUrl: new URL(`/api/k8s/v1/${ResourceTypes.SECRET}`, window.location.origin).toString()
+    baseUrl: new URL(`/api/k8s/v1/${ResourceTypes.NODE}`, window.location.origin).toString()
   }),
   endpoints(builder) {
     return {
-      listAll: builder.query<Response<ResourceTypeMap[ResourceTypes.SECRET][]>, string>({
+      listAll: builder.query<Response<ResourceTypeMap[ResourceTypes.NODE][]>, string>({
         query: namespace => `?namespace=${namespace}`
       }),
-      get: builder.query<Response<ResourceTypeMap[ResourceTypes.SECRET]>, GetBody>({
+      get: builder.query<Response<ResourceTypeMap[ResourceTypes.NODE]>, GetBody>({
         query: ({ name, namespace }) => `/${name}?namespace=${namespace}`
       }),
-      create: builder.mutation<Response<ResourceTypeMap[ResourceTypes.SECRET]>, ResourceBody>({
+      create: builder.mutation<Response<ResourceTypeMap[ResourceTypes.NODE]>, ResourceBody>({
         query: body => ({ url: "/", method: "POST", body })
       }),
       patch: builder.mutation<
-        Response<ResourceTypeMap[ResourceTypes.SECRET]>,
+        Response<ResourceTypeMap[ResourceTypes.NODE]>,
         ResourceBody & { name: string }
       >({
         query: ({ name, ...body }) => ({ url: `/${name}`, method: "PATCH", body })

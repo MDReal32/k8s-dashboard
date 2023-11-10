@@ -2,8 +2,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
-import { Response } from "../../../types";
-import { GetBody } from "../../../types/get-body";
+import { Response } from "../../../../types";
+import { GetBody } from "../../../../types/get-body";
 
 interface ResourceBody {}
 

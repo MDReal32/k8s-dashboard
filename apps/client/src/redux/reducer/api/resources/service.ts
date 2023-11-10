@@ -2,29 +2,29 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 import { ResourceTypeMap, ResourceTypes } from "@k8sd/shared";
 
-import { Response } from "../../../types";
-import { GetBody } from "../../../types/get-body";
+import { Response } from "../../../../types";
+import { GetBody } from "../../../../types/get-body";
 
 interface ResourceBody {}
 
-export const nodeApi = createApi({
-  reducerPath: `api.k8sd.${ResourceTypes.NODE}`,
+export const serviceApi = createApi({
+  reducerPath: `api.k8sd.${ResourceTypes.SERVICE}`,
   baseQuery: fetchBaseQuery({
-    baseUrl: new URL(`/api/k8s/v1/${ResourceTypes.NODE}`, window.location.origin).toString()
+    baseUrl: new URL(`/api/k8s/v1/${ResourceTypes.SERVICE}`, window.location.origin).toString()
   }),
   endpoints(builder) {
     return {
-      listAll: builder.query<Response<ResourceTypeMap[ResourceTypes.NODE][]>, string>({
+      listAll: builder.query<Response<ResourceTypeMap[ResourceTypes.SERVICE][]>, string>({
         query: namespace => `?namespace=${namespace}`
       }),
-      get: builder.query<Response<ResourceTypeMap[ResourceTypes.NODE]>, GetBody>({
+      get: builder.query<Response<ResourceTypeMap[ResourceTypes.SERVICE]>, GetBody>({
         query: ({ name, namespace }) => `/${name}?namespace=${namespace}`
       }),
-      create: builder.mutation<Response<ResourceTypeMap[ResourceTypes.NODE]>, ResourceBody>({
+      create: builder.mutation<Response<ResourceTypeMap[ResourceTypes.SERVICE]>, ResourceBody>({
         query: body => ({ url: "/", method: "POST", body })
       }),
       patch: builder.mutation<
-        Response<ResourceTypeMap[ResourceTypes.NODE]>,
+        Response<ResourceTypeMap[ResourceTypes.SERVICE]>,
         ResourceBody & { name: string }
       >({
         query: ({ name, ...body }) => ({ url: `/${name}`, method: "PATCH", body })
