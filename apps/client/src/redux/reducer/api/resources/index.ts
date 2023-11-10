@@ -4,7 +4,7 @@ import { CombinedState } from "@reduxjs/toolkit/query";
 
 import { ParsableResourceTypes } from "@k8sd/shared";
 
-import { FixName } from "../../../utils/fix-name";
+import { FixName } from "../../../../utils/fix-name";
 import { clusterRoleBindingApi } from "./cluster-role-binding";
 import { configMapApi } from "./config-map";
 import { cronJobApi } from "./cron-job";
@@ -62,7 +62,6 @@ export const resourceApis = {
   any
 >;
 
-export const apiReducers = {
 export const resourceApiMiddlewares = [
   namespaceApi.middleware,
   nodeApi.middleware,
@@ -86,6 +85,7 @@ export const resourceApiMiddlewares = [
   roleApi.middleware
 ];
 
+export const resourceApiReducers = {
   [namespaceApi.reducerPath]: namespaceApi.reducer,
   [nodeApi.reducerPath]: nodeApi.reducer,
   [ingressApi.reducerPath]: ingressApi.reducer,
