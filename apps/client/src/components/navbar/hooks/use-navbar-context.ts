@@ -1,45 +1,42 @@
-import { ReducerWithoutAction, useEffect, useMemo, useReducer } from "react";
+import { ReducerWithoutAction, useCallback, useMemo } from "react";
 
+import { useDispatch, useSelector } from "../../../hooks/use-store";
+import {
+  setBrandWidth,
+  setClientRoutingElementsWidth,
+  setGetStartedWidth,
+  setIsSidebarOpen
+} from "../../../redux/reducer/layout/navbar";
 import { NavbarContext } from "../context";
-import { navbarSlice } from "../redux/slice";
 
 export const useNavbarContext = (clientNavbarWidth: number): NavbarContext => {
-  const [state, dispatch] = useReducer(navbarSlice.reducer, navbarSlice.getInitialState());
+  const navbar = useSelector(state => state.layout.navbar);
+  const dispatch = useDispatch();
 
-  const dispatchActionFn = (action: ReducerWithoutAction<any>) => (value: any) =>
-    dispatch(action(value));
+  const dispatchActionFn = useCallback(
+    (action: ReducerWithoutAction<any>) => (value: any) => dispatch(action(value)),
+    []
+  );
 
   const navbarWidth = useMemo(() => {
     return (
-      state.values.brandWidth +
-      state.values.clientRoutingElementsWidth +
-      state.values.getStartedWidth
+      navbar.values.brandWidth +
+      navbar.values.clientRoutingElementsWidth +
+      navbar.values.getStartedWidth
     );
-  }, [state.values]);
+  }, [navbar.values]);
 
   const isHidden = useMemo(
     () => navbarWidth > clientNavbarWidth - 100,
     [navbarWidth, clientNavbarWidth]
   );
 
-  useEffect(() => {
-    dispatch(navbarSlice.actions.setIsAnimating(true));
-    dispatch(navbarSlice.actions.setIsSidebarOpen(!isHidden && state.sidebar.isOpen));
-    setInterval(
-      dispatchActionFn(navbarSlice.actions.setIsAnimating),
-      state.animation.isAnimating ? 1000 : 0,
-      false
-    );
-  }, [isHidden]);
-
   return {
     isHidden,
-    isSidebarOpen: state.sidebar.isOpen,
-    setIsSidebarOpen: dispatchActionFn(navbarSlice.actions.setIsSidebarOpen),
-    setBrandWidth: dispatchActionFn(navbarSlice.actions.setBrandWidth),
-    setClientRoutingElementsWidth: dispatchActionFn(
-      navbarSlice.actions.setClientRoutingElementsWidth
-    ),
-    setGetStartedWidth: dispatchActionFn(navbarSlice.actions.setGetStartedWidth)
+    isSidebarOpen: navbar.sidebar.isOpen,
+    setIsSidebarOpen: dispatchActionFn(setIsSidebarOpen),
+    setBrandWidth: dispatchActionFn(setBrandWidth),
+    setClientRoutingElementsWidth: dispatchActionFn(setClientRoutingElementsWidth),
+    setGetStartedWidth: dispatchActionFn(setGetStartedWidth)
   };
 };

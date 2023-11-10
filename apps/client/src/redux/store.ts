@@ -1,22 +1,26 @@
-import { useDispatch as _useDispatch, useSelector as _useSelector } from "react-redux";
-
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query/react";
 
-import { apiReducers, apis } from "./api/resources";
+import { projectApi } from "./reducer/api/project";
+import { resourceApiMiddlewares, resourceApiReducers } from "./reducer/api/resources";
+import { navbar } from "./reducer/layout/navbar";
+import { graph } from "./reducer/pages/graph";
 
 export const store = configureStore({
-  reducer: { ...apiReducers },
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(Object.values(apis).map(reducer => reducer.middleware))
+  reducer: combineReducers({
+    ...resourceApiReducers,
+    [projectApi.reducerPath]: projectApi.reducer,
+    layout: combineReducers({ navbar }),
+    pages: combineReducers({ graph })
+  }),
+  middleware: getDefaultMiddleware => [
+    ...getDefaultMiddleware(),
+    ...resourceApiMiddlewares,
+    projectApi.middleware
+  ]
 });
 
 setupListeners(store.dispatch);
 
 export type RootState = ReturnType<typeof store.getState>;
-
-export const useSelector = <TSelected = unknown>(
-  selector: (state: RootState) => TSelected,
-  equalityFn?: (left: TSelected, right: TSelected) => boolean
-) => _useSelector<RootState, TSelected>(selector, equalityFn);
-export const useDispatch = () => _useDispatch<typeof store.dispatch>();
+export type AppDispatch = typeof store.dispatch;
