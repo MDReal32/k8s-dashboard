@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 import { ParsableResourceTypes, ResourceTypeMap } from "@k8sd/shared";
 
-import { apis } from "../../../redux/api/resources";
+import { resourceApis } from "../../../redux/reducer/api/resources";
 import { getAppName } from "../../../utils/get-app-name";
 
 type ArrayObjectExtra = {
@@ -19,7 +19,7 @@ export const useGetArrayObject = <TResourceType extends ParsableResourceTypes>(
   resourceType: TResourceType
 ): ArrayObject<ResourceTypeMap[TResourceType]> => {
   const { namespace = "default" } = useParams();
-  const { data: nodes } = apis[resourceType].endpoints.listAll.useQuery(namespace);
+  const { data: nodes } = resourceApis[resourceType].endpoints.listAll.useQuery(namespace);
 
   return useMemo(() => {
     const dataNameIndexes: Record<string, number> = {};

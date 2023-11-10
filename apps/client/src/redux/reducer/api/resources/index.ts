@@ -26,7 +26,7 @@ import { serviceAccountApi } from "./service-account";
 import { statefulSetApi } from "./stateful-set";
 import { storageClassApi } from "./storage-class";
 
-export const apis = {
+export const resourceApis = {
   "namespace": namespaceApi,
   "node": nodeApi,
   "ingress": ingressApi,
