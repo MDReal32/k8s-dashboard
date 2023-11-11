@@ -1,3 +1,6 @@
+import { pick } from "lodash";
+import { Observable, catchError, map } from "rxjs";
+
 import {
   CallHandler,
   ExecutionContext,
@@ -5,8 +8,6 @@ import {
   Injectable,
   NestInterceptor
 } from "@nestjs/common";
-import { catchError, map, Observable } from "rxjs";
-import { pick } from "lodash";
 
 @Injectable()
 export class RequestInterceptor implements NestInterceptor {
